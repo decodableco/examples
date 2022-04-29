@@ -4,8 +4,9 @@ login:
 	decodable login
 
 async:
+	# jq -r 'select(.name | startswith("dataproduct"))|.id' | 
 	decodable stream list -o json | \
-		jq -r 'select(.name | startswith("dataproduct"))|.id' | \
+		jq -r .id | \
 		xargs -n1 decodable stream get -o json | \
 		jq -s '{dp:.}' \
 		> dp.json

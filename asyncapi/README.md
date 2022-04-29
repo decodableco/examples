@@ -29,25 +29,50 @@ pip install yq
 ```
 
 ### Makefile
+First open the Makefile and replace `change-me` with your Decodable account name.
 
+```Makefile
+ACCOUNT=change-me
+
+login:
+	decodable login
+```
+
+All the commands are in the Makefile. Run them in order below.
+
+This command logs you into Decodable
 ```bash
 make login
 ```
 
+This command lists all the streams defined in Decodable in your account. It then generates the AsyncAPI YAML document for all of the streams.
 ```bash
 make async
 ```
 
+Optional: To filter streams with a prefix, you can use this command instead. Alteratively you can filter with postfix using `endswith()` function instead of `startswith()`.
+```bash
+decodable stream list -o json | \
+		jq -r 'select(.name | startswith("my-prefix"))|.id' | 
+		xargs -n1 decodable stream get -o json | \
+		jq -s '{dp:.}' \
+		> dp.json
+```
+
+There should be a YAML document {YOUR_ACCOUNT}.yaml in the local directory. Run the next command to create the html document. This will create a `output` directory. When this command finishes, you can run `open output/index.html` to see it in your browser.
 ```bash
 make html
 ```
 
+
+At this point, you consumers have enough information to invoke the command to consume the data product they want. The command below creates a S3 sink connection. Go [here](https://docs.decodable.co/docs/connector-reference-s3) for more information in configuring the S3 connection.
+
 ```bash
 SINK_NAME=s3-sink
-ACCOUNT=you-decodable-account
+ACCOUNT=your-decodable-account
 STREAM_ID=xxxxxxx
 BUCKET=my-bucket
-DIRECTORY=my-directory
+DIRECTORY=my-directory-in-my-bucket
 FORMAT=json
 REGION=us-west-2
 ROLE=arn:aws:iam::xxxxxxx:role/xxxxxxxx
@@ -67,3 +92,10 @@ decodable conn create \
 		--prop region=$(REGION) \
 		--prop role-arn=$(ROLE)
 ```
+
+**NOTE** 
+>All the commands in this example use the command line to subscribe to a data product in Decodable. If your intention is to build a self-service data products portal to consume data into customer domains, please use the Decodable's [API Reference](https://docs.decodable.co/reference/listpipelines) for REST APIs to automatically build sink connections.
+
+**CONTACT US**
+>For more information or help with building your data products portal, please contact use [here](https://www.decodable.co/contact) or join our slack community at the same link. 
+

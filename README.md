@@ -1,8 +1,6 @@
-# Examples
+# Decodable Examples
 This repository contains examples of use cases that utilize Decodable streaming solution.
 
-
-## Examples:
 
 | Example | Description |
 |---------|-------------|

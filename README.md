@@ -1,2 +1,15 @@
-# examples
-This repository will contain examples of use cases that utilize Decodable streaming solution
+# Examples
+This repository contains examples of use cases that utilize Decodable streaming solution.
+
+
+## Examples:
+
+| Example | Description |
+|---------|-------------|
+| [AsyncAPI](asyncapi) | Publishing Data Products with Decodable and AsyncAPI |
+
+
+
+
+
+

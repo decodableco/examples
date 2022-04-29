@@ -1,0 +1,122 @@
+asyncapi: '2.2.0'
+
+externalDocs:
+  description: Find more info here
+  url: https://www.asyncapi.com
+
+info:
+  title: Decodable data products for account decodable-test
+  version: '0.0.1'
+  description: |
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: API Support
+    url: http://www.asyncapi.com/support
+    email: info@asyncapi.io
+  x-twitter: '@AsyncAPISpec'
+
+tags:
+  - name: root-tag1
+    externalDocs:
+      description: External docs description 1
+      url: https://www.asyncapi.com/
+  - name: root-tag2
+    description: Description 2
+    externalDocs:
+      url: "https://www.asyncapi.com/"
+  - name: root-tag3
+  - name: root-tag4
+    description: Description 4
+  - name: root-tag5
+    externalDocs:
+      url: "https://www.asyncapi.com/"
+
+servers:
+  decodable:
+    url: https://decodable.co
+    protocol: decodable
+    description: Decodable
+    security:
+      - user-password: []
+
+defaultContentType: application/json
+
+channels:
+{% for stream in dp %}
+  {{ stream.name }}:
+    x-confluent-cloud-security:
+      $ref: '#/components/securitySchemes/user-password'
+    description: Subscribe to {{ stream.name }}. Created {{ stream.create_time }}. Updated {{ stream.update_time }}. Id {{ stream.id }}
+    subscribe:
+      summary: Subscribe to {{ stream.name }}.
+      description: |
+        Subscribe to {{ stream.name }}. Created {{ stream.create_time }}. Updated {{ stream.update_time }}
+      operationId: receive{{ stream.name }}.
+      tags:
+        - name: stream.{{ stream.name }}.
+          externalDocs:
+            description: Subscribe to {{ stream.name }}. Created {{ stream.create_time }}. Updated {{ stream.update_time }}
+            url: https://app.decodable.co/decodable-test/streams/{{ stream.name }}
+      traits:
+        - $ref: '#/components/operationTraits/{{ stream.name }}'
+      message:
+        $ref: '#/components/messages/{{ stream.name }}'
+{% endfor %}
+
+components:
+  messages:
+  {% for stream in dp %}
+    {{ stream.name }}:
+      name: {{ stream.name }}
+      title: {{ stream.name }}
+      summary: Subscribe to {{ stream.name }}. Created {{ stream.create_time }}. Updated {{ stream.update_time }}
+      tags:
+        - name: stream.{{ stream.name }}
+          externalDocs:
+            description: Subscribe to {{ stream.name }}. Created {{ stream.create_time }}. Updated {{ stream.update_time }}
+            url: https://app.decodable.co/decodable-test/streams/{{ stream.name }}
+      payload:
+        $ref: "#/components/schemas/{{ stream.name }}"
+      bindings:
+        decodable:
+          key:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+          bindingVersion: '0.1.0'
+  {% endfor %}
+
+  schemas:
+  {% for stream in dp %}
+    {{ stream.name }}:
+      type: object
+      properties:
+        {% for prop in stream.schema %}
+        {{prop.name}}:
+          type: string
+        {% endfor %}
+  {% endfor %}
+    
+
+  securitySchemes:
+    user-password:
+      type: userPassword
+      description: | 
+
+  operationTraits:
+    {% for stream in dp %}
+    {{ stream.name }}:
+      bindings:
+        decodable:
+          groupId: {{ stream.name }}
+          clientId: {{ stream.name }}
+          streamId: {{ stream.id }}
+          bindingVersion: '0.1.0'
+    {% endfor %}
+

@@ -99,7 +99,8 @@ components:
       properties:
         {% for prop in stream.schema %}
         {{prop.name}}:
-          type: string
+          type: {% if prop.type == 'INT' %} integer {% else %} string {% endif %}
+          {% if prop.type.startswith('TIMESTAMP') %}format: date-time {% endif %}
         {% endfor %}
   {% endfor %}
     

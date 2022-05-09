@@ -29,13 +29,13 @@ pip install yq
 ```
 
 ### Makefile
-First open the Makefile and replace `change-me` with your Decodable account name.
+First create a ``.env`` file and place the contents these contents below replacing the values with yours.
 
 ```Makefile
-ACCOUNT=change-me
-
-login:
-	decodable login
+ACCOUNT=<< your decodable account name >>
+BUCKET=<< s3 bucket >>
+REGION=<< aws region >>
+ARN=<< AWS ARN ROLE >
 ```
 
 All the commands are in the Makefile. Run them in order below.

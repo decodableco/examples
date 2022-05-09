@@ -1,5 +1,4 @@
-ACCOUNT=change-me
-SCHEMA=./schemas/employee.json
+include .env
 
 login:
 	decodable login

@@ -29,7 +29,7 @@ pip install yq
 ```
 
 ### Makefile
-First create a ``.env`` file and place the contents these contents below replacing the values with yours.
+First create a ``.env`` file and place the contents these contents below replacing the values with yours. You can ``source .env`` to put all these values in the environment.
 
 ```Makefile
 ACCOUNT=<< your decodable account name >>
@@ -64,34 +64,13 @@ There should be a YAML document {YOUR_ACCOUNT}.yaml in the local directory. Run 
 make html
 ```
 
-
-At this point, you consumers have enough information to invoke the command to consume the data product they want. The command below creates a S3 sink connection. Go [here](https://docs.decodable.co/docs/connector-reference-s3) for more information in configuring the S3 connection.
+At this point, you consumers have enough information to create a S3 sink connection. Go [here](https://docs.decodable.co/docs/connector-reference-s3) for more information in configuring the S3 connection. This command will generate a script for you to run that will create the connection.
 
 ```bash
-SINK_NAME=s3-sink
-ACCOUNT=your-decodable-account
-STREAM_ID=xxxxxxx
-BUCKET=my-bucket
-DIRECTORY=my-directory-in-my-bucket
-FORMAT=json
-REGION=us-west-2
-ROLE=arn:aws:iam::xxxxxxx:role/xxxxxxxx
-
-decodable conn create \
-		--name $(SINK_NAME) \
-		--connector s3 \
-		--type sink \
-		--stream-id $(STREAM_ID) \
-		--field ts=TIMESTAMP \
-		--field status=INT \
-		--field method=STRING \
-		--field path=STRING \
-		--prop bucket=$(BUCKET) \
-		--prop directory=$(DIRECTORY) \
-		--prop format=$(FORMAT) \
-		--prop region=$(REGION) \
-		--prop role-arn=$(ROLE)
+make s3
 ```
+
+
 
 **NOTE** 
 >All the commands in this example use the command line to subscribe to a data product in Decodable. If your intention is to build a self-service data products portal to consume data into customer domains, please use the Decodable's [API Reference](https://docs.decodable.co/reference/listpipelines) for REST APIs to automatically build sink connections.

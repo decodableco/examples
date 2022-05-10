@@ -29,7 +29,7 @@ pip install yq
 ```
 
 ### Makefile
-First create a ``.env`` file and place the contents these contents below replacing the values with yours. You can ``source .env`` to put all these values in the environment.
+First create a ``.env`` file and place the contents below replacing the values with yours. You can ``source .env`` to put all these values in the environment.
 
 ```Makefile
 ACCOUNT=<< your decodable account name >>

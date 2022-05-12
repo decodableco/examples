@@ -1,4 +1,7 @@
 #!/bin/bash
+
+source .env
+
 {% for c in channels %}
 decodable conn create \
 	--name {{ c }} \

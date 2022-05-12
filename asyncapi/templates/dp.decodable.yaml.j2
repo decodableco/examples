@@ -18,7 +18,7 @@ info:
     email: info@asyncapi.io
   x-twitter: '@AsyncAPISpec'
 
-tags:
+tags:  # a way to reference more metadata like lineage, usage metrics, and security information
   - name: root-tag1
     externalDocs:
       description: External docs description 1
@@ -34,7 +34,7 @@ tags:
     externalDocs:
       url: "https://www.asyncapi.com/"
 
-servers:
+servers: # decodable is serverless. For now we will push this data to you
   decodable:
     url: https://decodable.co
     protocol: decodable
@@ -46,7 +46,7 @@ defaultContentType: application/json
 
 channels:
 {% for stream in dp %}
-  {{ stream.name }}:
+  {{ stream.name }}: # the stream name in decodable
     x-confluent-cloud-security:
       $ref: '#/components/securitySchemes/user-password'
     description: Subscribe to {{ stream.name }}. Created {{ stream.create_time }}. Updated {{ stream.update_time }}. Id {{ stream.id }}
@@ -114,7 +114,7 @@ components:
     {% for stream in dp %}
     {{ stream.name }}:
       bindings:
-        decodable:
+        decodable: # decodable specific bindings
           groupId: {{ stream.name }}
           clientId: {{ stream.name }}
           streamId: {{ stream.id }}

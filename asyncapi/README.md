@@ -59,7 +59,7 @@ decodable stream list -o json | \
 		> dp.json
 ```
 
-* There should be a YAML document {YOUR_ACCOUNT}.yaml in the local directory. Run the next command to create the html document. This will create a `output` directory. When this command finishes, you can run `open output/index.html` to see it in your browser.
+* There should be a YAML document {YOUR_ACCOUNT}.yaml in the local directory. Run the next command to create the html document. This will create a `output` directory. When this command finishes, you can run `open output/index.html` to see it in your browser. The command uses this [html generator](https://github.com/asyncapi/html-template).
 ```bash
 make html
 ```

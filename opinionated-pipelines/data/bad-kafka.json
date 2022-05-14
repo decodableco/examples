@@ -1,0 +1,8 @@
+{
+    "empid": "1",
+    "SSN": "123-45-6789",
+    "first_name": "bad",
+    "last_name": "record",
+    "address": "this is a bad record",
+    "address2": "this is a bad record"
+}

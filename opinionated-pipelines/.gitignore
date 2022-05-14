@@ -1,3 +1,4 @@
 model.sh
 .tmp
 .env
+config.*

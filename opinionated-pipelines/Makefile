@@ -5,15 +5,16 @@ DECODABLE_TOKEN := $(shell yq -r .tokens.default.access_token ~/.decodable/auth)
 login:
 	decodable login
 
-streams:
+stream:
 	jinja -d $(SCHEMA) -o model.sh templates/model.sh.j2
 	chmod +x model.sh
 	./model.sh
-	
-invalid_rest: # create a connection that doesn't fit
+
+
+invalid:  # create a connection to kafka
 	decodable conn create \
-	--name Employee_Command2 \
-	--connector rest \
+	--name EMPLOYEE_CONFLUENT \
+	--connector confluent-cloud \
 	--type source \
 	--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="Employee")|.id ' ) \
 	--description "COMMAND for Employee" \
@@ -22,25 +23,17 @@ invalid_rest: # create a connection that doesn't fit
 	--field fname=string \
 	--field lname=string \
 	--field address=string \
-	--prop format=json 
+	--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
+	--prop cluster.id=$(CLUSTER_ID) \
+	--prop topic=$(TOPIC) \
+	--prop format=json \
+	--prop cluster.api.key=$(CONFLUENT_KEY) \
+	--prop cluster.api.secret=$(CONFLUENT_SECRET)
 
-valid_rest: # create a connection that doesn't fit
-	decodable conn create \
-	--name Employee_Command2 \
-	--connector rest \
-	--type source \
-	--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="Employee")|.id ' ) \
-	--description "COMMAND for Employee" \
-	--field empid=integer \
-	--field SSN=string \
-	--field fname=string \
-	--field lname=string \
-	--field address=string \
-	--prop format=json 
 
-kafka:  # create a connection to kafka
+valid:  # create a connection to kafka
 	decodable conn create \
-	--name Employee_Command_Kafka \
+	--name EMPLOYEE_CONFLUENT \
 	--connector confluent-cloud \
 	--type source \
 	--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="Employee")|.id ' ) \
@@ -57,30 +50,20 @@ kafka:  # create a connection to kafka
 	--prop cluster.api.key=$(CONFLUENT_KEY) \
 	--prop cluster.api.secret=$(CONFLUENT_SECRET)
 
-good:  # send good data
-	curl --request POST \
-	--url https://$(ACCOUNT).api.decodable.co/v1alpha2/connections/$(CONNECTION)/events \
-	--header 'Accept: application/json' \
-	--header 'Authorization: Bearer $(DECODABLE_TOKEN)' \
-	--header 'Content-Type: application/json' \
-	--data "@data/good.json" | jq
-
-bad: # send bad data and see the connection fail
-	curl --request POST \
-	--url https://$(ACCOUNT).api.decodable.co/v1alpha2/connections/$(CONNECTION)/events \
-	--header 'Accept: application/json' \
-	--header 'Authorization: Bearer $(DECODABLE_TOKEN)' \
-	--header 'Content-Type: application/json' \
-	--data "@data/bad.json" | jq
+activate:
+	decodable connection activate  $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' )
 
 preview: # preview data coming in
 	decodable pl preview "select * from Employee"
 
-subscribe: 
-	kcat -b $(BOOTSTRAP) -F config.properties -t $(TOPIC) -K :
-	
 publish: # send data to kafka
 	# make publish JSON=<<path to JSON>> 
 	kcat -b $(BOOTSTRAP) -F config.properties -t $(TOPIC) -k $$RANDOM -P $(JSON)
 
+subscribe: 
+	kcat -b $(BOOTSTRAP) -F config.properties -t $(TOPIC) -K :
+
+status:
+	decodable connection get $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' ) -o json \
+		| jq .last_runtime_error.message -r
 

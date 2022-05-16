@@ -135,7 +135,7 @@ make: *** [invalid] Error 1
 The error is because the line ``--field empid=string`` does not match the Employee schema which defines ``empid=integer``. 
 
 #### Valid Connection
-Let's create a REST API source connection to the Employee stream with the correct schema definition. The command below will create a valid source connection.
+Let's create a Confluent Cloud source connection to the Employee stream with the correct schema definition. The command below will create a valid source connection.
 
 ```bash
 make valid

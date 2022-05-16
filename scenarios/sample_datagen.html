@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body style="font-size: xx-large">
+    <span>Posts sent: </span>
+    <span id="count"></span>
+    <hr />
+    <span>Request: </span>
+    <span id="req"></span>
+    <hr />
+    <span>Response: </span>
+    <span id="res"></span>
+
+    <script>
+      const account = "<name-of-account>";
+      const connection = "<connection-id>";
+      const token = "<access-token>";
+
+      let count = 0;
+      const countElement = document.getElementById("count");
+      const reqElement = document.getElementById("req");
+      const resElement = document.getElementById("res");
+
+      function send() {
+        countElement.textContent = ++count;
+        const body = JSON.stringify({
+          events: [
+            {
+              id: 10_000 + count,
+              date: "2021-09-20T19:03:00Z",
+              value: "test1",
+              test: true,
+            },
+            {
+              id: 10_000 + count,
+              date: "2021-09-20T19:03:00Z",
+              value: "test2",
+              test: false,
+            },
+          ],
+        });
+        reqElement.textContent = body;
+
+        const options = {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body,
+        };
+
+        // https://docs.decodable.co/reference/postevents
+        fetch(`https://${account}.api.decodable.co/v1alpha2/connections/${connection}/events`, options)
+          .then((response) => response.json())
+          .then((json) => {
+            resElement.textContent = JSON.stringify(json);
+          })
+          .catch((err) => {
+            resElement.textContent = JSON.stringify(err);
+          });
+      }
+
+      send();
+      setInterval(send, 2000);
+    </script>
+  </body>
+</html>

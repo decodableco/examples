@@ -1,0 +1,64 @@
+{
+  "flights": [
+    {
+      "flight_date": "2021-12-12",
+      "flight_status": "active",
+      "departure": {
+        "airport": "San Francisco International",
+        "timezone": "America/Los_Angeles",
+        "iata": "SFO",
+        "icao": "KSFO",
+        "terminal": "2",
+        "gate": "D11",
+        "delay": 13,
+        "scheduled": "2021-12-12T04:20:00+00:00",
+        "estimated": "2021-12-12T04:20:00+00:00",
+        "actual": "2021-12-12T04:20:13+00:00",
+        "estimated_runway": "2021-12-12T04:20:13+00:00",
+        "actual_runway": "2021-12-12T04:20:13+00:00"
+      },
+      "arrival": {
+        "airport": "Dallas/Fort Worth International",
+        "timezone": "America/Chicago",
+        "iata": "DFW",
+        "icao": "KDFW",
+        "terminal": "A",
+        "gate": "A22",
+        "baggage": "A17",
+        "delay": 0,
+        "scheduled": "2021-12-12T04:20:00+00:00",
+        "estimated": "2021-12-12T04:20:00+00:00",
+        "actual": null,
+        "estimated_runway": null,
+        "actual_runway": null
+      },
+      "airline": {
+        "name": "American Airlines",
+        "iata": "AA",
+        "icao": "AAL"
+      },
+      "flight": {
+        "number": "1004",
+        "iata": "AA1004",
+        "icao": "AAL1004",
+        "codeshared": null
+      },
+      "aircraft": {
+        "registration": "N160AN",
+        "iata": "A321",
+        "icao": "A321",
+        "icao24": "A0F1BB"
+      },
+      "live": {
+        "updated": "2021-12-12T10:00:00+00:00",
+        "latitude": 36.2856,
+        "longitude": -106.807,
+        "altitude": 8846.82,
+        "direction": 114.34,
+        "speed_horizontal": 894.348,
+        "speed_vertical": 1.188,
+        "is_ground": false
+      }
+    }
+  ]
+}

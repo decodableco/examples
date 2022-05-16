@@ -1,0 +1,12 @@
+{
+  "patient_id": "e148046d-e020-4303-937c-397439cfb832",
+  "device_id": "7cc1ca2a-87b8-467a-b2ce-4052974e043f",
+  "measurement_type": "blood pressure",
+  "measured_at": "2021-02-23 22:06:00",
+  "diastolic": 84,
+  "systolic": 129,
+  "pulse": 62,
+  "irregular": 0,
+  "signal_status": "GOOD SIGNAL",
+  "battery_status": "BATTERY OKAY"
+}

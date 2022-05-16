@@ -1,0 +1,12 @@
+<call_log>
+   <activity_id>701C</activity_id>
+   <call_id>367e5d7e-a3e6-4d27-a5c7-35706e9dca9d</call_id>
+   <user_id>4433a94b-12c5-4397-8837-3eedf11e78e6</user_id>
+   <start_time>2020-03-04 13:15:12</start_time>
+   <end_time>2020-03-04 13:19:22</end_time>
+   <call_time_seconds>207</call_ti_seconds>
+   <from_phone_number>+37277774841</from_phone_number>
+   <to_phone_number>+37249234343</to_phone_number>
+   <outcome>answered</outcome>
+   <has_recording>false</has_recording>
+</call_log>

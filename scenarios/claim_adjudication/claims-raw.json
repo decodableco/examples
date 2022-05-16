@@ -1,0 +1,36 @@
+{
+  "claim_date": "2020-07-31",
+  "facility_id": "46cfa81e-5820-44cb-ab01-637f8a8a8e2e",
+  "claims": [
+    {
+      "claim_id": "637eafba-f742-4661-bdfb-d8c6781d3b9d",
+      "member_id": "18bb9373-7a5e-430e-890d-dfa86add931a",
+      "currency": "USD",
+      "sum_of_claims": 482.72,
+      "sum_of_claims_finance": null,
+      "type_of_visit": "Out-Patient",
+      "member_plan": "TOP-UP",
+      "procedure_code": "1C04",
+      "date_of_consultation": "2020-07-31 10:40:00",
+      "provider_id": "87423368-4e31-41dc-a30a-5ace06d33288",
+      "approved_query_status": null,
+      "finance_audit_status": "pending",
+      "audit_status": "pending"
+    },
+    {
+      "claim_id": "f9ac56aa-be32-4b54-9ec1-e1198f5b4f54",
+      "member_id": "18bb9373-7a5e-430e-7c56-79704a2492ec",
+      "currency": "USD",
+      "sum_of_claims": 482.72,
+      "sum_of_claims_finance": null,
+      "type_of_visit": "Preventative",
+      "member_plan": "PPO-FAMILY",
+      "procedure_code": "3F71",
+      "date_of_consultation": "2020-07-31 14:15:00",
+      "provider_id": "87423368-4e31-41dc-a30a-5ace06d33288",
+      "approved_query_status": null,
+      "finance_audit_status": "pending",
+      "audit_status": "pending"
+    }
+  ]
+}

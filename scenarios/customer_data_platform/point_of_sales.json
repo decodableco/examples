@@ -1,0 +1,23 @@
+{
+  "transaction_id": "ec12db9f-f3a3-46c0-a267-b4800b209adf",
+  "terminal_id": "ba20148e-cf9a-4b36-b8a4-f0fdbf916639",
+  "terminal_location": "8463adad-b785-4aa9-bb61-233c03eef420",
+  "payer_id": "515d7bcb-2801-4ad9-8ebf-a226be0d55f7",
+  "created_at": "2021-05-20T22:40:38.862Z",
+  "updated_at": "2021-05-20T22:40:39.066Z",
+  "transaction_amount": {
+    "amount": 100,
+    "currency": "USD"
+  },
+  "card_details": {
+    "status": "CAPTURED",
+    "card": {
+      "card_brand": "BRAND",
+      "last_4": "5858",
+      "exp_month": 5,
+      "exp_year": 2023,
+      "fingerprint": "sq-1-Gg4tFVdtVF6tOSc8REcyHNW1aBKSZp3iQb3ZzdVG_JtpLftLvVkQhlXizopHIGbIgQ",
+      "card_type": "DEBIT"
+    }
+  }
+}

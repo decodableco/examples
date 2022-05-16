@@ -1,0 +1,19 @@
+{
+  "occurred_at": "2021-09-20 19:03:00",
+  "description": "Delivered, In/At Mailbox",
+  "city_locality": "SAN FRANCISCO",
+  "state_province": "CA",
+  "postal_code": "94118",
+  "country_code": "",
+  "latitude": 37.774,
+  "longitude": -122.475,
+  "tracking_number": "9405511899223197428490",
+  "status_description": "Delivered",
+  "carrier_code": "usps",
+  "carrier_status_description": "Your item was delivered in or at the mailbox at 2:03 pm on September 20, 2021 in SAN FRANCISCO, CA 94118.",
+  "occurred_at_prev": "2021-09-20 13:10:00",
+  "latitude_prev": 37.671,
+  "longitude_prev": -122.328,
+  "elapsed_minutes": 353,
+  "distance_ traveled": 17
+}

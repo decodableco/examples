@@ -1,0 +1,28 @@
+{
+  "patient_id": "e148046d-e020-4303-937c-397439cfb832",
+  "device_id": "7cc1ca2a-87b8-467a-b2ce-4052974e043f",
+  "measurement_type": "blood pressure",
+  "measured_at": "2021-02-23t22:06:00.000z",
+  "values": [
+    {
+      "value": 84,
+      "type": "diastolic"
+    },
+    {
+      "value": 129,
+      "type": "systolic"
+    },
+    {
+      "value": 62,
+      "type": "pulse"
+    },
+    {
+      "value": 0,
+      "type": "irregular"
+    }
+  ],
+  "signal_strength_percentage": 94,
+  "battery_percentage": 58,
+  "device_type": "pylobp",
+  "device_model": "py-802-lte"
+}

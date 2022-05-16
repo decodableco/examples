@@ -1,0 +1,43 @@
+{
+  "events": [
+    {
+      "updated_at": "2022-03-18T17:41:36.923Z",
+      "player": {
+        "id": 6126,
+        "name": "F. Andrada"
+      },
+      "assist": {
+        "id": null,
+        "name": null
+      },
+      "type": "Goal",
+      "detail": "Normal Goal"
+    },
+    {
+      "updated_at": "2022-03-18T17:44:32.721Z",
+      "player": {
+        "id": 35695,
+        "name": "D. Rodríguez"
+      },
+      "assist": {
+        "id": 5947,
+        "name": "B. Merlini"
+      },
+      "type": "Subst",
+      "detail": "Substitution 1"
+    },
+    {
+      "updated_at": "2022-03-18T17:52:16.193Z",
+      "player": {
+        "id": 5936,
+        "name": "Julio González"
+      },
+      "assist": {
+        "id": null,
+        "name": null
+      },
+      "type": "Card",
+      "detail": "Yellow Card"
+    }
+  ]
+}

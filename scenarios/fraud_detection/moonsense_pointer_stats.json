@@ -1,0 +1,14 @@
+{
+  "server_time": "2022-03-31 18:27:40",
+  "session_id": "5kj23DQ31ds2SJF23r",
+  "record_count": 108,
+  "velocity_p0": 0.0623409298,
+  "velocity_p25": 0.2609802933,
+  "velocity_p50": 0.3587928732,
+  "velocity_p75": 0.4160982341,
+  "velocity_p100": 0.4620938423,
+  "velocity_mean": 0.3220938409,
+  "total_distance": 1268.2983742386,
+  "total_duration": 4934,
+  "total_velocity": 0.2572387498
+}

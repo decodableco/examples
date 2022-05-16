@@ -1,0 +1,17 @@
+{
+  "window_start": "2022-04-07 18:25:10",
+  "window_end": "2022-04-07 18:25:15",
+  "window_time": "2022-04-07 18:25:14.999",
+  "product_id": "BTC-USD",
+  "side": "buy",
+  "volume": 29,
+  "price_min": 43716,
+  "price_max": 43719.88,
+  "price_avg": 43716.96,
+  "price_min_prev": 43712.27,
+  "price_max_prev": 43717.21,
+  "price_avg_prev": 43714.497143,
+  "price_min_change": 3.73,
+  "price_max_change": 2.67,
+  "price_avg_change": 2.462857
+}

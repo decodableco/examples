@@ -1,0 +1,53 @@
+insert into parsed
+select cast(delivery_update.order_id as bigint) as order_id,
+  cast(delivery_update.branch_id as bigint) as branch_id,
+  cast(delivery_update.customer_id as bigint) as customer_id,
+  delivery_update.state_human_readable as state_human_readable,
+  delivery_update.notification as notification,
+  to_timestamp(delivery_update.earliest) as earliest,
+  to_timestamp(delivery_update.latest) as latest,
+  to_timestamp(delivery_update.dispatched_at) as dispatched_at,
+  to_timestamp(delivery_update.completed_at) as completed_at,
+  cast(delivery_update.branch_lat as float) as branch_lat,
+  cast(delivery_update.branch_lon as float) as branch_lon,
+  cast(delivery_update.customer_lat as float) as customer_lat,
+  cast(delivery_update.customer_lon as float) as customer_lon,
+  cast(delivery_update.driver_lat as float) as driver_lat,
+  cast(delivery_update.driver_lon as float) as driver_lon
+from (
+    select -- parse XML to a DOM and extract fields using XPath expressions
+      xpaths(
+        xml,
+        'order_id',
+        '//order/@id',
+        'branch_id',
+        '//order/branch/@id',
+        'customer_id',
+        '//order/customer/@id',
+        'state_human_readable',
+        '//order/@state_human_readable',
+        'notification',
+        '//order/notification',
+        'earliest',
+        '//order/estimations/earliest_completed_at',
+        'latest',
+        '//order/estimations/latest_completed_at',
+        'dispatched_at',
+        '//order/timestamps/dispatched_at',
+        'completed_at',
+        '//order/timestamps/completed_at',
+        'branch_lat',
+        '//order/branch/location/latitude',
+        'branch_lon',
+        '//order/branch/location/longitude',
+        'customer_lat',
+        '//order/customer/location/latitude',
+        'customer_lon',
+        '//order/customer/location/longitude',
+        'driver_lat',
+        '//order/driver/location/latitude',
+        'driver_lon',
+        '//order/driver/location/longitude'
+      ) as delivery_update
+    from `delivery-raw`
+  )

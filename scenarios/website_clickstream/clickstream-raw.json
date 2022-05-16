@@ -1,0 +1,17 @@
+{
+  "event_datetime": "2020-11-16 22:59:59",
+  "event": "view_item",
+  "user_id": "f6d4-24d4-4a29-3be1",
+  "click_id": "a5cf-179b9-c9d4-83ab",
+  "site_id": "wj32-gao1-4w1o-iqp4",
+  "page": {
+    "id": "b7b1-05fb-bf95-a85a",
+    "url": "/product-67890",
+    "previous_id": "2905-81e7-be8e-4814",
+    "previous_url": "/category-tshirts"
+  },
+  "engagement": {
+    "seconds_on_data": 79,
+    "percent_viewed": 39.7
+  }
+}

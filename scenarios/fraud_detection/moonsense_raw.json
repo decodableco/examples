@@ -1,0 +1,42 @@
+{
+  "bundle": {
+    "client_time": {
+      "wall_time_millis": "1640122674127",
+      "timer_millis": "137168",
+      "timer_realtime_millis": "137168"
+    },
+    "pointer_data": [
+      {
+        "determined_at": "136893",
+        "type": "TOUCH",
+        "buttons": "1",
+        "delta": {},
+        "pos": {
+          "dx": 27,
+          "dy": 208
+        },
+        "pressure_range": {
+          "upper_bound": 1
+        },
+        "radius_major": 40.472574869791664,
+        "radius_minor": 40.472574869791664,
+        "size": 14742.263849318027
+      }
+    ],
+    "index": 1,
+    "text_change_data": [
+      {
+        "determined_at": "136989",
+        "target": {
+          "target_id": "de8dfdd2-9121-401e-90a5-c9c2b8c2f9e4",
+          "target_type": "range"
+        },
+        "masked_text": "d?"
+      }
+    ]
+  },
+  "app_id": "Wyk48mvsheCX4rg5d954tj",
+  "credential_id": "a7RZotQQqYn7wbpei2hAhV",
+  "session_id": "SjBbhxS88pngxDgzRYssma",
+  "server_time_millis": "1640122674226208"
+}

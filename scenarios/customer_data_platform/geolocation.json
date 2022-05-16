@@ -1,0 +1,17 @@
+{
+  "timestamp": "2021-05-20 12:34:50.627Z",
+  "device_id": "3fba0ca6-1fee-4dea-b208-a82255823a62",
+  "advertising_id": "515d7bcb-2801-4ad9-8ebf-a226be0d55f7",
+  "country": "Canada",
+  "countryCode": "CA",
+  "region": "QC",
+  "regionName": "Quebec",
+  "city": "Montreal",
+  "zip": "H1K",
+  "lat": 45.6085,
+  "lon": -73.5493,
+  "location_guid": "8463adad-b785-4aa9-bb61-233c03eef420",
+  "timezone": "America/Toronto",
+  "isp": "Le Groupe Videotron Ltee",
+  "as": "AS5769 Videotron Telecom Ltee"
+}

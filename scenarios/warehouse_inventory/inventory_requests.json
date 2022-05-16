@@ -1,0 +1,27 @@
+{
+  "inventory_requests": [
+    {
+      "code": 591,
+      "adjustment": {
+        "id": 4815044007,
+        "datetime": "2021-05-21 16:32:47",
+        "reason": "Damaged goods",
+        "reason_id": 2515,
+        "description": "Sample adjustment description.",
+        "reference_number": "REF-IA-00001",
+        "type": "quantity",
+        "line_items": [
+          {
+            "id": 48150044897,
+            "item_id": 4815004410,
+            "name": "laptop-gray/15.6inch/example-brand",
+            "description": "Sample line item description.",
+            "quantity_adjusted": 10,
+            "item_total": 244,
+            "warehouse_id": 4815000390
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "update_timestamp": "2019-12-11 22:21:00",
+  "airline_name": "American Airlines",
+  "airline_iata": "AA",
+  "flight_number": "1004",
+  "departuring_from": "San Francisco International",
+  "departuring_iata": "SFO",
+  "arriving_at": "Dallas/Fort Worth International",
+  "arriving_iata": "DFW",
+  "arrival_gate": "A22",
+  "arrival_time": "2019-12-11 23:42:00",
+  "flight_status": "ON TIME",
+  "flight_stage": "IN FLIGHT"
+}

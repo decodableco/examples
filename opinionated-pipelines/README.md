@@ -13,7 +13,6 @@ First create a ``.env`` file and place the contents these contents below replaci
 ```Makefile
 ACCOUNT=<<YOUR DECODABLE ACCOUNT NAME>>
 SCHEMA=./schemas/employee.json
-CONNECTION=4c377290
 
 # confluent cloud connection
 BOOTSTRAP=<<CONFLUENT BOOTSTRAP URL>>

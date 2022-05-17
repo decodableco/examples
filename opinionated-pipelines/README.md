@@ -138,7 +138,7 @@ Error: 0001-01-01T00:00:00Z 0: Invalid connection. Reason: Connection schema doe
 make: *** [invalid] Error 1
 ```
 
-The error is because the line ``--field empid=string`` does not match the Employee schema which defines ``empid=integer``. 
+The error occurred because the line ``--field empid=string`` does not match the Employee schema which defines ``empid=integer``. This is a design-time error. With schema-on-read approach, this would end up being a runtime error.
 
 #### Valid Connection
 Let's create a Confluent Cloud source connection to the Employee stream with the correct schema definition. The command below will create a valid source connection.

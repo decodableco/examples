@@ -1,6 +1,12 @@
 # Opinionated Data Pipelines
 Schema-on-write is a feature many engineers always understood used to their advantage when building data pipelines. In this example, we will introduce this idea with Decodable’s opinionated approach to building streaming data pipelines to bring schema-on-write to streaming and big data.
 
+![schema on read](images/odp.jpg)
+The diagram above shows how unstructured data was allowed in the data lake with schema on read semantics. If schemas evolved, it broke downstream processes that gave the data structure since schema validation was deferred later.
+
+![schema on write](images/sow.jpg)
+This diagram shows how Decodable's opinionated streaming data pipelines protect downstream consumers who are the biggest stakeholders of your data.
+
 ## Getting started
 First create a ``.env`` file and place the contents these contents below replacing the values with yours. You can ``source .env`` to put all these values in the environment.
 

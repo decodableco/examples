@@ -94,45 +94,6 @@ make invalid
 You will get the error below.
 
 ```
-decodable conn create \
-	--name EMPLOYEE_CONFLUENT \
-	--connector confluent-cloud \
-	--type source \
-	--stream-id 2638d8fe \
-	--description "COMMAND for Employee" \
-	--field empid=string \
-	--field SSN=string \
-	--field fname=string \
-	--field lname=string \
-	--field address=string \
-	--prop cluster.api.endpoint=https://pkc-pgq85.us-west-2.aws.confluent.cloud:9092 \
-	--prop cluster.id=lkc-38wq12 \
-	--prop topic=demo \
-	--prop format=json \
-	--prop cluster.api.key=NS44ZE3R2PPRGK7Q \
-	--prop cluster.api.secret=MvRNfi+lVzWlv6m6tj72trsPT44TMNLCQ1AGPp/1mJZEhb/JShV9anC8NqteprqO
-Error: 0001-01-01T00:00:00Z 0: Invalid connection. Reason: Connection schema doesn't match stream schema
-Usage:
-  decodable connection create [flags]
-
-Aliases:
-  create, new
-
-Flags:
-      --account string        override the account
-      --base-url string       override the base URL
-      --conf-file string      specify (or override) the conf file location
-      --connector string      connector name (e.g. kafka)
-      --description string    connection description
-      --field stringArray     schema field definition (name=type) (default )
-  -h, --help                  help for create
-      --name string           connection name
-  -o, --output string         output format (one of json|plain|yaml)
-  -p, --profile string        override active profile
-      --prop stringToString   set a property (<key>=<value>) (default )
-      --stream-id string      stream id
-      --type string           connection type (source|sink)
-
 Error: 0001-01-01T00:00:00Z 0: Invalid connection. Reason: Connection schema doesn't match stream schema
 make: *** [invalid] Error 1
 ```

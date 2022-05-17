@@ -12,7 +12,7 @@ stream:
 
 
 invalid:  # create a connection to kafka
-	decodable conn create \
+	@decodable conn create \
 	--name EMPLOYEE_CONFLUENT \
 	--connector confluent-cloud \
 	--type source \
@@ -32,7 +32,7 @@ invalid:  # create a connection to kafka
 
 
 valid:  # create a connection to kafka
-	decodable conn create \
+	@decodable conn create \
 	--name EMPLOYEE_CONFLUENT \
 	--connector confluent-cloud \
 	--type source \

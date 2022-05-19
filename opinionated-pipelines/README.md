@@ -145,17 +145,6 @@ make preview
 
 
 ### Step4: Test Valid & Invalid Messages
-Create a config.properties file and fill in the values.
-
-```properties
-bootstrap.servers=<< BOOTSTRAP >>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<< CONFLUENT_KEY >>" password="<< CONFLUENT_SECRET >>";
-
-```
-
 Back in the original terminal, publish some good messages to Kafka.
 
 ```bash

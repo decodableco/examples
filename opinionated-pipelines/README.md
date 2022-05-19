@@ -135,17 +135,14 @@ Run the command below to activate the connection to the Employee stream.
 ```
 
 ### Step 3: Preview the Stream
-In this step we will see the how schema validation works in the Decodable platform.
-
 Open another terminal window to view the contents of the Employee stream as messages come through.
 
 ```bash
 make preview
 ```
 
-
 ### Step4: Test Valid & Invalid Messages
-Back in the original terminal, publish some good messages to Kafka.
+In this step we will see the how schema validation works in the Decodable platform. Back in the original terminal, publish some good messages to Kafka.
 
 ```bash
 make publish JSON=data/good.json

@@ -7,6 +7,27 @@ The diagram above shows how unstructured data was allowed in the data lake with 
 ![schema on write](images/sow.jpg)
 This diagram shows how Decodable's opinionated streaming data pipelines protect downstream consumers who are the biggest stakeholders of your data.
 
+
+## Requirements
+* Setup an Account in Decodable.co & Install the Decodable CLI
+You can follow the steps [here](https://docs.decodable.co/docs/setup)
+
+* Install jq command line JSON processor
+```bash
+pip install jq
+```
+
+* Install kcat (formerly kafkacat)
+```bash
+brew install kcat
+```
+
+* Install Jinja
+```bash
+pip install jinja-cli
+```
+
+
 ## Getting started
 First create a ``.env`` file and place the contents these contents below replacing the values with yours. You can ``source .env`` to put all these values in the environment.
 

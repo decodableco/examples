@@ -62,6 +62,13 @@ subscribe:
 	kcat -b $(BOOTSTRAP) -F config.properties -t $(TOPIC) -K :
 
 status:
+	decodable connection get $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' ) 
+
+error:
 	decodable connection get $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' ) -o json \
 		| jq .last_runtime_error.message -r
 
+deactivate:
+	decodable connection deactivate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' ) -o json 
+	
+restart: deactivate activate

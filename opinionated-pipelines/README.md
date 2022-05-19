@@ -143,10 +143,33 @@ Open another terminal window to view the contents of the Employee stream as mess
 make preview
 ```
 
+
+### Step4: Test Valid & Invalid Messages
+Create a config.properties file and fill in the values.
+
+```properties
+bootstrap.servers=<< BOOTSTRAP >>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<< CONFLUENT_KEY >>" password="<< CONFLUENT_SECRET >>";
+
+```
+
 Back in the original terminal, publish some good messages to Kafka.
 
 ```bash
 make publish JSON=data/good.json
+```
+
+```json
+{
+    "empid":1,
+    "SSN": "123-45-6789",
+    "fname": "foo",
+    "lname": "bar",
+    "address": "7 Highland Road Fake Town, PA 18064"
+}
 ```
 
 You will see in the other terminal the message we just sent come through. Now lets send a bad message.
@@ -155,17 +178,67 @@ You will see in the other terminal the message we just sent come through. Now le
 make publish JSON=data/bad.json
 ```
 
+```json
+{
+    "empid": "1",
+    "SSN": "123-45-6789",
+    "first_name": "bad",
+    "last_name": "record",
+    "address": "this is a bad record",
+    "address2": "this is a bad record"
+}
+```
+
 You will see in the other terminal that the message we just sent doesn't appear. Let's see the status of the source connection.
 
 ```bash
-make status
+make error
 ```
 
-You will get a status message below.
+You will get an error status message below.
 
 ```
 Serialization issue with Avro data. This may be an underlying problem with the payload or the schema registry.
 ```
+
+### Step5: Test Schema Evolution
+Let's force a restart the connection.
+
+```bash
+make restart # Wait for status to be running.
+```
+
+Send a message with an additional field: `phone`.
+
+```bash
+make publish JSON=data/evolved.json
+```
+
+```json
+{
+    "empid":1,
+    "SSN": "123-45-6789",
+    "fname": "foo",
+    "lname": "bar",
+    "address": "7 Highland Road Fake Town, PA 18064",
+    "phone":"123-456-7890"
+}
+```
+
+This message will pass through without error. But the preview will only show the fields defined by the exiting schema.
+
+```
+$ make preview
+decodable pl preview "select * from Employee"
+Submitting query... done! (took 5.48s)
+Waiting for results...
+{"SSN":"123-45-6789","address":"7 Highland Road Fake Town, PA 18064","empid":1,"fname":"foo","lname":"bar"}
+Records received:      1
+Time to first record:  38.96s
+Total time:            121.71s
+
+```
+
 
 ## Error Handling
 There are other ways of handling this type of error. By default, Decodable will continue to processes good messages and drop bad ones. Decodable will provide the option of a dead letter queue to hold all bad messages the connection encounters as an alternative handling solution.

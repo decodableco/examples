@@ -134,7 +134,7 @@ Run the command below to activate the connection to the Employee stream.
  make activate
 ```
 
-### Step 3: Schema Validation Behaviors
+### Step 3: Preview the Stream
 In this step we will see the how schema validation works in the Decodable platform.
 
 Open another terminal window to view the contents of the Employee stream as messages come through.

@@ -1,7 +1,5 @@
 include .env
 
-DECODABLE_TOKEN := $(shell yq -r .tokens.default.access_token ~/.decodable/auth)
-
 login:
 	decodable login
 

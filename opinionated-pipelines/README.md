@@ -125,13 +125,13 @@ make preview
 Back in the original terminal, publish some good messages to Kafka.
 
 ```bash
-make publish JSON=data/good-kafka.json
+make publish JSON=data/good.json
 ```
 
 You will see in the other terminal the message we just sent come through. Now lets send a bad message.
 
 ```bash
-make publish JSON=data/bad-kafka.json
+make publish JSON=data/bad.json
 ```
 
 You will see in the other terminal that the message we just sent doesn't appear. Let's see the status of the source connection.

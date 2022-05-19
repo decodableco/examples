@@ -54,11 +54,21 @@ activate:
 preview: # preview data coming in
 	decodable pl preview "select * from Employee"
 
-publish: # send data to kafka
+kconfig:
+	@rm -f config.properties
+	@echo "bootstrap.servers=$(BOOTSTRAP)" >> config.properties
+	@echo "ssl.endpoint.identification.algorithm=https" >> config.properties
+	@echo "security.protocol=SASL_SSL" >> config.properties
+	@echo "sasl.mechanism=PLAIN" >> config.properties
+	@echo 'sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="$(CONFLUENT_KEY)" password="$(CONFLUENT_SECRET)";' >> config.properties
+
+
+
+publish: kconfig # send data to kafka
 	# make publish JSON=<<path to JSON>> 
 	kcat -b $(BOOTSTRAP) -F config.properties -t $(TOPIC) -k $$RANDOM -P $(JSON)
 
-subscribe: 
+subscribe: kconfig
 	kcat -b $(BOOTSTRAP) -F config.properties -t $(TOPIC) -K :
 
 status:

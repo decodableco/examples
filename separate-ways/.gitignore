@@ -1,0 +1,5 @@
+model.sh
+.tmp
+.env
+config.*
+secrets/

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source .env
+
+{% for c in channels %}
+decodable conn create \
+	--name {{ c }} \
+	--connector s3 \
+	--type sink \
+	--stream-id {{ components.operationTraits[c].bindings.decodable.streamId }} \
+	--description "{{ channels[c].description }}" \
+{% for p in components.schemas[c].properties %}	--field {{ p }}={% if components.schemas[c].properties[p].format == 'date-time' %}timestamp {% else %}{{ components.schemas[c].properties[p].type }} {% endif %} \
+{% endfor %}	--prop bucket=${BUCKET} \
+	--prop directory={{ c }} \
+	--prop format=json \
+	--prop region=${REGION} \
+	--prop role-arn=${ARN}
+{% endfor %}

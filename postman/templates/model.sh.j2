@@ -1,0 +1,7 @@
+#!/bin/bash
+
+decodable stream create \
+	--name {{title}} \
+	--description "{{description}}" \
+{% for p in properties %}  --field {{ p }}={{ properties[p].type }} \
+{% endfor %}

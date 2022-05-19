@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "56ffaf41-d5d4-4cda-ba10-6cec5c19ea3d",
+		"name": "decodable-apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "list streams",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://decodable-test.api.decodable.co/v1alpha2/streams",
+					"protocol": "https",
+					"host": [
+						"decodable-test",
+						"api",
+						"decodable",
+						"co"
+					],
+					"path": [
+						"v1alpha2",
+						"streams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create stream",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "useBrowser",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "clientId",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "decodable",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"test\",\n    \"schema\":[\n        { \"name\":\"foo\", \"type\":\"string\"},\n        { \"name\":\"bar\", \"type\":\"string\"}\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://decodable-test.api.decodable.co/v1alpha2/streams",
+					"protocol": "https",
+					"host": [
+						"decodable-test",
+						"api",
+						"decodable",
+						"co"
+					],
+					"path": [
+						"v1alpha2",
+						"streams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete stream",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "useBrowser",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "clientId",
+							"value": "postman",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "decodable",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://decodable-test.api.decodable.co/v1alpha2/streams/{id}",
+					"protocol": "https",
+					"host": [
+						"decodable-test",
+						"api",
+						"decodable",
+						"co"
+					],
+					"path": [
+						"v1alpha2",
+						"streams",
+						"{id}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list pipelines",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "useBrowser",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "clientId",
+							"value": "postman",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "decodable",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://decodable-test.api.decodable.co/v1alpha2/pipelines",
+					"protocol": "https",
+					"host": [
+						"decodable-test",
+						"api",
+						"decodable",
+						"co"
+					],
+					"path": [
+						"v1alpha2",
+						"pipelines"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "useBrowser",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "clientId",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "tokenName",
+				"value": "decodable",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Iks3c2hfMVM0OGV0c0RRY2p3M0JKdyJ9.eyJpc3MiOiJodHRwczovL2F1dGguZGVjb2RhYmxlLmNvLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTA3MDU4ODMwOTM0MTA5MDgzMDM4IiwiYXVkIjpbImh0dHBzOi8vYXBpLmRlY29kYWJsZS5jby8iLCJodHRwczovL2RlY29kYWJsZS51cy5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjUyODE2MTU4LCJleHAiOjE2NTI5MDI1NTgsImF6cCI6IllIOWpjSWJ2Z3lscHJMR0F0emtGZ0lxNkQyRDZzS0dtIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBhY3RpdmF0ZTpwaXBlbGluZSBhY3RpdmF0ZTpjb25uZWN0aW9uIHJlYWQ6YWNjb3VudCByZWFkOmNvbm5lY3Rpb24gcmVhZDpwaXBlbGluZSByZWFkOnN0cmVhbSB3cml0ZTphY2NvdW50IHdyaXRlOmNvbm5lY3Rpb24gd3JpdGU6cGlwZWxpbmUgd3JpdGU6c3RyZWFtIHdyaXRlOnByZXZpZXcgb2ZmbGluZV9hY2Nlc3MiLCJvcmdfaWQiOiJvcmdfUVZrNHlmUkxqVUdMbGZSbyIsInBlcm1pc3Npb25zIjpbImFjdGl2YXRlOmNvbm5lY3Rpb24iLCJhY3RpdmF0ZTpwaXBlbGluZSIsInJlYWQ6YWNjb3VudCIsInJlYWQ6Y29ubmVjdGlvbiIsInJlYWQ6aW52aXRlIiwicmVhZDptZW1iZXIiLCJyZWFkOnBpcGVsaW5lIiwicmVhZDpwcmV2aWV3IiwicmVhZDpzdHJlYW0iLCJ1cGRhdGU6YWNjb3VudCIsInVwZGF0ZTpjb25uZWN0aW9uIiwidXBkYXRlOnBpcGVsaW5lIiwidXBkYXRlOnN0cmVhbSIsIndyaXRlOmFjY291bnQiLCJ3cml0ZTpjb25uZWN0aW9uIiwid3JpdGU6aW52aXRlIiwid3JpdGU6bWVtYmVyIiwid3JpdGU6cGlwZWxpbmUiLCJ3cml0ZTpwcmV2aWV3Iiwid3JpdGU6c3RyZWFtIl19.iLYKzJW-vN4seZq8icPZ5enY1-QinuE083jFDcR-3cNcNsf9FOyeMmM9q8mFAJq2MtfhiQBZlFE0yYFpNpPJAtC-InRCNb-dNqKoP5_HgHQ9YlgUijMudKp-bCv0bgllhdbzHnB9AmGi4gMdAWzeNNqzZHiAtujNwapZ0j4qoAjK5cOl2406aPvNCAMKqTyhqq9iyptmCQgeZE-u2MOI1-dfP9GmBJJxbJBmiCQpewNlAQmM3BdC6HG5QuAXiVDPeYCzlhbPNQl4QAS6hfedx3uT7Ziiq6qJdAjTo7eHyOidy3OjTmnJbk26Nma8UP3QJFi-ePCSYjNAqZKAbvlk4g"
+		}
+	]
+}

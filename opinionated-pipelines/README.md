@@ -225,6 +225,12 @@ Total time:            121.71s
 
 ```
 
+### Step 6: Clean
+To clean up Decodable 
+
+```bash
+make clean
+```
 
 ## Error Handling
 There are other ways of handling this type of error. By default, Decodable will continue to processes good messages and drop bad ones. Decodable will provide the option of a dead letter queue to hold all bad messages the connection encounters as an alternative handling solution.

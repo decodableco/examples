@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/product.schema.json",
+    "title": "AppUser",
+    "description": "Application user",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Identifier that is not a SSN",
+            "type": "integer"
+        },
+        "bday": {
+            "description": "Birth Date",
+            "type": "date"
+        },
+        "fname": {
+            "description": "First name",
+            "type": "string"
+        },
+        "lname": {
+            "description": "Last name",
+            "type": "string"
+        },
+        "address": {
+            "description": "Address",
+            "type": "string"
+        }
+    },
+    "required": [
+        "empid", "SSN", "fname", "lname", "address"
+    ]
+}

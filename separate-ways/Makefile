@@ -31,21 +31,6 @@ rest: # create a connection that doesn't fit
 	--prop format=json 
 
 pulsar:
-	# From the left navigation pane of the StreamNative Cloud Manager, click Manage > Service Accounts > Download  to download the Oauth2 key file to the local path. Then, replace the `YOUR-KEY-FILE-PATH` parameter with the local path for your Oauth2 key file.
-	mkdir -p ~/.sncloud/
-	export PULSAR_CLIENT_CONF=~/.sncloud/client.conf
-	echo '
-	webServiceUrl=https://free.o-whe2d.snio.cloud
-	brokerServiceUrl=pulsar+ssl://free.o-whe2d.snio.cloud:6651
-	authPlugin=org.apache.pulsar.client.impl.auth.oauth2.AuthenticationOAuth2
-	authParams={"privateKey":"file://YOUR-KEY-FILE-PATH", "issuerUrl":"https://auth.streamnative.cloud/", "audience":"urn:sn:pulsar:o-whe2d:free"}
-	tlsAllowInsecureConnection=false
-	tlsEnableHostnameVerification=true
-	' > $PULSAR_CLIENT_CONF
-
-# with PULSAR_CLIENT_CONF set, the above config file will be used
-pulsar-admin tenants list
-
 
 
 activate:

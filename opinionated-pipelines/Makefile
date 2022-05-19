@@ -79,6 +79,11 @@ error:
 		| jq .last_runtime_error.message -r
 
 deactivate:
-	decodable connection deactivate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' ) -o json 
+	decodable connection deactivate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' )
 	
 restart: deactivate activate
+
+clean:
+	decodable connection deactivate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' )
+	decodable connection delete $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="EMPLOYEE_CONFLUENT")|.id ' )
+	decodable stream delete $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="Employee")|.id ' )

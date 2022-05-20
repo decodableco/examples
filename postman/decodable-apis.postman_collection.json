@@ -6,232 +6,447 @@
 	},
 	"item": [
 		{
-			"name": "list streams",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://decodable-test.api.decodable.co/v1alpha2/streams",
-					"protocol": "https",
-					"host": [
-						"decodable-test",
-						"api",
-						"decodable",
-						"co"
-					],
-					"path": [
-						"v1alpha2",
-						"streams"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create stream",
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "useBrowser",
-							"value": true,
-							"type": "boolean"
-						},
-						{
-							"key": "clientId",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "accessTokenUrl",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "authUrl",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "grant_type",
-							"value": "authorization_code",
-							"type": "string"
-						},
-						{
-							"key": "tokenName",
-							"value": "decodable",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
+			"name": "streams",
+			"item": [
+				{
+					"name": "list streams",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/streams",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"streams"
+							]
 						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
 					},
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\":\"test\",\n    \"schema\":[\n        { \"name\":\"foo\", \"type\":\"string\"},\n        { \"name\":\"bar\", \"type\":\"string\"}\n    ]\n}"
+					"response": []
 				},
-				"url": {
-					"raw": "https://decodable-test.api.decodable.co/v1alpha2/streams",
-					"protocol": "https",
-					"host": [
-						"decodable-test",
-						"api",
-						"decodable",
-						"co"
-					],
-					"path": [
-						"v1alpha2",
-						"streams"
-					]
+				{
+					"name": "create stream",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"demo_day_stream\",\n    \"description\": \"created from postman\",\n    \"schema\":[\n        { \"name\":\"foo\", \"type\":\"string\"},\n        { \"name\":\"bar\", \"type\":\"string\"}\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/streams",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"streams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create second stream",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"demo_day_stream_initcap\",\n    \"description\": \"created from postman\",\n    \"schema\":[\n        { \"name\":\"firstname\", \"type\":\"string\"},\n        { \"name\":\"lastname\", \"type\":\"string\"}\n    ]\n}"
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/streams",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"streams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete stream",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/streams/{id}",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"streams",
+								"{id}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "delete stream",
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "useBrowser",
-							"value": true,
-							"type": "boolean"
+			"name": "pipelines",
+			"item": [
+				{
+					"name": "create pipeline",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"demo_day_pipeline\",\n    \"description\":\"created from postman\",\n    \"sql\":\"INSERT INTO demo_day_stream_initcap SELECT INITCAP(foo) as firstname, INITCAP(bar) as lastname from demo_day_stream \"\n}"
 						},
-						{
-							"key": "clientId",
-							"value": "postman",
-							"type": "string"
-						},
-						{
-							"key": "accessTokenUrl",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "authUrl",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "grant_type",
-							"value": "authorization_code",
-							"type": "string"
-						},
-						{
-							"key": "tokenName",
-							"value": "decodable",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/pipelines",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"pipelines"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+				{
+					"name": "list pipelines",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/pipelines",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"pipelines"
+							]
+						}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "https://decodable-test.api.decodable.co/v1alpha2/streams/{id}",
-					"protocol": "https",
-					"host": [
-						"decodable-test",
-						"api",
-						"decodable",
-						"co"
-					],
-					"path": [
-						"v1alpha2",
-						"streams",
-						"{id}"
-					]
+				{
+					"name": "activate pipeline",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://decodable-test.api.decodable.co/v1alpha2/pipelines/{id}/activate",
+							"protocol": "https",
+							"host": [
+								"decodable-test",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"pipelines",
+								"{id}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deactivate pipeline",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://decodable-test.api.decodable.co/v1alpha2/pipelines/{id}/deactivate",
+							"protocol": "https",
+							"host": [
+								"decodable-test",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"pipelines",
+								"{id}",
+								"deactivate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete pipeline",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/pipelines/{id}",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"pipelines",
+								"{id}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "list pipelines",
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
-						{
-							"key": "useBrowser",
-							"value": true,
-							"type": "boolean"
+			"name": "connections",
+			"item": [
+				{
+					"name": "create rest api source connection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"demo_day_rest_api\",\n    \"description\": \"created from postman\",\n    \"connector\":\"rest\",\n    \"type\":\"source\",\n    \"stream_id\":\"{{demo_day_stream}}\",\n    \"schema\":[\n        { \"name\":\"foo\", \"type\":\"string\"},\n        { \"name\":\"bar\", \"type\":\"string\"}\n    ],\n    \"properties\": { \n        \"format\":\"json\" \n    }\n}"
 						},
-						{
-							"key": "clientId",
-							"value": "postman",
-							"type": "string"
-						},
-						{
-							"key": "accessTokenUrl",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "authUrl",
-							"value": "",
-							"type": "string"
-						},
-						{
-							"key": "grant_type",
-							"value": "authorization_code",
-							"type": "string"
-						},
-						{
-							"key": "tokenName",
-							"value": "decodable",
-							"type": "string"
-						},
-						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/connections",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"connections"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://decodable-test.api.decodable.co/v1alpha2/pipelines",
-					"protocol": "https",
-					"host": [
-						"decodable-test",
-						"api",
-						"decodable",
-						"co"
-					],
-					"path": [
-						"v1alpha2",
-						"pipelines"
-					]
+				{
+					"name": "create s3 sink connection",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"demo_day_s3\",\n    \"description\": \"created from postman\",\n    \"connector\":\"s3\",\n    \"type\":\"sink\",\n    \"stream_id\":\"{{demo_day_stream_initcap}}\",\n    \"schema\":[\n        { \"name\":\"firstname\", \"type\":\"string\"},\n        { \"name\":\"lastname\", \"type\":\"string\"}\n    ],\n    \"properties\": { \n        \"format\":\"json\",\n        \"bucket\":\"{{s3-bucket}}\",\n        \"directory\":\"{{s3-directory}}\",\n        \"region\":\"{{s3-region}}\",\n        \"role-arn\":\"{{s3-role-arn}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/connections",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"connections"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list connections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/connections",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"connections"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activate pipeline",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://decodable-test.api.decodable.co/v1alpha2/connections/{id}/activate",
+							"protocol": "https",
+							"host": [
+								"decodable-test",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"connections",
+								"{id}",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deactivate connection",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://decodable-test.api.decodable.co/v1alpha2/connections/{id}/deactivate",
+							"protocol": "https",
+							"host": [
+								"decodable-test",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"connections",
+								"{id}",
+								"deactivate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete connection",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/connections/{id}",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"connections",
+								"{id}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"auth": {
@@ -306,8 +521,44 @@
 	],
 	"variable": [
 		{
+			"key": "decodable-account",
+			"value": "",
+			"type":"string"
+		},
+		{
 			"key": "token",
-			"value": ""
+			"value": "",
+			"type":"oauth2"
+		},
+		{
+			"key": "demo_day_stream\n",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "demo_day_stream_initcap",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "s3-role-arn",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "s3-bucket",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "s3-directory",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "s3-region",
+			"value": "",
+			"type": "string"
 		}
 	]
 }

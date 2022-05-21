@@ -447,6 +447,45 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Post Messages",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"events\": [\n        {\n            \"foo\": \"foo\",\n            \"bar\": \"bar\"\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/connections/{{connection-id}}/events",
+					"protocol": "https",
+					"host": [
+						"{{decodable-account}}",
+						"api",
+						"decodable",
+						"co"
+					],
+					"path": [
+						"v1alpha2",
+						"connections",
+						"{{connection-id}}",
+						"events"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -523,15 +562,15 @@
 		{
 			"key": "decodable-account",
 			"value": "",
-			"type":"string"
+			"type": "string"
 		},
 		{
 			"key": "token",
 			"value": "",
-			"type":"oauth2"
+			"type": "oauth2"
 		},
 		{
-			"key": "demo_day_stream\n",
+			"key": "demo_day_stream",
 			"value": "",
 			"type": "string"
 		},
@@ -539,6 +578,10 @@
 			"key": "demo_day_stream_initcap",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "connection-id",
+			"value": ""
 		},
 		{
 			"key": "s3-role-arn",

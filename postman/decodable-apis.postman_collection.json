@@ -130,6 +130,56 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "get stream",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/streams/{id}",
+							"protocol": "https",
+							"host": [
+								"{{decodable-account}}",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"streams",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update stream",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"\",\n    \"name\": \"demo_day_stream_initcap\",\n    \"description\": \"created from postman\",\n    \"watermark\": null,\n    \"create_time\": \"2022-05-20T15:59:52.334+00:00\",\n    \"update_time\": \"2022-05-20T15:59:52.334+00:00\",\n    \"schema\": [\n        {\n            \"name\": \"firstname\",\n            \"type\": \"string\"\n        },\n        {\n            \"name\": \"lastname\",\n            \"type\": \"string\"\n        }\n    ],\n    \"stream_type\": \"UPSERT\"\n}"
+						},
+						"url": {
+							"raw": "https://{{decodable-account}}.api.decodable.co/v1alpha2/streams/{id}",
+							"protocol": "https",
+							"host": [
+								"decodable-test",
+								"api",
+								"decodable",
+								"co"
+							],
+							"path": [
+								"v1alpha2",
+								"streams",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

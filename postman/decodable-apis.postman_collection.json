@@ -422,7 +422,7 @@
 					"response": []
 				},
 				{
-					"name": "activate pipeline",
+					"name": "activate connection",
 					"request": {
 						"method": "POST",
 						"header": [],

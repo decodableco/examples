@@ -3,8 +3,9 @@ This is an early release feature supporting change streams. Change streams are s
 
 
 ```mermaid
-graph TD;
-    DataGen-->raw_stream-->pipeline_aggregation-->change_stream-->Postgres_Materialized_View;
+flowchart TD;
+    dg{{DataGen}}-->raw_stream-->pl[[pipeline_aggregation]]-->change_stream-->
+    pg[(Postgres_Materialized_View)];
 ```
 
 ## Getting Started

@@ -1,0 +1,15 @@
+{
+    "name": "demo_day_change_stream",
+    "description": "demo day change stream",
+    "schema": [
+        {
+            "name": "status_code",
+            "type": "string primary key"
+        },
+        {
+            "name": "count",
+            "type": "bigint"
+        }
+    ],
+    "stream_type": "UPSERT"
+}

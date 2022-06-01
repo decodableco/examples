@@ -61,9 +61,10 @@ active:
 
 
 clean:
-	decodable stream delete $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_envoy_raw")|.id ' )
-	decodable stream delete $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_change_stream")|.id ' )
 	decodable conn delete $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_datagen")|.id ' )
 	decodable conn delete $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_postgres")|.id ' )
 	decodable pipeline delete $(shell decodable pipeline list -o json | jq -sr '.[] |select(.name=="demo_day_pipeline")|.id ' )
+	decodable stream delete $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_envoy_raw")|.id ' )
+	decodable stream delete $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_change_stream")|.id ' )
+	
 	

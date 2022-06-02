@@ -3,7 +3,7 @@ include .env
 TOKE=$(shell yq -r .tokens.default.access_token ~/.decodable/auth)
 
 db:
-	psql -h $(HOST) -d $(DB) -U $(USER) -W
+	psql -h $(HOST) -d $(DB) -U $(USER) -W -f sql/postgres.sql
 
 
 envoy:

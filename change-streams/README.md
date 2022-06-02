@@ -35,6 +35,7 @@ From the command line, execute this make command:
 
 ```bash
 $ make pipeline
+$ make active
 ```
 
 ### Clean up

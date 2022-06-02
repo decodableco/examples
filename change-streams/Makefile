@@ -59,8 +59,13 @@ active:
 	decodable conn activate $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_postgres")|.id ' )
 	decodable pipeline activate $(shell decodable pipeline list -o json | jq -sr '.[] |select(.name=="demo_day_pipeline")|.id ' )
 
+deactive:
+	decodable conn deactivate $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_datagen")|.id ' )
+	decodable conn deactivate $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_postgres")|.id ' )
+	decodable pipeline deactivate $(shell decodable pipeline list -o json | jq -sr '.[] |select(.name=="demo_day_pipeline")|.id ' )
 
-clean:
+
+clean: deactive
 	decodable conn delete $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_datagen")|.id ' )
 	decodable conn delete $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="demo_day_postgres")|.id ' )
 	decodable pipeline delete $(shell decodable pipeline list -o json | jq -sr '.[] |select(.name=="demo_day_pipeline")|.id ' )

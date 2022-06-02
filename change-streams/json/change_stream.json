@@ -11,5 +11,5 @@
             "type": "bigint"
         }
     ],
-    "stream_type": "UPSERT"
+    "type": "UPSERT"
 }

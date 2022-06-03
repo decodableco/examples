@@ -18,32 +18,32 @@ parsed:
 
 source:  # create a connection to kafka
 	@decodable conn create \
-	--name XML_SOURCE \
-	--connector confluent-cloud \
-	--type source \
-	--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_xml_raw")|.id ' ) \
-	--field xml=string \
-	--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
-	--prop cluster.id=$(CLUSTER_ID) \
-	--prop topic=$(XML) \
-	--prop format=raw \
-	--prop cluster.api.key=$(CONFLUENT_KEY) \
-	--prop cluster.api.secret=$(CONFLUENT_SECRET)
+		--name XML_SOURCE \
+		--connector confluent-cloud \
+		--type source \
+		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_xml_raw")|.id ' ) \
+		--field xml=string \
+		--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
+		--prop cluster.id=$(CLUSTER_ID) \
+		--prop topic=$(XML) \
+		--prop format=raw \
+		--prop cluster.api.key=$(CONFLUENT_KEY) \
+		--prop cluster.api.secret=$(CONFLUENT_SECRET)
 
 sink:  # create a connection to kafka
 	@decodable conn create \
-	--name XML_SINK \
-	--connector confluent-cloud \
-	--type sink \
-	--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_parsed")|.id ' ) \
-	--field first_name=string \
-	--field last_name=string \
-	--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
-	--prop cluster.id=$(CLUSTER_ID) \
-	--prop topic=$(JSON) \
-	--prop format=json \
-	--prop cluster.api.key=$(CONFLUENT_KEY) \
-	--prop cluster.api.secret=$(CONFLUENT_SECRET)
+		--name XML_SINK \
+		--connector confluent-cloud \
+		--type sink \
+		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_parsed")|.id ' ) \
+		--field first_name=string \
+		--field last_name=string \
+		--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
+		--prop cluster.id=$(CLUSTER_ID) \
+		--prop topic=$(JSON) \
+		--prop format=json \
+		--prop cluster.api.key=$(CONFLUENT_KEY) \
+		--prop cluster.api.secret=$(CONFLUENT_SECRET)
 
 flow: raw parsed source sink
 	@decodable pipeline create \

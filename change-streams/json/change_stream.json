@@ -10,6 +10,5 @@
             "name": "count",
             "type": "bigint"
         }
-    ],
-    "type": "UPSERT"
+    ]
 }

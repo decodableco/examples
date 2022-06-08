@@ -2,3 +2,4 @@ output
 *test*
 .env
 api-key*
+*.properties

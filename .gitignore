@@ -1,1 +1,12 @@
 .vscode
+model.sh
+.tmp
+.env
+config.*
+*.properties
+
+output
+*test*
+.env
+api-key*
+*.properties

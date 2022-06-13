@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+import osquery
+import json
+import sys
+import os
+import traceback
+import pulsar
+from dotenv import load_dotenv
+
+@osquery.register_plugin
+class ConfigPlugin(osquery.ConfigPlugin):
+    """Example config plugin"""
+
+    def name(self):
+        return "osquery_config"
+    
+    def content(self):
+        return [
+            {
+                "source_one": json.dumps({
+                    "schedule": {
+                        "time_1": {
+                            "query": "SELECT * FROM processes",
+                            "interval": 1,
+                        },
+                    },
+                }),
+            }
+        ]
+
+@osquery.register_plugin
+class LoggerPlugin(osquery.LoggerPlugin):
+    """Example logger plugin"""
+
+    def __init__(self):
+
+        load_dotenv('/home/ubuntu/.env')
+        
+        service_url = os.getenv('PULSAR_ENDPOINT')
+        topic =  os.getenv('TOPIC')
+        token =  os.getenv('DS_TOKEN')
+
+        self.client = pulsar.Client(service_url, authentication=pulsar.AuthenticationToken(token))
+        self.producer = self.client.create_producer(topic )
+
+    def name(self):
+        return "pulsar_logger"
+
+    def log_string(self, value):
+        try:
+            self.producer.send((value).encode('utf-8'))
+
+            return osquery.extensions.ttypes.ExtensionStatus(code=0, message="OK")
+            
+        except:
+            print ("Unexpected error:", sys.exc_info()[0])
+            traceback.print_exc()
+            raise
+
+    def __del__(self):
+        self.client.close()
+
+
+if __name__ == "__main__":
+    
+    osquery.start_extension(
+        name="osquery_decodable",
+        version="1.0.0",)

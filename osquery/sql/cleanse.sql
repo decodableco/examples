@@ -29,11 +29,11 @@ select
         cast(columns['start_time'] as bigint) as start_time,
         cast(columns['state'] as int) as state,
         cast(columns['suid'] as int) as suid,
-        cast(columns['system_time'] as bigint) as system_time,
+        cast(columns['system_time'] as bigint) as `system_time`,
         cast(columns['threads'] as int) as threads,
         cast(columns['total_size'] as bigint) as total_size,
         cast(columns['uid'] as int) as uid,
         cast(columns['user_time'] as bigint) as user_time,
         cast(columns['wired_size'] as int) as wired_size,
-        columns['action'] as action
+        action
 from filtered_processes

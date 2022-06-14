@@ -6,10 +6,10 @@
 flowchart TD;
     os{{OSQuery+Extension}}-->Pulsar-->pc([Pulsar_Connection])
     
-    pc-->opp[[osquery_processes]]-->osquery_filter_noise-->fp[[filtered_processes]]
+    pc-->opp[[osquery_processes]]-->SQL:osquery_filter_noise-->fp[[filtered_processes]]
 
-    fp-->osquery_cleanse-->db[(Real-time Database)]
-    fp-->suspicious_processes-->a>Alert]
+    fp-->SQL:osquery_cleanse-->db[(Real-time Database)]
+    fp-->SQL:suspicious_processes-->a>Alert]
 
 ```
 

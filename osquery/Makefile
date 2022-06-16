@@ -6,7 +6,7 @@ osq:
 	
 	
 subscribe:
-	@./consumer.py $(PULSAR_ENDPOINT) $(TOPIC) $(DS_TOKEN) myconsumer	
+	@./consumer.py $(PULSAR_ENDPOINT) $(SINK) $(DS_TOKEN) myconsumer	
 
 
 osquery_processes:
@@ -107,24 +107,55 @@ source:  # create a connection to kafka
 		--field action=STRING \
 		--prop service-url=$(PULSAR_ENDPOINT) \
 		--prop admin-url=$(ADMIN_URL) \
-		--prop topic=$(TOPIC) \
+		--prop topic=$(SOURCE) \
 		--prop token=$(DS_TOKEN) \
 		--prop format=json
 
-# sink:  # create a connection to kafka
-# 	@decodable conn create \
-# 		--name XML_SINK \
-# 		--connector confluent-cloud \
-# 		--type sink \
-# 		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_parsed")|.id ' ) \
-# 		--field first_name=string \
-# 		--field last_name=string \
-# 		--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
-# 		--prop cluster.id=$(CLUSTER_ID) \
-# 		--prop topic=$(JSON) \
-# 		--prop format=json \
-# 		--prop cluster.api.key=$(CONFLUENT_KEY) \
-# 		--prop cluster.api.secret=$(CONFLUENT_SECRET)
+sink:  # persistent://decodable-hubert/default/cleansed-processes
+	@decodable conn create \
+		--name osquery_processes_pulsar_sink \
+		--connector pulsar \
+		--type sink \
+		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="cleansed_processes")|.id ' ) \
+		--field name=string \
+		--field hostIdentifier=string \
+		--field calendarTime=string \
+		--field unixTime=bigint \
+		--field epoch=bigint \
+		--field counter=int \
+		--field numerics=boolean \
+		--field cmdline=STRING \
+		--field cwd=STRING \
+		--field disk_bytes_read=BIGINT \
+		--field disk_bytes_written=BIGINT \
+		--field egid=INT \
+		--field euid=INT \
+		--field gid=INT \
+		--field process_name=STRING \
+		--field nice=INT \
+		--field on_disk=INT \
+		--field parent=BIGINT \
+		--field path=STRING \
+		--field pgroup=BIGINT \
+		--field pid=BIGINT \
+		--field resident_size=BIGINT \
+		--field root=STRING \
+		--field sgid=INT \
+		--field start_time=BIGINT \
+		--field state=INT \
+		--field suid=INT \
+		--field system_time=BIGINT \
+		--field threads=INT \
+		--field total_size=BIGINT \
+		--field uid=INT \
+		--field user_time=BIGINT \
+		--field wired_size=INT \
+		--field action=string \
+		--prop service-url=$(PULSAR_ENDPOINT) \
+		--prop admin-url=$(ADMIN_URL) \
+		--prop topic=$(SINK) \
+		--prop token=$(DS_TOKEN) \
+		--prop format=json
 
 filter:
 	@decodable pipeline create \

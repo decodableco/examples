@@ -33,7 +33,8 @@ Create a `.env` file and set the values.
 
 ```
 DS_TOKEN=<< Datastax Token >>
-TOPIC=<< Persistent Topic Name >>
+SOURCE=<< Persistent Topic Name >>
+SINK=<< Persistent Topic Name >>
 PULSAR_ENDPOINT=<< PULSAR ENDPOINT >>
 ADMIN_UR=<< Datastax Admin URL >>
 ```

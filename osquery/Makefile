@@ -183,8 +183,9 @@ active:
 	decodable pl activate --force $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="suspicious_processes")|.id ' )
 	decodable pl activate --force $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="osquery_cleanse")|.id ' )
 	
-deactive:
+deactive: 
 	decodable connection deactivate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_processes_pulsar")|.id ' )
+	decodable connection deactivate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_processes_pulsar_sink")|.id ' )
 	decodable pl deactivate --force $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="osquery_filter_noise")|.id ' )
 	decodable pl deactivate --force $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="suspicious_processes")|.id ' )
 	decodable pl deactivate --force $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="osquery_cleanse")|.id ' )
@@ -193,6 +194,7 @@ restart: deactive active
 
 clean: deactive
 	decodable connection delete $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_processes_pulsar")|.id ' )
+	decodable connection delete $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_processes_pulsar_sink")|.id ' )
 	decodable pl delete $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="osquery_filter_noise")|.id ' )
 	decodable pl delete $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="suspicious_processes")|.id ' )
 	decodable pl delete $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="osquery_cleanse")|.id ' )

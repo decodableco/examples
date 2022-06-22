@@ -1,6 +1,7 @@
-{'events': [
+{
+    "events": [
         {
-            'id': '9', 'first_name': 'Natale', 'last_name': 'Hortop', 'email': 'nhortop8@istockphoto.com', 'gender': 'Male', 'ip_address': '56.152.50.233', 'cc': '670665542533531767'
+            "id": "9", "first_name": "Natale", "last_name": "Hortop", "email": "nhortop8@istockphoto.com", "gender": "Male", "ip_address": "56.152.50.233", "cc": "670665542533531767"
         }
     ]
 }

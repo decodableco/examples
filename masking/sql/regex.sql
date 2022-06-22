@@ -1,10 +1,10 @@
-insert into new_output_stream
+insert into customers_masked
 select 
     id,
     first_name,
     last_name,
     email,
     gender,
-    REGEXP_REPLACE(ip_address, '\d', '*') fn_regex,
-    cc
+    REGEXP_REPLACE(ip_address, '\d', '*') ip_address,
+    'removed' as cc
 from customers

@@ -10,6 +10,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 | [Change Streams](change-streams) | Using change streams to build materialized views in Postgres |
 | [XML Processing](xml) | Parse XML and transform to JSON |
 | [OSQuery Routing](osquery) | Route OSQuery logs with SQL |
+| [Masking](masking) | Ways to mask data |
 
 
 

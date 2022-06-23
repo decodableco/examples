@@ -1,0 +1,145 @@
+{
+  "schemaName": "osquery",
+  "dimensionFieldSpecs": [
+    {
+      "name": "name",
+      "dataType": "STRING"
+    },
+    {
+        "name": "hostIdentifier",
+        "dataType": "STRING"
+    },
+    {
+        "name": "calendarTime",
+        "dataType": "STRING"
+    },
+    {
+        "name": "epoch",
+        "dataType": "LONG"
+    },
+    {
+        "name": "counter",
+        "dataType": "INT"
+    },
+    {
+        "name": "numerics",
+        "dataType": "BOOLEAN"
+    },
+    {
+        "name": "cmdline",
+        "dataType": "STRING"
+    },
+    {
+        "name": "cwd",
+        "dataType": "STRING"
+    },
+    {
+        "name": "disk_bytes_read",
+        "dataType": "LONG"
+    },
+    {
+        "name": "disk_bytes_written",
+        "dataType": "LONG"
+    },
+    {
+        "name": "egid",
+        "dataType": "INT"
+    },
+    {
+        "name": "euid",
+        "dataType": "INT"
+    },
+    {
+        "name": "gid",
+        "dataType": "INT"
+    },
+    {
+        "name": "process_name",
+        "dataType": "STRING"
+    },
+    {
+        "name": "nice",
+        "dataType": "INT"
+    },
+    {
+        "name": "on_disk",
+        "dataType": "INT"
+    },
+    {
+        "name": "parent",
+        "dataType": "LONG"
+    },
+    {
+        "name": "path",
+        "dataType": "STRING"
+    },
+    {
+        "name": "pgroup",
+        "dataType": "LONG"
+    },
+    {
+        "name": "pid",
+        "dataType": "LONG"
+    },
+    {
+        "name": "resident_size",
+        "dataType": "LONG"
+    },
+    {
+        "name": "root",
+        "dataType": "STRING"
+    },
+    {
+        "name": "sgid",
+        "dataType": "INT"
+    },
+    {
+        "name": "start_time",
+        "dataType": "LONG"
+    },
+    {
+        "name": "state",
+        "dataType": "INT"
+    },
+    {
+        "name": "suid",
+        "dataType": "INT"
+    },
+    {
+        "name": "system_time",
+        "dataType": "LONG"
+    },
+    {
+        "name": "threads",
+        "dataType": "INT"
+    },
+    {
+        "name": "total_size",
+        "dataType": "LONG"
+    },
+    {
+        "name": "uid",
+        "dataType": "INT"
+    },
+    {
+        "name": "user_time",
+        "dataType": "LONG"
+    },
+    {
+        "name": "wired_size",
+        "dataType": "INT"
+    },
+    {
+        "name": "action",
+        "dataType": "STRING"
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "unixTime",
+      "dataType": "LONG",
+      "format": "1:MILLISECONDS:EPOCH",
+      "granularity": "1:MILLISECONDS"
+    }
+  ]
+}

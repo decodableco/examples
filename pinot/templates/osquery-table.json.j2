@@ -1,0 +1,38 @@
+{
+    "tableName": "osquery",
+    "tableType": "REALTIME",
+    "segmentsConfig": {
+      "timeColumnName": "unixTime",
+      "timeType": "MILLISECONDS",
+      "schemaName": "osquery",
+      "replicasPerPartition": "1"
+    },
+    "tenants": {},
+    "tableIndexConfig": {
+      "loadMode": "MMAP",
+      "streamConfigs": {
+        "streamType": "kafka",
+        "stream.kafka.consumer.type": "lowlevel",
+        "stream.kafka.topic.name": "{{TOPIC}}",
+        "stream.kafka.decoder.class.name": "org.apache.pinot.plugin.stream.kafka.KafkaJSONMessageDecoder",
+        "stream.kafka.consumer.factory.class.name": "org.apache.pinot.plugin.stream.kafka20.KafkaConsumerFactory",
+        
+        "stream.kafka.broker.list": "{{BOOTSTRAP}}",
+        "stream.kafka.schema.registry.url": "{{SCHEMA_REGISTRY}}",
+        "stream.kafka.decoder.prop.schema.registry.rest.url": "{{SCHEMA_REGISTRY}}",
+        "stream.kafka.decoder.prop.basic.auth.credentials.source": "USER_INFO",
+        "stream.kafka.decoder.prop.schema.registry.basic.auth.user.info": "{{CONFLUENT_SR_KEY}}:{{CONFLUENT_SR_SECRET}}",
+        "sasl.mechanism": "PLAIN",
+        "security.protocol": "SASL_SSL",
+        "sasl.jaas.config": "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{CONFLUENT_KEY}}\" password=\"{{CONFLUENT_SECRET}}\";",
+                
+
+        "realtime.segment.flush.threshold.time": "3600000",
+        "realtime.segment.flush.threshold.rows": "50000",
+        "stream.kafka.consumer.prop.auto.offset.reset": "smallest"
+      }
+    },
+    "metadata": {
+      "customConfigs": {}
+    }
+}

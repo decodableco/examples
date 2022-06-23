@@ -175,7 +175,7 @@ cleanse:
   		--description "demo day osquery_cleanse" \
   		- < sql/cleanse.sql
 
-flow: osquery_processes filtered_processes suspicious_processes cleansed_processes source filter suspicious cleanse
+flow: osquery_processes filtered_processes suspicious_processes cleansed_processes source filter suspicious cleanse sink
 
 active:
 	decodable connection activate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_processes_pulsar")|.id ' )

@@ -70,5 +70,14 @@ Start Pinot
 
 This starts a streaming example built into Apache Pinot. 
 
-## Deploy Pinot Table & Schema
+## Start
+
+```bash
+make topic
+make flow
+make active
+
+make clean # cleans Decodable
+```
+
 

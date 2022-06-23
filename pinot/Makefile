@@ -73,7 +73,20 @@ sink:
 		--prop cluster.api.key=$(CONFLUENT_KEY) \
 		--prop cluster.api.secret=$(CONFLUENT_SECRET)
 
-
+active:
 	decodable connection activate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_pinot_sink")|.id ' )
 
-flow: topic sink table
+flow: sink table
+
+drop:
+	pinot-admin ChangeTableState \
+		-tableName osquery \
+		-state drop \
+		-controllerHost $(CONTROLLER_HOST) \
+		-controllerPort $(CONTROLLER_PORT) \
+
+
+clean: 
+	decodable conn deactivate  --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_pinot_sink")|.id ' )
+	decodable conn delete $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_pinot_sink")|.id ' )
+	

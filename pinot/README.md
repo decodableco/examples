@@ -8,8 +8,10 @@ flowchart TD;
     
     pc-->opp[[osquery_processes]]-->SQL:osquery_filter_noise-->fp[[filtered_processes]]
 
-    fp-->SQL:osquery_cleanse-->db[(Apache Pinot)]
-    fp-->SQL:suspicious_processes-->a>Alert]
+    fp-->SQL:osquery_cleanse-->db[(Apache Pinot)]-->as[/Apache Superset\]
+    fp-->sp[SQL:suspicious_processes]-->a>Alert]
+
+    sp-->db
 
 
 ```

@@ -32,19 +32,19 @@ datagen:
 		--prop data.type=envoy \
 		--prop delay=100 
 
-postgres:
-	@decodable connection create \
-		--name demo_day_postgres \
-		--description "demo day postgres" \
-		--connector postgres \
-		--type sink \
-		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_change_stream")|.id ' ) \
-		--field status_code="string primary key" \
-		--field count=bigint \
-		--prop url="jdbc:postgresql://$(HOST):5432/postgres?currentSchema=public" \
-		--prop table-name=status_code_counts \
-		--prop username=$(USER) \
-		--prop password="$(PWD)"
+# postgres:
+# 	@decodable connection create \
+# 		--name demo_day_postgres \
+# 		--description "demo day postgres" \
+# 		--connector postgres \
+# 		--type sink \
+# 		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="demo_day_change_stream")|.id ' ) \
+# 		--field status_code="string primary key" \
+# 		--field count=bigint \
+# 		--prop url="jdbc:postgresql://$(HOST):5432/postgres?currentSchema=public" \
+# 		--prop table-name=status_code_counts \
+# 		--prop username=$(USER) \
+# 		--prop password="$(PWD)"
 
 
 pipeline: envoy change_stream datagen postgres

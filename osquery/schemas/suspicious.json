@@ -1,0 +1,114 @@
+{
+    "type": "object",
+    "required": [],
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "hostIdentifier": {
+        "type": "string"
+      },
+      "calendarTime": {
+        "type": "string"
+      },
+      "unixTime": {
+        "type": "number"
+      },
+      "epoch": {
+        "type": "string"
+      },
+      "counter": {
+        "type": "number"
+      },
+      "numerics": {
+        "type": "string"
+      },
+      "columns": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "cmdline": {
+            "type": "string"
+          },
+          "cwd": {
+            "type": "string"
+          },
+          "disk_bytes_read": {
+            "type": "string"
+          },
+          "disk_bytes_written": {
+            "type": "string"
+          },
+          "egid": {
+            "type": "string"
+          },
+          "euid": {
+            "type": "string"
+          },
+          "gid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nice": {
+            "type": "string"
+          },
+          "on_disk": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "pgroup": {
+            "type": "string"
+          },
+          "pid": {
+            "type": "string"
+          },
+          "resident_size": {
+            "type": "string"
+          },
+          "root": {
+            "type": "string"
+          },
+          "sgid": {
+            "type": "string"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "suid": {
+            "type": "string"
+          },
+          "system_time": {
+            "type": "string"
+          },
+          "threads": {
+            "type": "string"
+          },
+          "total_size": {
+            "type": "string"
+          },
+          "uid": {
+            "type": "string"
+          },
+          "user_time": {
+            "type": "string"
+          },
+          "wired_size": {
+            "type": "string"
+          }
+        }
+      },
+      "action": {
+        "type": "string"
+      }
+    }
+  }

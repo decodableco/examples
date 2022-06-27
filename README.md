@@ -11,6 +11,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 | [XML Processing](xml) | Parse XML and transform to JSON |
 | [OSQuery Routing](osquery) | Route OSQuery logs with SQL |
 | [Masking](masking) | Ways to mask data |
+| [Apache Pinot](pinot) | Transforming osquery logs to Apache Pinot and Superset |
 
 
 

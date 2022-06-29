@@ -7,7 +7,7 @@ In this example, we show two ways of masking data on real-time streaming data: o
 
 ```mermaid
 flowchart TD;
-    md[Mock Data]-->rest[Decodable Rest API]-->customers[customers stream]
+    md[Mock Data]-->rest[Decodable Rest API]-->customers
 
     customers --> overlay[SQL:overlay pipeline] --> customers_masked
 

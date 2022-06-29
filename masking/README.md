@@ -5,6 +5,15 @@ The data used in this example was generated using https://www.mockaroo.com/.
 In this example, we show two ways of masking data on real-time streaming data: overlay(), regexp_replace(), and omission.
 
 
+```mermaid
+flowchart TD;
+    md[Mock Data]-->rest[Decodable Rest API]-->customers[customers stream]
+
+    customers --> overlay[SQL:overlay pipeline] --> customers_masked
+
+    customers --> regexp_replace[SQL:regexp_replace pipeline] --> customers_masked
+```
+
 ```sql
 insert into customers_masked
 select 

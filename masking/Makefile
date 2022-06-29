@@ -43,7 +43,7 @@ source:
 run:
 	$(eval ID:=$(shell decodable connection list -o json | jq -sr '.[] |select(.name=="rest_customers")|.id ' ))
 	$(eval EP:=$(shell decodable connection get $(ID) -o json |jq -r '.properties.endpoint'))
-	python loader.py data/MOCK_DATA.csv $(TOKE) $(EP)
+	@python loader.py data/MOCK_DATA.csv $(TOKE) $(EP)
 
 
 active:

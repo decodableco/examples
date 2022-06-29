@@ -1,0 +1,12 @@
+{
+	"bootstrap.servers": "{{BOOTSTRAP}}",
+	"security.protocol": "SASL_SSL",
+	"sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule   required username\": \"'{{ CLUSTER_API_KEY }}'   password\": \"'{{ CLUSTER_API_SECRET }}';\"",
+	"sasl.mechanism": "PLAIN",
+	"client.dns.lookup": "use_all_dns_ips",
+	"session.timeout.ms": "45000",
+	"acks": "all",
+	"schema.registry.url": "{{SCHEMA_REGISTRY}}",
+	"basic.auth.credentials.source": "USER_INFO",
+	"basic.auth.user.info": "{{ SR_API_KEY }}:{{ SR_API_SECRET }}"
+}

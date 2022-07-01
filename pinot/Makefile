@@ -29,6 +29,14 @@ pinot.table: pinot.table.config
 		-controllerPort $(CONTROLLER_PORT) \
 		-exec
 
+suspicious.pinot.table: pinot.table.config
+	pinot-admin AddTable \
+		-tableConfigFile tables/osquery-suspicious-table.json  \
+		-schemaFile schemas/osquery-schema.json \
+		-controllerHost $(CONTROLLER_HOST) \
+		-controllerPort $(CONTROLLER_PORT) \
+		-exec
+
 suspicious_osquery_cleansed:
 	@decodable stream create \
 		--name suspicious_osquery_cleansed \

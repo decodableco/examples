@@ -4,14 +4,9 @@ This example uses the output of stream in the [osquery example](../osquery/). We
 
 ```mermaid
 flowchart TD;
-    os{{OSQuery+Extension}}-->Pulsar-->pc([Pulsar_Connection])
-    
-    pc-->opp[[osquery_processes]]-->SQL:osquery_filter_noise-->fp[[filtered_processes]]
+    ms{{COVID Stats}}-->rest[Decodable REST API]
 
-    fp-->SQL:osquery_cleanse-->db[(Apache Druid)]-->as[/Apache Superset\]
-    fp-->sp[SQL:suspicious_processes]-->a>Alert]
-
-    sp-->db
+    rest-->SQL:covid_cleanse-->Kafka-->db[(Apache Druid)]-->as[/Apache Superset\]
 
 
 ```

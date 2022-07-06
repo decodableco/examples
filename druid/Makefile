@@ -96,37 +96,8 @@ pipeline:
 		--name covid_cleanse \
   		- < sql/covid_cleanse.sql
 
-kinesis:
-	aws2 kinesis create-stream \
-		--stream-name covid_druid \
-		--shard-count 1 \
-		--stream-mode-details on-demand \
-		[--cli-input-json <value>]
-		[--generate-cli-skeleton <value>]
-
-active:
-	decodable connection activate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_cleansed_sink")|.id ' )
-	decodable connection activate --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="suspicious_osquery_cleansed_sink")|.id ' )
-	decodable pl activate --force $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="suspicious_osquery_cleansed_pipeline")|.id ' )
-
 flow: view raw source sink pipeline
 
 run:
 	python app/covid.py ${TOKE} ${ACCOUNT} $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="covid_rest")|.properties.endpoint ' )
 
-drop:
-	pinot-admin ChangeTableState \
-		-tableName osquery \
-		-state drop \
-		-controllerHost $(CONTROLLER_HOST) \
-		-controllerPort $(CONTROLLER_PORT) 
-
-clean: 
-	decodable conn deactivate  --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_cleansed_sink")|.id ' )
-	decodable conn delete $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="osquery_cleansed_sink")|.id ' )
-	
-	decodable conn deactivate  --force $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="suspicious_osquery_cleansed_sink")|.id ' )
-	decodable conn delete $(shell decodable connection list -o json | jq -sr '.[] |select(.name=="suspicious_osquery_cleansed_sink")|.id ' )
-	
-	decodable pl deactivate $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="suspicious_osquery_cleansed_pipeline")|.id ' )
-	decodable pl delete $(shell decodable pl list -o json | jq -sr '.[] |select(.name=="suspicious_osquery_cleansed_pipeline")|.id ' )

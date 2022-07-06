@@ -1,6 +1,6 @@
-# Osquery logs to Apache Druid
+# COVID 19 Stats to Apache Druid
 
-This example uses the output of stream in the [osquery example](../osquery/). We send this stream to Kafka to be consumed by Apache Pinot.
+This example sends covid 19 data to Decodable using it's REST API. The data is then cleansed using Decodable SQL and send the data to a Kafka sink. You must have Kafka available. This one uses Confluent cloud as its Kafka. You must also have an Apache Druid running. Follow the install instructions for Druid [here](https://druid.apache.org/docs/latest/tutorials/index.html).
 
 ```mermaid
 flowchart TD;
@@ -11,70 +11,49 @@ flowchart TD;
 
 ```
 
+This demo assumes you have a Kafka cluster to use.
+
 ## Getting started
 
 Create an `.env` file and populate your values
 
 ```
-BOOTSTRAP=<< Kafka bootstrap servers >>
-CONFLUENT_KEY=<< CONFLUENT KEY >>
-CONFLUENT_SECRET=<< CONFLUENT SECRET >>
-CLUSTER_ID=<< KAFKA CLUSTER ID >>
+ACCOUNT={{ YOUR DECODABLE ACCOUNT }}
 
-SCHEMA_REGISTRY=<< CONFLUENT CLOUD SCHEMA REGISTRY URL >>
-CONFLUENT_SR_KEY=<< CONFLUENT SCHEMA REGISTRY KEY >>
-CONFLUENT_SR_SECRET=<< CONFLUENT SCHEMA REGSITRY SECRET >>
+BOOTSTRAP={{ YOUR KAFKA BOOTSTRAP SERVERS }}
+CONFLUENT_KEY={{ CONFLUENT KEY }}
+CONFLUENT_SECRET={{ CONFLUENT SECRET }}
+CLUSTER_ID={{ CONFLUENT CLUSTER ID }}
+SCHEMA_REGISTRY={{ CONFLUENT SCHEMA REGISTRY }}
+CONFLUENT_SR_KEY={{ CONFLUENT SCHEMA REGISTRY KEY }}
+CONFLUENT_SR_SECRET={{ CONFLUENT SCHEMA REGISTRY SECRET }}
 
-TOPIC=<< KAFKA PINOT TOPIC >>
+TOPIC={{ KAFKA TOPIC }}
 
-CONTROLLER_HOST=<< HOST/IP to PINOT >>
-CONTROLLER_PORT=<< PINOT CONTROLLER PORT >>
 ```
-
-Install pinot-admin
-
-```bash
-brew install pinot
-```
-
-Install Confluent Cloud CLI
-
-```bash
-curl -sL --http1.1 https://cnfl.io/cli | sh -s -- latest
-```
-
-## Install / Run Pinot EC2 Instance
-
-Install Apache Pinot
-
-```bash
-PINOT_VERSION=0.10.0 #set to the Pinot version you decide to use
-
-wget https://downloads.apache.org/pinot/apache-pinot-$PINOT_VERSION/apache-pinot-$PINOT_VERSION-bin.tar.gz
-
-# untar it
-tar -zxvf apache-pinot-$PINOT_VERSION-bin.tar.gz
-
-# navigate to directory containing the launcher scripts
-cd apache-pinot-$PINOT_VERSION-bin
-```
-
-Start Pinot
-
-```bash
-./bin/quick-start-streaming.sh &
-```
-
-This starts a streaming example built into Apache Pinot. 
 
 ## Start
 
 ```bash
-make topic
 make flow
-make active
-
-make clean # cleans Decodable
 ```
+
+Go into the Decodable UI and activate all the connections and pipelines. Then go to Apache Druid to configure your Kafka datasource. Use the configuration below and follow the wizard to create a dataset in Druid.
+
+```json
+{
+	"bootstrap.servers": "{{ KAFKA BOOTSTRAP SERVER }}",
+	"security.protocol": "SASL_SSL",
+	"sasl.jaas.config": "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{{ CONFLUENT KEY }}\" password=\"{{ CONFLUENT SECRET }}\";",
+	"sasl.mechanism": "PLAIN",
+	"client.dns.lookup": "use_all_dns_ips",
+	"session.timeout.ms": "45000",
+	"acks": "all",
+	"schema.registry.url": "{{ CONFLUENT SCHEMA REGISTRY URL }}",
+	"basic.auth.credentials.source": "USER_INFO",
+	"basic.auth.user.info": "{{ CONFLUENT SCHEMA REGISTRY KEY }}:{{ CONFLUENT SCHEMA REGISTRY SECRET }}"
+}
+```
+
 
 

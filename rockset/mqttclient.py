@@ -1,43 +1,77 @@
-import requests
+import paho.mqtt.client as mqtt
 import json
-import time
-import sys
-import traceback
-from paho.mqtt import client as mqtt_client
-from decodablepy import sender
+import os
+import logging
+import boto3
+from dotenv import load_dotenv
 
-def poll(url, config):
-    try:
-        response = requests.get(url)
-        results = json.loads(response.text)
-        events = []
-        for j in results['Countries']:
-            events.append(j)
-            
-        message = {}
-        message["events"] = events
 
-        # send(data={}, config={ "token": Empty, "account": Empty, "endpoint": Empty}, callback = lambda resp : print(resp)):
-        sender.send(json.dumps(message), config, lambda resp : print(f"status code: {resp.status_code}"))
+def on_connect(client, userdata, flags, rc):
+	 print("rc: " + str(rc))
+ 
+def on_message(client, config, msg):
+	response = {
+		'topic': msg.topic,
+		'payload': str(msg.payload.decode("utf-8")),
+		'qos': msg.qos,
+		'retain':msg.retain
+	}
+	config['p'].put_record(
+		StreamName=config['t'],
+		Data=json.dumps(response),
+		PartitionKey="-1")
+	print(response)
+ 
+def on_publish(client, obj, mid):
+	 print("mid: " + str(mid))
+ 
+def on_subscribe(client, obj, mid, granted_qos):
+	 print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
-        traceback.print_exc()
+def on_log(client, obj, level, string):
+	 print(string)
 
+def create_mqtt_client(config, mqtt_confg:dict):
+	logging.info(f"Connecting to: {mqtt_confg}")
+	mqttc = mqtt.Client(userdata=config)
+	mqttc.on_message = on_message
+	mqttc.on_connect = on_connect
+	mqttc.on_publish = on_publish
+	mqttc.on_subscribe = on_subscribe
+
+	mqttc.username_pw_set(mqtt_confg["user"], mqtt_confg["pwd"])
+	mqttc.connect(mqtt_confg["mqtt_host"], int(mqtt_confg["port"]))
+	mqttc.subscribe(mqtt_confg["topic"], 0)
+	return mqttc
 
 def main():
-    url = 'https://api.covid19api.com/summary'
 
-    config = {
-        "host": sys.argv[1],
-        "account": sys.argv[2],
-        "endpoint": sys.argv[3]
-    }
+	load_dotenv()
+	logging.basicConfig(level=logging.INFO)
 
-    while True:
-        poll(url, config)
-        time.sleep(3600)
+	kinesis_client = boto3.client('kinesis',region_name=os.getenv("REGION"))
+
+	kinesis = {
+		'p': kinesis_client,
+		't': os.getenv("KINESIS_STREAM")
+	}
+
+	mqtt_config = {
+		'mqtt_host':os.getenv("MQTT_HOST"), 
+		'port': os.getenv("MQTT_PORT"), 
+		'user': os.getenv("MQTT_USER"), 
+		'pwd': os.getenv("MQTT_PASSWORD"), 
+		'topic': os.getenv("TOPIC")
+	}
+
+	mqttc = create_mqtt_client(mqtt_confg=mqtt_config, config=kinesis)
+
+	rc = 0
+	while rc == 0:
+		rc = mqttc.loop()
 
 
 if __name__== "__main__":
-    main()
+	main()
+
+	

@@ -10,3 +10,5 @@ output
 .env
 api-key*
 *.properties
+
+secret

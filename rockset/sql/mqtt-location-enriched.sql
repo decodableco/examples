@@ -1,43 +1,5 @@
-insert into mqtt_location_enriched
-select 
-    _type as `type`,
-    acc as accuracy,
-    alt as altitude,
-    batt as battery_level,
-    bs as battery_status,
-    cog as course_over_ground, --the actual direction of progress of a vessel, between two points, with respect to the surface of the earth
-    lat,
-    lon,
-    m as monitoring_mode,
-    p as barometric_pressure,
-    SSID as wlan,
-    BSSID as access_point,
-    tid as tracker_id,
-    TO_TIMESTAMP_LTZ(tst, 3) as `timestamp`,
-    vac as vertical_accuracy,
-    vel as velocity, -- velocity (iOS,Android/integer/kmh/optional)
-    CASE 
-        WHEN vel BETWEEN 5 and 11 THEN 'running'
-        WHEN vel BETWEEN 10 and 501 THEN 'driving'
-        WHEN vel > 500 THEN 'flying'
-        WHEN DAYOFWEEK(TO_TIMESTAMP_LTZ(tst, 3)) BETWEEN 1 and 7 THEN 'working'
-        ELSE 'resting'
-    end AS status,
-    CASE 
-        WHEN SSID = 'lon3r-5G' THEN 'at home'
-        ELSE 'somewhere else'
-    end AS location
-from mqtt_location
 
-insert into stream_220714071518110
-select 
---"_type":"location","acc":5,"alt":120,"batt":33,"bs":1,"BSSID":"dc:ef:9:e5:78:36","cog":31,
--- "conn":"w","lat":41.702987,"lon":-74.082472,"m":2,"p":100.138,"SSID":"lon3r-5G","t":"u","tid":"0E","tst":1657840848,"vac":3,"vel":0}
-    topic,
-
-
-
-insert into mqtt_cleanse_enrich
+insert into mqtt_enriched
 
 select *,
     CASE 

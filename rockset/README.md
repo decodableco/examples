@@ -1,80 +1,53 @@
 # IoT Data to Rockset
 
-This example uses the output of stream in the [osquery example](../osquery/). We send this stream to Kafka to be consumed by Apache Pinot.
+Below is the flow of IoT data from the device (cell phone) to the real-time dashboard (superset). We will be utilizing a cloud MQTT broker and AWS Kinesis to capture and stream data. Decodable will be responsible for preparing and aggregating the data prior to reaching the real-time analytical database (Rockset).
 
 ```mermaid
 flowchart TD;
-    ms{{MQTT Phone Metrics}}-->CloudMQTT-->Bridge-->K1[Kinesis Source]
+    ms{{Owntracks}}-->CloudMQTT-->Bridge-->K1[Kinesis IoT Raw]
 
-    K1-->mqtt_raw-->SQL:mqtt_cleanse-->K2[Kinesis Sink]-->db[(Rockset)]-->as[/Apache Superset\]
+    K1-->iot_raw-->SQL:iot_cleanse-->K2[Kinesis IoT Cleansed]-->db[(Rockset)]-->as[/Apache Superset\]
 
 
 ```
+
+## Command Line Requirements
+
+- python3
+- decodable cli - https://docs.decodable.co/docs/setup
+- optional mosquitto cli
+```bash
+brew install mosquitto
+```
+- optional AWS2 CLI -  https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+## Owntracks Phone App
+
+https://owntracks.org/
+
+## Cloud MQTT Broker
+- cloudmqtt.com
+- hivemq.com
+
 
 ## Getting started
 
 Create an `.env` file and populate your values
 
 ```
-BOOTSTRAP=<< Kafka bootstrap servers >>
-CONFLUENT_KEY=<< CONFLUENT KEY >>
-CONFLUENT_SECRET=<< CONFLUENT SECRET >>
-CLUSTER_ID=<< KAFKA CLUSTER ID >>
+MQTT_HOST=
+MQTT_USER=
+MQTT_PASSWORD=
+MQTT_PORT=
+TOPIC=owntracks/\#
 
-SCHEMA_REGISTRY=<< CONFLUENT CLOUD SCHEMA REGISTRY URL >>
-CONFLUENT_SR_KEY=<< CONFLUENT SCHEMA REGISTRY KEY >>
-CONFLUENT_SR_SECRET=<< CONFLUENT SCHEMA REGSITRY SECRET >>
-
-TOPIC=<< KAFKA PINOT TOPIC >>
-
-CONTROLLER_HOST=<< HOST/IP to PINOT >>
-CONTROLLER_PORT=<< PINOT CONTROLLER PORT >>
+ARN=
+KINESIS_STREAM=
+REGION=
 ```
 
-Install pinot-admin
-
+Create the flow
 ```bash
-brew install pinot
-```
-
-Install Confluent Cloud CLI
-
-```bash
-curl -sL --http1.1 https://cnfl.io/cli | sh -s -- latest
-```
-
-## Install / Run Pinot EC2 Instance
-
-Install Apache Pinot
-
-```bash
-PINOT_VERSION=0.10.0 #set to the Pinot version you decide to use
-
-wget https://downloads.apache.org/pinot/apache-pinot-$PINOT_VERSION/apache-pinot-$PINOT_VERSION-bin.tar.gz
-
-# untar it
-tar -zxvf apache-pinot-$PINOT_VERSION-bin.tar.gz
-
-# navigate to directory containing the launcher scripts
-cd apache-pinot-$PINOT_VERSION-bin
-```
-
-Start Pinot
-
-```bash
-./bin/quick-start-streaming.sh &
-```
-
-This starts a streaming example built into Apache Pinot. 
-
-## Start
-
-```bash
-make topic
 make flow
-make active
-
-make clean # cleans Decodable
 ```
-
 

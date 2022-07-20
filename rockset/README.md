@@ -4,9 +4,9 @@ This example uses the output of stream in the [osquery example](../osquery/). We
 
 ```mermaid
 flowchart TD;
-    ms{{MQTT Phone Metrics}}-->rest[Decodable REST API]
+    ms{{MQTT Phone Metrics}}-->CloudMQTT-->Bridge-->K1[Kinesis Source]
 
-    rest-->SQL:mqtt_cleanse-->Kafka-->db[(Rockset)]-->as[/Apache Superset\]
+    K1-->mqtt_raw-->SQL:mqtt_cleanse-->K2[Kinesis Sink]-->db[(Rockset)]-->as[/Apache Superset\]
 
 
 ```

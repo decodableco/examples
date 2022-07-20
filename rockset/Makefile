@@ -56,5 +56,6 @@ consume:
 
 
 pub:
-	@mosquitto_pub -h $(MQTT_HOST) -t owntracks/foo/bar -p $(MQTT_PORT) -u $(MQTT_USER) -P $(MQTT_PASSWORD) -m '@sample.json'
+	@mosquitto_pub -h $(MQTT_HOST) -t owntracks/foo/bar -p $(MQTT_PORT) -u $(MQTT_USER) -P $(MQTT_PASSWORD) \
+	-m '{ "_type": "location", "acc": 11, "alt": 120, "batt": $$RANDOM, "bs": 1, "BSSID": "xx:xx:x:xx:xx:xx", "cog": 147, "conn": "w", "lat": 41.702894, "lon": -74.082373, "m": 1, "p": 99.715, "SSID": "my-router", "tid": "0E", "tst": 1657136071, "vac": 11, "vel": $(RANDOM) }'
 

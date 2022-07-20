@@ -1,4 +1,4 @@
-# Osquery logs to Apache Druid
+# IoT Data to Rockset
 
 This example uses the output of stream in the [osquery example](../osquery/). We send this stream to Kafka to be consumed by Apache Pinot.
 

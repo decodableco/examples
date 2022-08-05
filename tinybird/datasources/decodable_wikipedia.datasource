@@ -1,0 +1,31 @@
+
+SCHEMA >
+    `value` String,
+    `topic` LowCardinality(String),
+    `partition` Int16,
+    `offset` Int64,
+    `timestamp` DateTime,
+    `key` String,
+    `author` Nullable(String) `json:$.author`,
+    `comments` Nullable(String) `json:$.comments`,
+    `diff_id` Nullable(String) `json:$.diff_id`,
+    `guidislink` UInt8 `json:$.guidislink`,
+    `id` String `json:$.id`,
+    `link` String `json:$.link`,
+    `oldid` Nullable(String) `json:$.oldid`,
+    `published` DateTime `json:$.published`,
+    `summary` Nullable(String) `json:$.summary`,
+    `title` String `json:$.title`,
+    `type` Nullable(String) `json:$.type`,
+    `url_title` Nullable(String) `json:$.url_title`
+
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(timestamp)"
+ENGINE_SORTING_KEY "timestamp"
+
+KAFKA_CONNECTION_NAME 'pkc-4r087.us-west2.gcp.confluent.cloud:9092'
+KAFKA_TOPIC 'wiki'
+KAFKA_GROUP_ID 'tinybird_wikipedia'
+KAFKA_AUTO_OFFSET_RESET 'latest'
+KAFKA_STORE_RAW_VALUE 'False'
+KAFKA_TARGET_PARTITIONS 'auto'

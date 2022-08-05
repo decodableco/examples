@@ -1,0 +1,10 @@
+NODE decodable_wikipedia_pipe_9167_0
+SQL >
+
+    SELECT author, count(*) as `count` FROM decodable_wikipedia
+    where published >= now() - 600 and type is null
+    group by author
+    order by `count` desc
+    limit 20
+
+

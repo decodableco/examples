@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tinybird.co example</title>
+    <style>
+        table {
+            width: 800px;
+            border-collapse: collapse;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: rgb(16, 3, 3);
+        }
+
+        th {
+            text-align: left;
+        }
+
+        thead {
+            th {
+                background-color: #55608f;
+            }
+        }
+
+        tbody {
+            tr {
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.3);
+                }
+            }
+
+            td {
+                position: relative;
+
+                &:hover {
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        top: -9999px;
+                        bottom: -9999px;
+                        background-color: rgba(255, 255, 255, 0.2);
+                        z-index: -1;
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <center><div id="details"></div></center>
+    <script src="secrets/secrets.js"></script>
+    <script>
+        async function run() {
+            const params = new URLSearchParams(window.location.search)
+            var auth = params.get('author')
+            let url = new URL('https://api.us-east.tinybird.co/v0/pipes/decodable_wikipedia_pipe_activity_by_author.json')
+
+
+            url.searchParams.append('author', auth)
+
+
+            const result = await fetch(url, details)
+                .then(r => r.json())
+                .then(r => r)
+                .catch(e => e.toString())
+
+
+            if (!result.data) {
+                console.error(`there is a problem running the query: ${result}`);
+            } else {
+                console.table(result.data)
+                console.log("** Query columns **")
+                for (let column of result.meta) {
+                    console.log(`${column.name} -> ${column.type}`)
+                }
+
+                let text = "<table border='1'>";
+                text += "<tr><thead><td>author</td><td>Wiki Page</td><td>published</td><td>summary</td></thead></tr><tbody>";
+                for (let x in result.data) {
+                    text += "<tr><td>" + result.data[x].author + "</td><td><a href='" + result.data[x].id + "'>" + result.data[x].title + "</a></td><td>" + result.data[x].published + "</td><td>" + result.data[x].summary + "</td></tr>";
+                }
+                text += "</tbody></table>"
+                document.getElementById("details").innerHTML = text;
+            }
+
+        }
+        run()
+    </script>
+</body>
+
+</html>

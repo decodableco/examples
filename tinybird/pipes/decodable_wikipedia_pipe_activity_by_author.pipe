@@ -1,0 +1,24 @@
+NODE decodable_wikipedia_page_change_count_by_author
+SQL >
+
+    SELECT author, title, count(*) as `count` FROM decodable_wikipedia
+    where published >= now() - 600 and type is null
+    group by author, title
+    order by `count` desc
+    limit 20
+
+
+
+NODE decodable_wikipedia_pipe_author_activity
+SQL >
+
+    %
+    SELECT author, title, published, summary, id FROM decodable_wikipedia
+    where 
+      type is null and
+      author = {{String(author, 'Hey man im josh')}}
+    group by author, title, published, summary, id
+    ORDER BY published desc
+    limit 10
+
+

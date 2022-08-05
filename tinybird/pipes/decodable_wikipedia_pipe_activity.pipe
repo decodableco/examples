@@ -1,0 +1,10 @@
+NODE decodable_wikipedia_pipe_time
+SQL >
+
+    SELECT toDateTime(published) as `time` , count(*) as `count` FROM decodable_wikipedia
+    where published >= now() - 600
+    group by `time`
+    order by `time` asc
+    limit 20
+
+

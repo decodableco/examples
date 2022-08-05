@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Decodable Tinybird.co Example</title>
+    <style>
+        .mychart {
+            height: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mychart"><canvas id="lineChart" width="400" height="400"></canvas></div>
+    <div class="mychart"><canvas id="barChart" width="400" height="400"></canvas></div>
+
+    <script src="secrets/secrets.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        function colorize(opaque) {
+            return (ctx) => {
+                const v = ctx.parsed.y;
+                const c = v < -50 ? '#D60000'
+                    : v < 0 ? '#F46300'
+                        : v < 50 ? '#0358B6'
+                            : '#44DE28';
+
+                return opaque ? c : Utils.transparentize(c, 1 - Math.abs(v / 150));
+            };
+        }
+
+        const lineCtx = document.getElementById('lineChart');
+        const lineChart = new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Changes',
+                    backgroundColor: 'green',
+                    borderColor: 'green',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const barCtx = document.getElementById('barChart');
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: 'Author Update Count',
+                    backgroundColor: 'blue',
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                // interaction: {
+                //     mode: 'dataset'
+                // },
+                onClick: (e, i) => {
+                    console.log(e)
+                    console.log(i)
+                    console.log()
+                    var author = e.chart.config.data.labels[i[0].index];
+                    window.open("author.html?author="+author);
+                },
+                elements: {
+                    bar: {
+                        backgroundColor: colorize(false),
+                        borderColor: colorize(true),
+                        borderWidth: 2
+                    }
+                }
+            }
+        });
+    </script>
+    <script type="module">
+
+        const arrayColumn = (arr, n) => arr.map((x) => x[n]);
+        const colors = ['red', 'blue', 'green', 'purple', 'black']
+
+        async function runLine() {
+            let url = new URL(`https://api.us-east.tinybird.co/v0/pipes/decodable_wikipedia_pipe_activity.json`)
+
+            const result = await fetch(url, lineChartHeaders)
+                .then(r => r.json())
+                .then(r => r)
+                .catch(e => e.toString())
+
+
+            if (!result.data) {
+                console.error(`there is a problem running the query: ${result}`);
+            } else {
+                console.table(result.data)
+                console.log(arrayColumn(result.data, 'time'));
+                console.log("** Query columns **")
+                for (let column of result.meta) {
+                    console.log(`${column.name} -> ${column.type}`)
+                }
+
+                lineChart.config.data.labels = arrayColumn(result.data, 'time')
+                lineChart.config.data.datasets[0].data = arrayColumn(result.data, 'count')
+                lineChart.update()
+            }
+            setTimeout(runLine, 20 * 1000);
+        }
+        runLine()
+
+        async function runBar() {
+            let url = new URL(`https://api.us-east.tinybird.co/v0/pipes/decodable_wikipedia_pipe_by_author.json`)
+
+
+            const result = await fetch(url, barChartHeaders)
+                .then(r => r.json())
+                .then(r => r)
+                .catch(e => e.toString())
+
+
+            if (!result.data) {
+                console.error(`there is a problem running the query: ${result}`);
+            } else {
+                console.table(result.data)
+                console.log(arrayColumn(result.data, 'time'));
+                console.log("** Query columns **")
+                for (let column of result.meta) {
+                    console.log(`${column.name} -> ${column.type}`)
+                }
+
+                barChart.config.data.labels = arrayColumn(result.data, 'author')
+                barChart.config.data.datasets[0].data = arrayColumn(result.data, 'count')
+                barChart.update()
+            }
+            setTimeout(runBar, 20 * 1000);
+        }
+        runBar()
+
+    </script>
+</body>
+
+</html>

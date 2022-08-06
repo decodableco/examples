@@ -5,14 +5,21 @@
     <title>Decodable Tinybird.co Example</title>
     <style>
         .mychart {
-            height: 100;
+            height: 700px;
+            width: 700px;
         }
     </style>
 </head>
 
 <body>
-    <div class="mychart"><canvas id="lineChart" width="400" height="400"></canvas></div>
-    <div class="mychart"><canvas id="barChart" width="400" height="400"></canvas></div>
+    <table>
+        <tr>
+            <td><div class="mychart"><canvas id="lineChart" width="500px" height="500px"></canvas></div></td>
+            <td><div class="mychart"><canvas id="barChart" width="500px" height="500px"></canvas></div></td>
+        </tr>
+    </table>
+    
+    
 
     <script src="secrets/secrets.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

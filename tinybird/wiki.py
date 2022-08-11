@@ -13,7 +13,7 @@ def kinesis():
 	return boto3.client('kinesis',region_name=os.getenv("REGION"))
 
 def poll():
-	feed=feedparser.parse('https://en.wikipedia.org/w/api.php?action=feedrecentchanges&format=json')
+	feed=feedparser.parse('https://en.wikipedia.org/w/api.php?action=feedrecentchanges')
 	entries = feed['entries']
 	stream = os.getenv("KINESIS_STREAM")
 	k = kinesis()

@@ -23,7 +23,7 @@ ENGINE "MergeTree"
 ENGINE_PARTITION_KEY "toYYYYMM(timestamp)"
 ENGINE_SORTING_KEY "timestamp"
 
-KAFKA_CONNECTION_NAME 'pkc-4r087.us-west2.gcp.confluent.cloud:9092'
+KAFKA_CONNECTION_NAME 'xxxxxxxxxxx.confluent.cloud:9092'
 KAFKA_TOPIC 'wiki'
 KAFKA_GROUP_ID 'tinybird_wikipedia'
 KAFKA_AUTO_OFFSET_RESET 'latest'

@@ -31,7 +31,7 @@ def main():
 
 	while True:
 		poll(producer, topic)
-		time.sleep(5)
+		time.sleep(20)
 
 	
 

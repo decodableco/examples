@@ -287,3 +287,7 @@ cython_debug/
 secret*
 
 .tinyb
+
+
+*cert
+*key

@@ -14,6 +14,10 @@ This repository contains examples of use cases that utilize Decodable streaming 
 | [Apache Pinot](pinot) | Transforming osquery logs to Apache Pinot and Superset |
 | [Apache Druid](druid) | This example sends covid 19 data to Decodable using it's REST API. The data is then cleansed using Decodable SQL and send the data to a Kafka sink.  |
 | [Rockset](rockset) | We will be utilizing a cloud MQTT broker and AWS Kinesis to capture and stream data. Decodable will be responsible for preparing and aggregating the data prior to reaching the real-time analytical database (Rockset) |
+| [Tinybird](tinybird) | We write data to Tinybird and build a simple real time web application. |
+| [Apache Kafka](kafka2s3) | Installing Apache Kafka on EC2 and writing to S3 with Decodable |
+| [Apache Kafka mTLS](mtls) | We install Apache Kafka on EC2 and configure it with mTLS and configure Decodable to read from it |
+
 
 
 

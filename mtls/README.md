@@ -48,6 +48,11 @@ classDef file fill:green,stroke:#333,stroke-width:4px
 ## server.properties file
 Requires Kafka restart.
 
+set this environment property to show SSL debug logs.
+```bash
+export KAFKA_OPTS=-Djavax.net.debug=all
+```
+
 ```properties
 listeners=PLAINTEXT://0.0.0.0:9092,SSL://0.0.0.0:9093
 advertised.listeners=PLAINTEXT://<HOSTNAME>:9092,SSL://<HOSTNAME>:9093
@@ -57,6 +62,8 @@ ssl.keystore.password=yourpassword
 ssl.key.password=yourpassword
 ssl.truststore.location=<path>/kafka.server.truststore.jks
 ssl.truststore.password=yourpassword
+
+ssl.client.auth=required
 
 ```
 
@@ -94,6 +101,23 @@ Consumer
 ```bash
 ./kafka-console-consumer.sh --broker-list HOSTNAME:9093 --topic mytopic --consumer.config PATH_TO_THE_ABOVE_PROPERTIES
 ```
+
+# Configuring Decodable
+
+The common name (CN) must match exactly the fully qualified domain name (FQDN) of the server. The client compares the CN with the DNS domain name to ensure that it is indeed connecting to the desired server, not a malicious one. The hostname of the server can also be specified in the Subject Alternative Name (SAN). Since the distinguished name is used as the server principal when SSL is used as the inter-broker security protocol, it is useful to have hostname as a SAN rather than the CN.
+
+To show the CN or SAN in a signed certificate, run the command below:
+
+```bash
+openssl x509 -noout -subject -in your-signed-cert
+```
+
+Host name verification of servers is enabled by default for client connections as well as inter-broker connections to prevent man-in-the-middle attacks. Server host name verification may be disabled by setting ssl.endpoint.identification.algorithm to an empty string. For example,
+
+```properties
+ssl.endpoint.identification.algorithm=
+```
+
 
 # mTLS
 Client authentication. Broker work is same as above.

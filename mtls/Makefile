@@ -97,7 +97,8 @@ send.server:
 	scp -i ${PEMDEVW} ssl/kafka.server.*.jks ec2-user@$(BROKER_HOST):kafka_2.13-3.2.1/ssl/
 
 ssl.verify:
-	openssl s_client -connect ${BROKER_HOST}:9093
+	# openssl s_client -connect ${BROKER_HOST}:9093
+	openssl s_client -connect 34.222.216.72:9093
 
 delete.stream:
 	-@decodable stream delete $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="crypto_mtls")|.id ' )
@@ -151,7 +152,7 @@ create.conn.mtls:
 		--prop properties.ssl.endpoint.identification.algorithm=\
 		--prop tls.broker.certificate=@ssl/server-cert-signed \
 
-recrecate: mtls deactivate.conn.mtls delete.conn.mtls delete.stream create.stream create.conn.mtls add.decodable
+recreate: mtls deactivate.conn.mtls delete.conn.mtls delete.stream create.stream create.conn.mtls add.decodable
 
 add.decodable:
 	decodable connection \
@@ -174,6 +175,7 @@ java.consume:
 		--consumer.config client.properties
 
 java.produce:
+	KAFKA_OPTS="-Djavax.net.debug=ssl"
 	~/development/cp/confluent-7.1.2/bin/kafka-console-producer \
 		--bootstrap-server $(BROKER_HOST):9093 \
 		--topic crytpo_mtls \

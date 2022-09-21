@@ -101,6 +101,20 @@ polaris_sink:
 		--prop polaris.org-name=$(POLARIS_ORG_NAME) \
 		--prop polaris.client-secret=$(POLARIS_CLIENT_SECRET)
 
+
+imply:
+	@decodable connection create \
+		--name imply_sink \
+		--connector polaris \
+		--type sink \
+		--stream-id $(shell decodable stream list -o json | jq -sr '.[] |select(.name=="covid_cleansed")|.id ' ) \
+		--prop cluster.api.endpoint=https://$(BOOTSTRAP) \
+		--prop cluster.id=$(CLUSTER_ID) \
+		--prop topic=$(TOPIC) \
+		--prop format=json \
+		--prop cluster.api.key=$(CONFLUENT_KEY) \
+		--prop cluster.api.secret=$(CONFLUENT_SECRET)
+
 pipeline:
 	@decodable pipeline create \
 		--name covid_cleanse \

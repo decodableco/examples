@@ -11,11 +11,14 @@ flowchart TD;
 
 ```
 
-This demo assumes you have a Kafka cluster to use.
+This demo assumes you have a Kafka cluster to use or you have an Imply Polaris project and corresponding table created.
 
 ## Getting started
+Follow the instructions under the header that applies to you.
 
-Create an `.env` file and populate your values
+### Druid (open source)
+
+Create an `.env` file and populate your values using the following .env structure:
 
 ```
 ACCOUNT={{ YOUR DECODABLE ACCOUNT }}
@@ -29,10 +32,37 @@ CONFLUENT_SR_KEY={{ CONFLUENT SCHEMA REGISTRY KEY }}
 CONFLUENT_SR_SECRET={{ CONFLUENT SCHEMA REGISTRY SECRET }}
 
 TOPIC={{ KAFKA TOPIC }}
+```
 
+### Imply Polaris
+
+Create an `.env` file and populate your values using the following .env structure:
+```
+ACCOUNT={{ YOUR DECODABLE ACCOUNT }}
+```
+
+If you have not already, create a Polaris table with the following schema:
+```markdown
+name           | type
+------------------------------------------
+__time         | timestamp (auto created)
+ID             | string
+Country        | string
+CountryCode    | string
+Slug           | string
+NewConfirmed   | long
+TotalConfirmed | long
+NewDeaths      | long
+TotalDeaths    | long
+NewRecovered   | long
+TotalRecovered | long
 ```
 
 ## Start
+
+Follow the instructions under the header that applies to you.
+
+### Druid (open source)
 
 ```bash
 make flow
@@ -55,5 +85,16 @@ Go into the Decodable UI and activate all the connections and pipelines. Then go
 }
 ```
 
+### Imply Polaris
 
+```bash
+make polaris_flow
+```
 
+Go into the Decodable UI and activate all the connections and pipelines. Then, run:
+
+```bash
+make run
+```
+
+Then go to your Polaris table and ensure data is being populated as you expect.

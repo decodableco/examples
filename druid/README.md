@@ -1,6 +1,6 @@
-# COVID 19 Stats to Apache Druid
+# COVID 19 Stats to Apache Druid and Imply Polaris
 
-This example sends covid 19 data to Decodable using it's REST API. The data is then cleansed using Decodable SQL and send the data to a Kafka sink. You must have Kafka available. This one uses Confluent cloud as its Kafka. You must also have an Apache Druid running. Follow the install instructions for Druid [here](https://druid.apache.org/docs/latest/tutorials/index.html).
+This example sends covid 19 data to Decodable using it's REST API. The data is then cleansed using Decodable SQL - from there, data can be sent to Apache Druid (via Kafka) or an Imply Polaris table. You must have Kafka available if you want to stream to Druid. This example uses Confluent cloud as its Kafka. You must also have an Apache Druid running. Follow the install instructions for Druid [here](https://druid.apache.org/docs/latest/tutorials/index.html).
 
 ```mermaid
 flowchart TD;

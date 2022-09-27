@@ -8,8 +8,8 @@ Generating a self-signed certificate for a Kafka broker.
 
 ```mermaid
 flowchart TD;
-classDef make fill:blue,stroke:#333,stroke-width:4px
-classDef file fill:green,stroke:#333,stroke-width:4px
+classDef make fill:blue,stroke:#333,stroke-width:4px,text:white
+classDef file fill:green,stroke:#333,stroke-width:4px,text:white
 
     make:CA:::make-->file:ca-key:::file
     make:CA-->file:ca-cert:::file

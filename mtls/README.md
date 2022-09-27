@@ -31,6 +31,16 @@ flowchart TD;
 
     client==>|create a signing request| client-cert-file-request
 
+    subgraph Client
+    client
+    client-cert-file-request
+    end
+
+    subgraph Server
+    server
+    server-cert-file-request
+    end
+
 ```
 
 # Sign Certificate

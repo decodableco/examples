@@ -2,6 +2,10 @@
 Generating a self-signed certificate for a Kafka broker.
 
 
+# Download Apache Kafka
+curl -O https://downloads.apache.org/kafka/3.2.3/kafka_2.13-3.2.3.tgz
+
+
 # Generate CA
 - ca-cert = public CA certificate
 - ca-key = private key of the ca-cert
@@ -14,48 +18,76 @@ flowchart TD;
 
 ```
 
-# Broker Side
-- cert-file = signing request
-- cert-signed = signed certificate
+# Create a Keystore and Create a Cert Sign Request
 
-## Create Siging Request
 ```mermaid
 flowchart TD;
 
-    s[/start\]-->|Create Broker Keystore| jks[kafka.server.keystore.jks]
+    s[/start\]-->|Create Broker Keystore| server[kafka.server.keystore.jks]
 
-    jks==>|create a signing request| server-cert-file-request
+    server==>|create a signing request| server-cert-file-request
+
+    s-->|Create Client Keystore| client[kafka.client.keystore.jks]
+
+    client==>|create a signing request| client-cert-file-request
 
 ```
 
-## Sign Certificate
+# Sign Certificate
 ```mermaid
 flowchart TD;
 
-    ca-cert-->sign[[Sign Certificate]]
-    ca-key-->sign
-    cert-file-request-->sign
+    ca-cert-->sign1[[Sign Certificate]]
+    ca-key-->sign1
+    server-cert-file-request-->sign1
 
-    sign-->signed(server-cert-signed fa:fa-cert)
+    sign1-->signed1(server-cert-signed fa:fa-cert)
 
 
+
+    ca-cert-->sign2[[Sign Certificate]]
+    ca-key-->sign2
+    client-cert-file-request-->sign2
+
+    sign2-->signed2(client-cert-signed fa:fa-cert)
+
+    subgraph Certificate Authority
+    ca-cert
+    ca-key
+    end
 
 
 ```
 
-## Import Certificates
+# Import Certificates
 ```mermaid
 flowchart TD;
 
 
-    ca-cert-->|import|jks[kafka.server.keystore.jks]
-    ca-cert-->|import|kafka.server.truststore.jks
+    ca-cert-->|import|serverks[kafka.server.keystore.jks]
+    ca-cert-->|import|serverts[kafka.server.truststore.jks]
 
-    server-cert-signed-->|import|jks
+    server-cert-signed-->|import|serverks
+
+    ca-cert-->|import|clientks[kafka.client.keystore.jks]
+    ca-cert-->|import|clientts[kafka.client.truststore.jks]
+
+
+    cert-cert-signed-->|import|clientks
+
+    subgraph Client
+    clientks
+    clientts
+    end
+
+    subgraph Server
+    serverks
+    serverts
+    end
 
 ```
 
-## server.properties file
+# Broker Configuration server.properties file
 Requires Kafka restart.
 
 set this environment property to show SSL debug logs.
@@ -82,48 +114,27 @@ ssl.client.auth=required
 openssl s_client -connect <HOSTNAME>:9093
 ```
 
-# Client Side configuration
 
-## Create Siging Request
-```mermaid
-flowchart TD;
+# Client Configuration properties file
 
-    s[/start\]-->|Create Client Keystore| jks[kafka.client.keystore.jks]
-
-    jks==>|create a signing request| client-cert-file-request
-
-```
-
-## Sign Certificate
-```mermaid
-flowchart TD;
-
-    ca-cert-->sign[[Sign Certificate]]
-    ca-key-->sign
-    client-cert-file-request-->sign
-
-    sign-->signed(client-cert-signed fa:fa-cert)
-
-```
-
-## Import Certificates
-```mermaid
-flowchart TD;
-
-    ca-cert-->|import|jks[kafka.client.keystore.jks]
-    ca-cert-->|import|kafka.client.truststore.jks
-
-
-    cert-signed-->|import|jks
-
-```
-
-## properties file
+## client.properties
 
 ```properties
 security.protocol=SSL
-ssl.truststore.location=<path>/kafka.client.truststore.jks
-ssl.truststore.password=yourclientpassword
+ssl.truststore.location=<path to your truststore>
+ssl.truststore.password=<the password>
+ssl.keystore.location=<path to your keystore>
+ssl.keystore.password=<the password>
+ssl.key.password=<the password>
+
+ssl.endpoint.identification.algorithm=
+```
+
+
+Host name verification of servers is enabled by default for client connections as well as inter-broker connections to prevent man-in-the-middle attacks. Server host name verification may be disabled by setting ssl.endpoint.identification.algorithm to an empty string. For example,
+
+```properties
+ssl.endpoint.identification.algorithm=
 ```
 
 Producer
@@ -138,31 +149,6 @@ Consumer
 ```
 
 
-## client.properties
-
-```properties
-security.protocol=SSL
-ssl.truststore.location=<path to your truststore>
-ssl.truststore.password=<the password>
-ssl.keystore.location=<path to your keystore>
-ssl.keystore.password=<the password>
-ssl.key.password=<the password>
-
-```
-
-
-Producer
-```bash
-./kafka-console-producer.sh --broker-list HOSTNAME:9093 --topic mytopic --producer.config PATH_TO_THE_ABOVE_PROPERTIES
-
-```
-
-Consumer
-```bash
-./kafka-console-consumer.sh --bootstrap-server HOSTNAME:9093 --topic mytopic --consumer.config PATH_TO_THE_ABOVE_PROPERTIES
-```
-
-
 # Configuring Decodable
 
 The common name (CN) must match exactly the fully qualified domain name (FQDN) of the server. The client compares the CN with the DNS domain name to ensure that it is indeed connecting to the desired server, not a malicious one. The hostname of the server can also be specified in the Subject Alternative Name (SAN). Since the distinguished name is used as the server principal when SSL is used as the inter-broker security protocol, it is useful to have hostname as a SAN rather than the CN.
@@ -173,9 +159,19 @@ To show the CN or SAN in a signed certificate, run the command below:
 openssl x509 -noout -subject -in your-signed-cert
 ```
 
-Host name verification of servers is enabled by default for client connections as well as inter-broker connections to prevent man-in-the-middle attacks. Server host name verification may be disabled by setting ssl.endpoint.identification.algorithm to an empty string. For example,
+
+# Automated
+
+## .env file
 
 ```properties
-ssl.endpoint.identification.algorithm=
+BROKER_HOST=<THE HOST NAME TO YOUR BROKER>
+SRVPASS=server_pw
+CLIPASS=client_pw
+SSL_DIR=<THE PATH TO YOUR SSL DIRECTORY>
 ```
 
+
+```bash
+$ make create.all
+```

@@ -94,7 +94,7 @@ import.cacert.signed.cert.keystore:
 		-noprompt
 
 send.server:
-	scp -i ${PEMDEVW} ssl/kafka.server.*.jks ec2-user@$(BROKER_HOST):kafka_2.13-3.2.1/ssl/
+	scp -i ${PEMDEVW} ssl/kafka.server.*.jks ec2-user@$(BROKER_HOST):$(SSL_DIR)
 
 ssl.verify:
 	# openssl s_client -connect ${BROKER_HOST}:9093
@@ -152,7 +152,7 @@ create.conn.mtls:
 		--prop properties.ssl.endpoint.identification.algorithm=\
 		--prop tls.broker.certificate=@ssl/server-cert-signed \
 
-recreate: mtls deactivate.conn.mtls delete.conn.mtls delete.stream create.stream create.conn.mtls add.decodable
+create.all: mtls deactivate.conn.mtls delete.conn.mtls delete.stream create.stream create.conn.mtls add.decodable
 
 add.decodable:
 	decodable connection \

@@ -8,8 +8,6 @@ Generating a self-signed certificate for a Kafka broker.
 
 ```mermaid
 flowchart TD;
-classDef make fill:blue,stroke:#333,stroke-width:4px,text:white
-classDef file fill:green,stroke:#333,stroke-width:4px,text:white
 
     make:CA:::make-->file:ca-key:::file
     make:CA-->file:ca-cert:::file
@@ -22,8 +20,7 @@ classDef file fill:green,stroke:#333,stroke-width:4px,text:white
 
 ```mermaid
 flowchart TD;
-classDef make fill:blue,stroke:#333,stroke-width:4px
-classDef file fill:green,stroke:#333,stroke-width:4px
+
 
     make:BROKER_KEYSTORE:::make-->jks[file:kafka.server.keystore.jks]:::file-->
     make:BROKER_CERT_REQUEST:::make-->file:cert-file:::file
@@ -76,8 +73,6 @@ openssl s_client -connect <HOSTNAME>:9093
 
 ```mermaid
 flowchart TD;
-classDef make fill:blue,stroke:#333,stroke-width:4px
-classDef file fill:green,stroke:#333,stroke-width:4px
 
 file:ca-cert-->make:CLIENT_TRUSTORE:::make-->jks[file:kafka.client.truststore.jks]:::file
 
@@ -125,8 +120,6 @@ Client authentication. Broker work is same as above.
 
 ```mermaid
 flowchart TD;
-classDef make fill:blue,stroke:#333,stroke-width:4px
-classDef file fill:green,stroke:#333,stroke-width:4px
 
 make:CLIENT_KEYSTORE:::make-->jks[file:kafka.client.keystore.jks]:::file
 

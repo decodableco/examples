@@ -9,8 +9,8 @@ Generating a self-signed certificate for a Kafka broker.
 ```mermaid
 flowchart TD;
 
-    make:CA:::make-->file:ca-key:::file
-    make:CA-->file:ca-cert:::file
+    ca[Create CA]-->ca-key
+    ca-->ca-cert
 
 ```
 
@@ -18,29 +18,53 @@ flowchart TD;
 - cert-file = signing request
 - cert-signed = signed certificate
 
+## Create Siging Request
 ```mermaid
 flowchart TD;
 
+    s[/start\]-->|Create Broker Keystore| jks[kafka.server.keystore.jks]
 
-    make:BROKER_KEYSTORE:::make-->jks[file:kafka.server.keystore.jks]:::file-->
-    make:BROKER_CERT_REQUEST:::make-->file:cert-file:::file
+    jks==>|create a signing request| cert-file-request
 
-    file:ca-cert-->make:SELF_SIGN:::make
-    file:ca-key-->make:SELF_SIGN
-    file:cert-file-->make:SELF_SIGN
-
-    make:SELF_SIGN-->file:cert-signed:::file
-
-
-    file:ca-cert-->make:TRUSTSTORE:::make-->file:kafka.server.truststore.jks:::file
-
-    jks-->make:KEYSTORE_CACERT:::make
-    file:ca-cert-->make:KEYSTORE_CACERT
-
-    file:cert-signed-->make:KEYSTORE_SIGNED_CERT
-    jks-->make:KEYSTORE_SIGNED_CERT:::make
 ```
 
+## Sign Certificate
+```mermaid
+flowchart TD;
+
+    ca-cert-->sign[[Sign Certificate]]
+    ca-key-->sign
+    cert-file-request-->sign
+
+    sign-->signed(cert-signed fa:fa-cert)
+
+
+
+
+```
+
+## Import Certificates
+```mermaid
+%%{init: {'theme':'base'}}%%
+flowchart TD;
+
+
+
+    s[/start\]-->|Create Broker Keystore| jks[kafka.server.keystore.jks]
+
+    jks==>|create a signing request| cert-file-request
+
+    s-->|Create a Broker Truststore|kafka.server.truststore.jks
+
+    ca-cert-->make:TRUSTSTORE-->kafka.server.truststore.jks
+
+    jks-->make:KEYSTORE_CACERT
+    ca-cert-->make:KEYSTORE_CACERT
+
+    cert-signed-->make:KEYSTORE_SIGNED_CERT
+    jks-->make:KEYSTORE_SIGNED_CERT
+
+```
 
 ## server.properties file
 Requires Kafka restart.
@@ -74,7 +98,7 @@ openssl s_client -connect <HOSTNAME>:9093
 ```mermaid
 flowchart TD;
 
-file:ca-cert-->make:CLIENT_TRUSTORE:::make-->jks[file:kafka.client.truststore.jks]:::file
+ca-cert-->make:CLIENT_TRUSTORE-->jks[kafka.client.truststore.jks]
 
 ```
 
@@ -121,19 +145,19 @@ Client authentication. Broker work is same as above.
 ```mermaid
 flowchart TD;
 
-make:CLIENT_KEYSTORE:::make-->jks[file:kafka.client.keystore.jks]:::file
+make:CLIENT_KEYSTORE-->jks[kafka.client.keystore.jks]
 
-jks-->make:CLIENT_SIGN:::make-->file:client-cert-sign-request:::file
+jks-->make:CLIENT_SIGN-->client-cert-sign-request
 
-file:ca-cert-->make:CA_CLIENT_SIGN:::make-->file:client-cert-signed:::file
-file:ca-key-->make:CA_CLIENT_SIGN
-file:client-cert-sign-request:::file-->make:CA_CLIENT_SIGN
+ca-cert-->make:CA_CLIENT_SIGN-->client-cert-signed
+ca-key-->make:CA_CLIENT_SIGN
+client-cert-sign-request-->make:CA_CLIENT_SIGN
 
-file:kafka.client.keystore.jks-->make:CLIENT_CA:::make
-file:ca-cert-->make:CLIENT_CA:::make
+kafka.client.keystore.jks-->make:CLIENT_CA
+ca-cert-->make:CLIENT_CA
 
-file:kafka.client.keystore.jks-->make:CLIENT_SIGNED:::make
-file:client-cert-signed-->make:CLIENT_SIGNED
+kafka.client.keystore.jks-->make:CLIENT_SIGNED
+client-cert-signed-->make:CLIENT_SIGNED
 ```
 
 ## server.properties

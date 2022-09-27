@@ -188,3 +188,10 @@ create.topic:
 		--create \
 		--topic crytpo_mtls \
 		--command-config client.properties
+
+list.topics:
+	KAFKA_OPTS="-Djavax.net.debug=ssl"
+	~/development/cp/confluent-7.1.2/bin/kafka-topics \
+		--bootstrap-server $(BROKER_HOST):9093 \
+		--list \
+		--command-config client.properties

@@ -105,6 +105,8 @@ set this environment property to show SSL debug logs.
 export KAFKA_OPTS=-Djavax.net.debug=all
 ```
 
+Create a `ssl` directory in KAFKA_HOME so that you can utilize the make command at the end of this README. Place all of the jks files in that directory and set the path as a relative path in the properties below. (replace `<path>` with `ssl`)
+
 ```properties
 listeners=PLAINTEXT://0.0.0.0:9092,SSL://0.0.0.0:9093
 advertised.listeners=PLAINTEXT://<HOSTNAME>:9092,SSL://<HOSTNAME>:9093
@@ -173,6 +175,7 @@ openssl x509 -noout -subject -in your-signed-cert
 # Automated
 
 ## .env file
+Create a directory called `ssl` in your KAFKA_HOME directory. The make command below will copy the updated jks files to that directory. You'll need to restart Kafka.
 
 ```properties
 BROKER_HOST=<THE HOST NAME TO YOUR BROKER>

@@ -123,7 +123,7 @@ ssl.client.auth=required
 
 ## Verify the SSL port
 ```bash
-openssl s_client -connect <HOSTNAME>:9093
+openssl s_client -connect <HOST_IP>:9093
 ```
 
 
@@ -184,7 +184,7 @@ CLIPASS=client_pw
 SSL_DIR=<THE PATH TO YOUR SSL DIRECTORY>
 ```
 
-
+Run the command below to create to create the certificates, the connection and streams.
 ```bash
 $ make create.all
 ```

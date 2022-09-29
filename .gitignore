@@ -12,3 +12,4 @@ api-key*
 *.properties
 
 secret
+snow*.log*

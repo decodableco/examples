@@ -2,10 +2,14 @@
 # Decodable + Snowpipe + Snowflake
 This demo outlines the work needed to integrate Decodable with Snowflake using the S3 Sink and Snowpipe.
 
+![diagram](images/decodable-snowpipe.jpg)
+
 ## Configure S3 sink
 Follow the instructions in this link.
 
 https://docs.decodable.co/docs/connector-reference-s3
+
+
 
 ## Create the integration
 

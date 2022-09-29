@@ -128,9 +128,7 @@ create.stream:
 		--field rank=STRING \
 		--field rank_delta=STRING \
 		--field high=STRING \
-		--field high_timestamp=STRING \
-		--field 1d="ROW<volume STRING, price_change STRING, price_change_pct STRING, volume_change STRING, volume_change_pct STRING, market_cap_change STRING, market_cap_change_pct STRING >" \
-		--field 30d="ROW<volume STRING, price_change STRING, price_change_pct STRING, volume_change STRING, volume_change_pct STRING, market_cap_change STRING, market_cap_change_pct STRING >"
+		--field high_timestamp=STRING 
 
 deactivate.conn.mtls:
 	-@decodable conn deactivate $(shell decodable conn list -o json | jq -sr '.[] |select(.name=="kafka_mtls_source")|.id ' )

@@ -1,0 +1,14 @@
+{
+  "name": "Clickstream_Avro",
+  "config": {
+    "connector.class": "DatagenSource",
+    "name": "Clickstream_Avro",
+    "kafka.auth.mode": "KAFKA_API_KEY",
+    "kafka.api.key": "****************",
+    "kafka.api.secret": "****************************************************************",
+    "kafka.topic": "clickstream_avro",
+    "output.data.format": "AVRO",
+    "quickstart": "CLICKSTREAM",
+    "tasks.max": "1"
+  }
+}

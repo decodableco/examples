@@ -26,7 +26,7 @@ TABLE=users
 $ make create.all
 ```
 
-![alt](images/confluent.jpg)
+![alt](images/current-demo.jpg)
 
 Creates a materialized view in Postgres
 

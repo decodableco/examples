@@ -17,6 +17,8 @@ This repository contains examples of use cases that utilize Decodable streaming 
 | [Tinybird](tinybird) | We write data to Tinybird and build a simple real time web application. |
 | [Apache Kafka](kafka2s3) | Installing Apache Kafka on EC2 and writing to S3 with Decodable |
 | [Apache Kafka mTLS](mtls) | We install Apache Kafka on EC2 and configure it with mTLS and configure Decodable to read from it |
+| [Snowflake + Snowpipe](snowflake) | We setup a snowpipe at the end of a Decodable S3 sink. |
+| [Confluent](confluent) | Clickstream from Confluent Cloud joined with CDC user data from Postgres |
 
 
 

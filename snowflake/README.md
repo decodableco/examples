@@ -4,7 +4,7 @@ This demo outlines the work needed to integrate Decodable with Snowflake using t
 
 ![diagram](images/decodable-snowpipe.jpg)
 
-## 1. Configure S3 sink
+## Configure S3 sink
 Choose an existing stream in Decodable to use to send to Snowflake. If you do not have any streams, please use the Datagen connection to generated envoy logs ( `datagen_envoy_connection` ). 
 
 Next we will need to configure a S3 sink connection to your stream. The documentation can be found [here](https://docs.decodable.co/docs/connector-reference-s3)

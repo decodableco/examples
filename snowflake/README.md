@@ -4,6 +4,13 @@ This demo outlines the work needed to integrate Decodable with Snowflake using t
 
 ![diagram](images/decodable-snowpipe.jpg)
 
+---
+**CDC Mirroring to Snowflake**
+
+Follow these [instructions](README-CDC.md) to create a mirrored Postgres table in Snowflake.
+
+---
+
 ## Configure S3 sink
 Choose an existing stream in Decodable to use to send to Snowflake. If you do not have any streams, please use the Datagen connection to generated envoy logs ( `datagen_envoy_connection` ). 
 
@@ -165,3 +172,7 @@ from MY_S3_TABLE
 
 - You've successfully configured Snowpipe with Decodable.
 
+
+# Create a mirrored table in Snowflake
+
+Follow these [instructions](README-CDC.md) to create a mirrored Postgres table in Snowflake.

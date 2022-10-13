@@ -1,17 +1,19 @@
-insert into clickstream_users_last_click
+insert into customer_last_url_visit
 select 
-    u.userid as userid,
-	u.first_name as first_name,
-	u.last_name as last_name,
-	u.phone as phone,
-	c.ip as ip,
-	c.remote_user as remote_user,
-	c.`time` as `time`,
-	c._time as _time,
-	c.request as request,
-	c.status as status,
-	c.`bytes` as `bytes`,
-	c.referrer as referrer,
-	c.agent as agent
-from clickstream_change c
-join users u on c.userid=u.userid
+    c.userid,
+    c.first_name,
+    c.last_name,
+    c.phone,
+    e.ip,
+    e.remote_user,
+    e.`time`,
+    NOW() as _time,
+    e.request,
+    SPLIT_INDEX(e.request, ' ', 1) as url,
+    e.status,
+    e.`bytes`,
+    e.referrer,
+    e.agent
+from ecommerce_clickstream e
+inner join customers c on c.userid=e.userid
+

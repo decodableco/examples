@@ -113,7 +113,7 @@ Go to Data->YOUR_DATABASE->YOUR_SCHEMA->Tasks to see your tasks. Click on the **
 ALTER TASK IF EXISTS  {{YOUR_STREAM_NAME}} RESUME
 ```
 
-## Trouble Shooting
+## Troubleshooting
 
 - Check the status of your Task to make sure it's not `suspended`.
 - Make sure your `merge` statement is selecting the stream and NOT the staging table.

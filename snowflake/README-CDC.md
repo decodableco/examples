@@ -58,35 +58,38 @@ Create a merge statement following the syntax below. Logic:
    3. If the record did not exist in the merge table, insert it. 
 
 ```sql
-CREATE OR REPLACE TASK merge_pg_customers -- create a task
+-- EXECUTE CHANGES
+CREATE OR REPLACE TASK merge_pg_customers -- creates a task
   WAREHOUSE = test
-  SCHEDULE = '1 minute' -- runs every minute
+  SCHEDULE = '1 minute' -- task runs every minute
 WHEN
-  SYSTEM$STREAM_HAS_DATA('append_only_customers_stream') -- runs only if there is data in the stream
+  SYSTEM$STREAM_HAS_DATA('append_only_customers_stream') -- task runs only if the stream has data
 AS
-merge into customers_merge c using ( -- the merge table
+merge into customers_merge c using ( -- merge statement
     select
-        case -- if delete event, use the before prop
+        case 
             when SRC:op = 'd' then SRC:before:userid
             else SRC:after:userid 
         end as userid,
         SRC:after:first_name as first_name,
         SRC:after:last_name as last_name,
         SRC:after:phone as phone,
-        SRC:op as op 
+        SRC:op as op
     from
-        append_only_customers_stream -- the append stream
-    where METADATA$ACTION = 'INSERT' -- looking for only inserts
-    order by SRC:ts_ms -- order by debezium timestamp
-) as s on s.userid = c.userid -- join on userid from merge table
-when matched and s.op='d' then -- delete from merge table if operation is delete
+        append_only_customers_stream
+    where 
+        METADATA$ACTION = 'INSERT' -- process only inserts in case the staging table is truncated.
+        and SRC:op <> 'c' -- process only d (deletes), u (updates), i (inserts) 
+    order by SRC:ts_ms
+) as s on s.userid = c.userid
+when matched and s.op='d' then -- deletes the record
     delete
-when matched and (s.op='u' or s.op='c') then -- update merge table with new values
+when matched and s.op='u' then -- updates the record
     update set
         first_name = s.first_name,
         last_name = s.last_name,
         phone = s.phone
-WHEN NOT matched THEN -- insert if a match was not found in the merge table
+WHEN NOT matched THEN -- insert the record
     INSERT
         (
             userid,
@@ -101,4 +104,20 @@ WHEN NOT matched THEN -- insert if a match was not found in the merge table
             s.last_name,
             s.phone
         );
+
 ```
+
+## View Tasks
+Go to Data->YOUR_DATABASE->YOUR_SCHEMA->Tasks to see your tasks. Click on the **Run History** tab to see the history of your runs. Alternatively you can run `show tasks`. If your task is at a `suspended` state, you'll need to resume it:
+
+```sql
+ALTER TASK IF EXISTS  {{YOUR_STREAM_NAME}} RESUME
+```
+
+## Trouble Shooting
+
+- Check the status of your Task to make sure it's not `suspended`.
+- Make sure your `merge` statement is selecting the stream and NOT the staging table.
+- If you are not seeing your changes, go to the data view/database/tasks to see your tasks. Check the **Run History** column to see if the task is running. If it failed, hover over the "Failed i" to see the error message.
+- If you get a duplicate row error: `Duplicate row detected during DML action Row Values: [11, "foo", "bar", "111"]` , you may need to delete this record from the merge table.
+- If you change the same record in Postgres multiple times causing multiple transactions to merge, make sure that you are ordering by a timestamp.

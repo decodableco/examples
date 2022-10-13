@@ -45,12 +45,14 @@ merge into customers_merge c using (
         SRC:op as op
     from
         append_only_customers_stream
-    where METADATA$ACTION = 'INSERT'
+    where 
+          METADATA$ACTION = 'INSERT' and
+          SRC:op in ('d', 'i', 'u')
     order by SRC:ts_ms
 ) as s on s.userid = c.userid
 when matched and s.op='d' then 
     delete
-when matched and (s.op='u' or s.op='c') then
+when matched and (s.op='u') then
     update set
         first_name = s.first_name,
         last_name = s.last_name,

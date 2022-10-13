@@ -58,14 +58,13 @@ Create a merge statement following the syntax below. Logic:
    3. If the record did not exist in the merge table, insert it. 
 
 ```sql
--- EXECUTE CHANGES
-CREATE OR REPLACE TASK merge_pg_customers -- creates a task
+CREATE OR REPLACE TASK merge_pg_customers -- creates task
   WAREHOUSE = test
   SCHEDULE = '1 minute' -- task runs every minute
 WHEN
   SYSTEM$STREAM_HAS_DATA('append_only_customers_stream') -- task runs only if the stream has data
 AS
-merge into customers_merge c using ( -- merge statement
+merge into customers_merge c using (
     select
         case 
             when SRC:op = 'd' then SRC:before:userid
@@ -78,18 +77,18 @@ merge into customers_merge c using ( -- merge statement
     from
         append_only_customers_stream
     where 
-        METADATA$ACTION = 'INSERT' -- process only inserts in case the staging table is truncated.
-        and SRC:op <> 'c' -- process only d (deletes), u (updates), i (inserts) 
+          METADATA$ACTION = 'INSERT' and -- only want insert events to the staging table
+          SRC:op in ('d', 'i', 'u') -- only process these operations
     order by SRC:ts_ms
 ) as s on s.userid = c.userid
-when matched and s.op='d' then -- deletes the record
+when matched and s.op='d' then -- delete record
     delete
-when matched and s.op='u' then -- updates the record
+when matched and (s.op='u') then -- update record
     update set
         first_name = s.first_name,
         last_name = s.last_name,
         phone = s.phone
-WHEN NOT matched THEN -- insert the record
+WHEN NOT matched THEN -- insert record
     INSERT
         (
             userid,

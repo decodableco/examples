@@ -27,13 +27,13 @@ create pipe snowpipe_db.public.customer_cdc_pipe auto_ingest=true as
 create or replace stream append_only_customers_stream on table customer_cdc append_only=true;
 
 -- EXECUTE CHANGES
-CREATE OR REPLACE TASK merge_pg_customers
+CREATE OR REPLACE TASK merge_pg_users
   WAREHOUSE = test
   SCHEDULE = '1 minute'
 WHEN
-  SYSTEM$STREAM_HAS_DATA('append_only_customers_stream')
+  SYSTEM$STREAM_HAS_DATA('append_only_users_stream')
 AS
-merge into customers_merge c using (
+merge into users_merge c using (
     select
         case 
             when SRC:op = 'd' then SRC:before:userid
@@ -44,20 +44,18 @@ merge into customers_merge c using (
         SRC:after:phone as phone,
         SRC:op as op
     from
-        append_only_customers_stream
-    where 
-          METADATA$ACTION = 'INSERT' and
-          SRC:op in ('d', 'i', 'u')
+        append_only_users_stream
+    where METADATA$ACTION = 'INSERT' and SRC:op <> 'r'
     order by SRC:ts_ms
 ) as s on s.userid = c.userid
 when matched and s.op='d' then 
     delete
-when matched and (s.op='u') then
+when matched and s.op='u' then
     update set
         first_name = s.first_name,
         last_name = s.last_name,
         phone = s.phone
-WHEN NOT matched THEN
+WHEN NOT matched and s.op='c' THEN -- insert only if op is c
     INSERT
         (
             userid,

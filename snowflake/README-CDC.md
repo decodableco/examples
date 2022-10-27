@@ -58,13 +58,13 @@ Create a merge statement following the syntax below. Logic:
    3. If the record did not exist in the merge table, insert it. 
 
 ```sql
-CREATE OR REPLACE TASK merge_pg_customers -- creates task
+CREATE OR REPLACE TASK customers_pg_snowpipe_task -- creates task
   WAREHOUSE = test
   SCHEDULE = '1 minute' -- task runs every minute
 WHEN
-  SYSTEM$STREAM_HAS_DATA('append_only_customers_stream') -- task runs only if the stream has data
+  SYSTEM$STREAM_HAS_DATA('customers_pg_snowpipe_stream') -- task runs only if the stream has data
 AS
-merge into customers_merge c using (
+merge into CUSTOMERS_PG_SNOWPIPE_MERGE c using (
     select
         case 
             when SRC:op = 'd' then SRC:before:userid
@@ -74,12 +74,20 @@ merge into customers_merge c using (
         SRC:after:last_name as last_name,
         SRC:after:phone as phone,
         SRC:op as op
-    from
-        append_only_customers_stream
+    from customers_pg_snowpipe_stream c1
+    join ( -- ensure we're reading a single record per ID and it's the latest record
+        select 
+          SRC:after:userid as userid, 
+          max(SRC:ts_ms) as ts
+        from customers_pg_snowpipe_stream 
+        group by SRC:after:userid
+    ) c2
+    on c1.SRC:after:userid=c2.userid and c1.SRC:ts_ms=c2.ts
     where 
-          METADATA$ACTION = 'INSERT' and -- only want insert events to the staging table
-          SRC:op in ('d', 'i', 'u') -- only process these operations
+      METADATA$ACTION = 'INSERT' and -- only want insert events to the staging table
+      SRC:op in ('d', 'c', 'u', 'r') -- only process these operations
     order by SRC:ts_ms
+    
 ) as s on s.userid = c.userid
 when matched and s.op='d' then -- delete record
     delete

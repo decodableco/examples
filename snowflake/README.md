@@ -21,24 +21,24 @@ Next we will need to configure a S3 sink connection to your stream. The document
 - Go to the AWS IAM console to create a role. Click on "Roles" on the left.
 - Create a role and choose `custome-trust-policy`
 ![alt](images/custom-trust-policy.png)
-- Paste the JSON policy replacing the `my-decodable-account` with the name of your decodable account. Click next.
+- Paste the JSON policy replacing the `{DECODABLE_ACCOUNT_NAME}` with the name of your decodable account. Click next.
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::671293015970:root"
-      },
-      "Action": "sts:AssumeRole",
-      "Condition": {
-        "StringEquals": {
-          "sts:ExternalId": "my-decodable-account"
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::671293015970:root"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "{DECODABLE_ACCOUNT_NAME}"
+                }
+            }
         }
-      }
-    }
-  ]
+    ]
 }
 ```
 - Click `Create Policy` at the top of the screen. This will open a new tab.
@@ -116,11 +116,43 @@ CREATE STORAGE INTEGRATION decodable_clickstream_int
   STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::123412341234:role/YOUR_ARN-ROLE'
   STORAGE_ALLOWED_LOCATIONS = ('s3://your-bucket/some/dir/')
 ```
-- Describe the integration you just created and grab these values to use later:
+- Describe the integration you just created and grab these values and update the Role created previously:
   - STORAGE_AWS_IAM_USER_ARN
   - STORAGE_AWS_EXTERNAL_ID
 ```sql
 DESC INTEGRATION decodable_clickstream_int
+```
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::671293015970:root"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "{DECODABLE_ACCOUNT_NAME}"
+                }
+            }
+        },
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "{{STORAGE_AWS_IAM_USER_ARN}}"
+            },
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                "StringEquals": {
+                    "sts:ExternalId": "{{STORAGE_AWS_EXTERNAL_ID}}"
+                }
+            }
+        }
+    ]
+}
 ```
 - Execute the commands below replacing `s3://your-bucket/clickstream/` with your bucket. Make sure that it matches exactly the value when you created the storage integration above. Missing a trailing slash will cause and error. This creates a STAGING area that will load data from S3.
 

@@ -44,6 +44,22 @@ This demo shows how to notify an AWS lambda function to send latest contents to 
 }
 ```
 
+## Lambda Permissions
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::hubert-s3-lambda/events/*"
+        }
+    ]
+}
+```
+
 ## Lambda
 
 ```python

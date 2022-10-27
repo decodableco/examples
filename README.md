@@ -19,7 +19,8 @@ This repository contains examples of use cases that utilize Decodable streaming 
 | [Apache Kafka mTLS](mtls) | We install Apache Kafka on EC2 and configure it with mTLS and configure Decodable to read from it |
 | [Snowflake + Snowpipe](snowflake) | We setup a snowpipe at the end of a Decodable S3 sink. |
 | [Confluent](confluent) | Clickstream from Confluent Cloud joined with CDC user data from Postgres |
-
+| [Snowflake + Snowpipe + Merge](snowflake/README-CDC.md) | Leveraging Snowpipe, we send CDC data from Postgres to be processed in Snowflake using an Append Only Stream in Snowflake to merge CDC data in a Snowflake table. Essentially `mirroring` the table in Postgres in a Snowflake table. |
+|[Reading S3 Events in a Lambda Function](s3events/)|We configure an S3 bucket with a Lambda notification to send data to Kinesis to be processed in Decodable |
 
 
 

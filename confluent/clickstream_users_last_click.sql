@@ -7,13 +7,12 @@ select
     e.ip,
     e.remote_user,
     e.`time`,
-    NOW() as _time,
+    cast(NOW() as timestamp) as _time,
     e.request,
     SPLIT_INDEX(e.request, ' ', 1) as url,
     e.status,
     e.`bytes`,
     e.referrer,
     e.agent
-from ecommerce_clickstream e
-inner join customers c on c.userid=e.userid
-
+from clickstream_avro e
+inner join customers_pg c on c.userid=e.userid

@@ -23,7 +23,7 @@ public class App {
         String audience = "urn:sn:pulsar:o-whe2d:free";
 
         PulsarClient client = PulsarClient.builder()
-                .serviceUrl("pulsar+ssl://free.o-whe2d.snio.cloud:6651")
+                .serviceUrl("")
                 .authentication(
                         AuthenticationFactoryOAuth2.clientCredentials(new URL(issuerUrl), new URL(credentialsUrl), audience))
                 .build();

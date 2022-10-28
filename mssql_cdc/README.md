@@ -27,6 +27,12 @@ The docker image has this environment variable set to start the SQL Server Agent
 -e "MSSQL_AGENT_ENABLED=True" \
 ```
 
+To start Docker SQL Server run this command:
+
+```bash
+make sqlserver
+```
+
 ### Enabling CDC in MSSQL
 
 Create a database and table below. You must create your own database instance else you will get an error stating you cannot enable CDC on a system database.

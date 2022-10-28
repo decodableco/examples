@@ -180,3 +180,28 @@ debezium.source.value.converter=org.apache.kafka.connect.json.JsonConverter
 $ run.sh | jq
 ```
 
+## SQL Pipelines
+To cleanse the data for the data to become materialized, we'll need to prepare it. Run the sql below under pipelines.
+
+```sql
+insert into mssql_cdc_partitioned
+select
+    payload.after.userid,
+    payload.after.first_name,
+    payload.after.last_name,
+    payload.after.phone,
+    payload.op,
+    TO_TIMESTAMP_LTZ(payload.ts_ms, 3) as ts_ms
+from mssql_cdc
+where payload.op <> 'd' --ignoring deletes
+
+```
+
+Next run the materialization sql which converts the append stream into a change stream (or a materialized view). You may not see your entire dataset in the preview. You will need to sink it into a database like PG to see the materialization.
+
+```sql
+insert into mssql_cdc_materialized
+select *
+from table(to_change(mssql_cdc_partitioned))
+
+```

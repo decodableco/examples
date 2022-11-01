@@ -21,7 +21,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 | [Confluent](confluent) | Clickstream from Confluent Cloud joined with CDC user data from Postgres |
 | [Snowflake + Snowpipe + Merge](snowflake/README-CDC.md) | Leveraging Snowpipe, we send CDC data from Postgres to be processed in Snowflake using an Append Only Stream in Snowflake to merge CDC data in a Snowflake table. Essentially `mirroring` the table in Postgres in a Snowflake table. |
 |[Reading S3 Events in a Lambda Function](s3events/)|We configure an S3 bucket with a Lambda notification to send data to Kinesis to be processed in Decodable |
-
+|[MSSQL CDC](mssql_cdc/)| We enable a MSSQL in Docker with CDC. We then stand up a Debezium server to read from MSSQL and write the change events into AWS Kinesis  |
 
 
 

@@ -67,5 +67,6 @@ END
 
 select * from customers
 
+delete from customers where userid = 1
 
 

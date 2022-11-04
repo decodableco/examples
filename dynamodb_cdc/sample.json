@@ -1,0 +1,46 @@
+{
+    "awsRegion": "us-west-2",
+    "eventID": "d3ed405e-420b-4601-8aaf-bda773a16d86",
+    "eventName": "MODIFY",
+    "userIdentity": null,
+    "recordFormat": "application/json",
+    "tableName": "hubert_dynamocdc",
+    "dynamodb": {
+        "ApproximateCreationDateTime": 1667565639982,
+        "Keys": {
+            "userid": {
+                "N": "8"
+            }
+        },
+        "NewImage": {
+            "last_name": {
+                "S": "gX8fQ2n"
+            },
+            "phone": {
+                "N": "8"
+            },
+            "userid": {
+                "N": "8"
+            },
+            "first_name": {
+                "S": "gX8fQ2n"
+            }
+        },
+        "OldImage": {
+            "last_name": {
+                "S": "K2zqYSK"
+            },
+            "phone": {
+                "N": "8"
+            },
+            "userid": {
+                "N": "8"
+            },
+            "first_name": {
+                "S": "K2zqYSK"
+            }
+        },
+        "SizeBytes": 104
+    },
+    "eventSource": "aws:dynamodb"
+}

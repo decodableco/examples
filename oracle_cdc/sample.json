@@ -1,0 +1,242 @@
+{
+    "schema": {
+        "type": "struct",
+        "fields": [
+            {
+                "type": "struct",
+                "fields": [
+                    {
+                        "type": "bytes",
+                        "optional": false,
+                        "name": "org.apache.kafka.connect.data.Decimal",
+                        "version": 1,
+                        "parameters": {
+                            "scale": "0",
+                            "connect.decimal.precision": "38"
+                        },
+                        "field": "USERID"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "FIRST_NAME"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "LAST_NAME"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "PHONE"
+                    }
+                ],
+                "optional": true,
+                "name": "ora.ADMIN.CUSTOMERS.Value",
+                "field": "before"
+            },
+            {
+                "type": "struct",
+                "fields": [
+                    {
+                        "type": "bytes",
+                        "optional": false,
+                        "name": "org.apache.kafka.connect.data.Decimal",
+                        "version": 1,
+                        "parameters": {
+                            "scale": "0",
+                            "connect.decimal.precision": "38"
+                        },
+                        "field": "USERID"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "FIRST_NAME"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "LAST_NAME"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "PHONE"
+                    }
+                ],
+                "optional": true,
+                "name": "ora.ADMIN.CUSTOMERS.Value",
+                "field": "after"
+            },
+            {
+                "type": "struct",
+                "fields": [
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "version"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "connector"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "name"
+                    },
+                    {
+                        "type": "int64",
+                        "optional": false,
+                        "field": "ts_ms"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "name": "io.debezium.data.Enum",
+                        "version": 1,
+                        "parameters": {
+                            "allowed": "true,last,false,incremental"
+                        },
+                        "default": "false",
+                        "field": "snapshot"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "db"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "sequence"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "schema"
+                    },
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "table"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "txId"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "scn"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "commit_scn"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "lcr_position"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "rs_id"
+                    },
+                    {
+                        "type": "int32",
+                        "optional": true,
+                        "field": "ssn"
+                    },
+                    {
+                        "type": "int32",
+                        "optional": true,
+                        "field": "redo_thread"
+                    },
+                    {
+                        "type": "string",
+                        "optional": true,
+                        "field": "user_name"
+                    }
+                ],
+                "optional": false,
+                "name": "io.debezium.connector.oracle.Source",
+                "field": "source"
+            },
+            {
+                "type": "string",
+                "optional": false,
+                "field": "op"
+            },
+            {
+                "type": "int64",
+                "optional": true,
+                "field": "ts_ms"
+            },
+            {
+                "type": "struct",
+                "fields": [
+                    {
+                        "type": "string",
+                        "optional": false,
+                        "field": "id"
+                    },
+                    {
+                        "type": "int64",
+                        "optional": false,
+                        "field": "total_order"
+                    },
+                    {
+                        "type": "int64",
+                        "optional": false,
+                        "field": "data_collection_order"
+                    }
+                ],
+                "optional": true,
+                "name": "event.block",
+                "version": 1,
+                "field": "transaction"
+            }
+        ],
+        "optional": false,
+        "name": "ora.ADMIN.CUSTOMERS.Envelope",
+        "version": 1
+    },
+    "payload": {
+        "before": null,
+        "after": {
+            "USERID": "Aw==",
+            "FIRST_NAME": "f3",
+            "LAST_NAME": "b3",
+            "PHONE": "333"
+        },
+        "source": {
+            "version": "2.0.0.Final",
+            "connector": "oracle",
+            "name": "ora",
+            "ts_ms": 1667525679000,
+            "snapshot": "false",
+            "db": "TEST",
+            "sequence": null,
+            "schema": "ADMIN",
+            "table": "CUSTOMERS",
+            "txId": "07000d005a030000",
+            "scn": "1273960",
+            "commit_scn": "1273961",
+            "lcr_position": null,
+            "rs_id": null,
+            "ssn": 0,
+            "redo_thread": 1,
+            "user_name": "ADMIN"
+        },
+        "op": "c",
+        "ts_ms": 1667525785087,
+        "transaction": null
+    }
+}

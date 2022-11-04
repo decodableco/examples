@@ -18,6 +18,16 @@ config.vm.box = "fedora/34-cloud-base"
 ```
 ---
 
+Below is a diagram that outlines a possible use case. We will be implementing the top half before the cleanse job.
+
+```mermaid
+flowchart TD;
+    ora[Oracle AWS RDS Server]-->dbz[Debezium Server]-->Kinesis-->dc[Decodable Kinesis Source]-->Cleanse-->Materialize-->pg[(Materialize in a Database)]
+
+	Other[Other Streaming Data]-->Enrichment
+	Materialize-->Enrichment
+```
+
 ## Makefile
 This example utilizes a Makefile that organizes all the commands. To hide credentials, it includes a `.env` file which needs populated in order for the commands to work.
 

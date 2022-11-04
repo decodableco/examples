@@ -8,6 +8,16 @@ DynamoDB provides CDC data to Kinesis following the instructions [here](https://
 
 This example creates a Kinesis source connection to the stream you created. The data loader is implemented in NodeJS.
 
+Below is a diagram of a use case. We will be implementing everything above `Cleanse`.
+```mermaid
+flowchart TD;
+    NodeJS-->ddb[DynamoDB]-->Kinesis-->dc[Decodable Kinesis Source]-->Cleanse-->Materialize-->pg[(Materialize in a Database)]
+
+	Other[Other Streaming Data]-->Enrichment
+	Materialize-->Enrichment
+```
+
+
 ## Setup
 
 Create a `.env` file to place your credentials. The Makefile will use this information to build the stream and Kinesis source connection.

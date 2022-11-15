@@ -10,13 +10,13 @@ create table customers (
 select * from customers c 
 truncate customers 
 
-
+-- CREATES AN EXTERNAL SCHEMA THAT PROVIDES ACCESS TO KINESIS STREAMS
 CREATE EXTERNAL SCHEMA postgres_users_schema
 FROM KINESIS
 IAM_ROLE 'arn:aws:iam::657006753396:role/hubert-redshift-kinesis';
+-- drop SCHEMA postgres_users_schema
 
-drop SCHEMA postgres_users_schema
-
+-- CREATES THE MATERIALIZED VIEW
 CREATE MATERIALIZED VIEW postgres_users_schema_view AS
 SELECT 
 	approximate_arrival_timestamp, 
@@ -26,12 +26,7 @@ SELECT
 	JSON_PARSE(from_varbyte(kinesis_data , 'utf-8')) as Data
 FROM postgres_users_schema."hubert-redshift"
 --WHERE is_utf8(Data) AND is_valid_json(from_varbyte(Data, 'utf-8'));
-drop materialized view postgres_users_schema_view
-
-
-describe  postgres_users_schema_view
-
-REFRESH MATERIALIZED VIEW postgres_users_schema_view;
+--drop materialized view postgres_users_schema_view
 
 create table customers_merged (
 	userid int primary key,
@@ -40,6 +35,7 @@ create table customers_merged (
 	phone varchar(63)
 );
 
+REFRESH MATERIALIZED VIEW postgres_users_schema_view;
 select * from customers_merged
 
 

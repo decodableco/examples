@@ -6,6 +6,16 @@ Details of this solution can be found [here]([https://](https://docs.aws.amazon.
 ## Use case
 Redshift has the ability to materialize views from a Kinesis stream. Although JOINs are not currently supported and requires preprocessing of your data prior reaching Kinesis. Decodable provides this stream processing to allow you to mirror/replicate data from any database (eg. postgres) into Redshift.
 
+
+
+```mermaid
+flowchart TD;
+    mspgsql[Postgres CDC Source]-->append[To append stream]-->sql[Cleanse, Enrich, and Join]-->sink[Kinesis Sink]-->
+    schema[External Schema]-->view[Materialized View]-->Refresh-->Merge
+
+	Other[Other Streaming Data]-->sql
+```
+
 ## Create a Decodable Kinesis Sink
 First create a Kinesis stream from which Redshift will read. Then follow the instructions [here]([https://](https://docs.decodable.co/docs/connector-reference-kinesis)) to create a Kinesis sink to write to said stream.
 

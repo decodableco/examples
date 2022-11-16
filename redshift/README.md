@@ -235,5 +235,5 @@ where B.userid is null and op <> 'd'
 ```
 
 
-To schedule these commands, follow this AWS [document]((https://docs.aws.amazon.com/redshift/latest/mgmt/query-editor-schedule-query.html)). Make sure you are using version 1 of the query editor.
+To schedule these commands, follow this AWS [document](https://docs.aws.amazon.com/redshift/latest/mgmt/query-editor-schedule-query.html). Make sure you are using version 1 of the query editor.
 

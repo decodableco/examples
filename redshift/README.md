@@ -1,7 +1,7 @@
 # Writing Real Time CDC Events to Redshift
 In this example, we will be mirroring a Postgres table in Redshift. Amazon Redshift acts as a stream consumer. An Amazon Redshift materialized view is the landing area for data that is read from the stream, which is processed as it arrives. For instance, JSON values can be consumed and mapped to Redshift data columns using SQL, which is familiar. When the materialized view is refreshed, Redshift compute nodes allocate each data shard to a compute slice. Each slice consumes data from the allocated shards until the view reaches parity with the stream. In the same manner, subsequent materialized view refreshes read data from the last SEQUENCE_NUMBER of the previous refresh until it reaches parity with the stream data.
 
-Details of this solution can be found [here]([https://](https://docs.aws.amazon.com/redshift/latest/dg/materialized-view-streaming-ingestion.html)).
+Details of this solution can be found [here][https://](https://docs.aws.amazon.com/redshift/latest/dg/materialized-view-streaming-ingestion.html).
 
 ## Use case
 Redshift has the ability to materialize views from a Kinesis stream. Although JOINs are not currently supported and requires preprocessing of your data prior reaching Kinesis. Decodable provides this stream processing to allow you to mirror/replicate data from any database (eg. postgres) into Redshift.
@@ -17,10 +17,10 @@ flowchart TD;
 ```
 
 ## Create a Decodable Kinesis Sink
-First create a Kinesis stream from which Redshift will read. Then follow the instructions [here]([https://](https://docs.decodable.co/docs/connector-reference-kinesis)) to create a Kinesis sink to write to said stream.
+First create a Kinesis stream from which Redshift will read. Then follow the instructions [here](https://docs.decodable.co/docs/connector-reference-kinesis) to create a Kinesis sink to write to said stream.
 
 ## Create an IAM Role
-Create an IAM Role and choose a "custome trust policy".
+Create an IAM Role and choose a "custom trust policy".
 
 ![alt](images/custom-trust-policy.png)
 

@@ -1,6 +1,12 @@
 # InfluxDB and Decodable Integration
 This example integrates Decodable and InfluxDB (Influx Data Cloud) via Kinesis + AWS Lambda / Python. We will be sending envoy logs being produced by the DataGen connector built into Decodable.
 
+```mermaid
+flowchart TD;
+    DataGen-->envoy_logs-->parse_http_events-->http_events-->Kinesis_Sink-->Lambda-->InfluxDB
+
+```
+
 ## Setup
 Setup a python virtual environment and install the requirements.
 

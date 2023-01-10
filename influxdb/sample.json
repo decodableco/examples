@@ -1,0 +1,2 @@
+{"_raw":"[2023-01-09T21:11:41Z] \"POST /products/2 HTTP/1.1\" 500 UH 9414 8115 88 95 \"-\" \"Mozilla/5.0 (Linux; Android 10) \" \"791e8771-d9ab-4f61-9583-a255f5f35f7d\" \"locations\" \"127.0.0.1:8080\"","_time":"2023-01-09 21:11:41","req_flags":"UH","req_method":"POST","req_path":"/products/2","req_proto":"HTTP/1.1","resp_size":9414,"resp_status":500}
+

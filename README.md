@@ -4,6 +4,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 
 | Example | Description |
 |---------|-------------|
+| [Flink Learn](./flink-learn/) | Apache Flink tutorials and webinarsm|
 | [AsyncAPI](asyncapi) | Publishing Data Products with AsyncAPI |
 | [Opinionated Data Pipelines](opinionated-pipelines) | Building data pipelines with schema on write streams. |
 | [Postman](postman) | Building data pipelines with Postman. |

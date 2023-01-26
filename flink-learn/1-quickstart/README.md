@@ -32,6 +32,8 @@ tar -xzf flink-*.tgz
 ./bin/stop-cluster.sh  # stop the flink cluster
 ```
 
+We will need the Flink Kafka connector for this webinar. Download it [here](https://nightlies.apache.org/flink/flink-docs-release-1.16/docs/connectors/table/kafka/) and place it into the lib directory of your Flink deployment.
+
 # Redpanda
 In this webinar, we’ll be sending data to Redpanda, a Kafka-compatible and Zookeeperless streaming platform for mission critical workloads. We’ll set up Flink to read from one Redpanda topic, process that data, and then send it back to a different topic in Redpanda. You'll need to install Redpanda and it's CLI rpk, which can be found [here](https://docs.redpanda.com/docs/platform/quickstart/).
 

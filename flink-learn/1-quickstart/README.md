@@ -1,13 +1,6 @@
 # Getting started with Apache Flink & FlinkSQL
 With heavy adoption at both large and small companies, [Apache Flink](https://flink.apache.org/) has emerged as the clear winner in the stream processing war. However, many streaming engineers have been embedded in Apache Spark or Kafka Streams/ksqlDB ecosystems and do not have much experience with using Flink.
 
-## Agenda
-- Gunnar introductions
-- Redpanda introductions
-- Hubert starts
-- Questions
-- Wrap up
-
 ## Goal
 This webinar is for engineers who are new and interested in Apache Flink and Flink SQL, and we’ll be demonstrating for you how you can get started with Apache Flink and Flink SQL. By the end of this webinar, you will have:
 Created and configured a Flink application on your local machine that reads and writes data from one Redpanda topic to another topic. 

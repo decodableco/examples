@@ -1,6 +1,8 @@
 # Decodable Examples
-This repository contains examples of use cases that utilize Decodable streaming solution.
 
+This repository contains examples of use cases that utilize Decodable streaming solution as well as demos for related open-source projects such as Apache Flink, Debezium, and Postgres.
+
+## Contents
 
 | Example | Description |
 |---------|-------------|
@@ -25,4 +27,9 @@ This repository contains examples of use cases that utilize Decodable streaming 
 |[MSSQL CDC](mssql_cdc/)| We enable a MSSQL in Docker with CDC. We then stand up a Debezium server to read from MSSQL and write the change events into AWS Kinesis  |
 |[Oracle CDC](oracle_cdc/)| We configure a Oracle AWS RDS with LogMiner. We then stand up a Debezium server to read change events into AWS Kinesis  |
 |[DynamoDb CDC](dynamodb_cdc/)| We configure a DynamoDB to send change data to Kinesis. Then we read those changes into Decodable for transformation or replication.  |
+|[ Logical Decoding Message Examples](postgres-logical-decoding)| We show how to retrieve logical decoding messages from the Postgres WAL |
+
+## License
+
+This code base is available under the Apache License, version 2.
 

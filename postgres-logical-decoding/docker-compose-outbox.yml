@@ -1,0 +1,57 @@
+#
+#  Copyright 2023 The original authors
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+version: '2.1'
+services:
+  postgres:
+    image: quay.io/debezium/example-postgres:2.1
+    ports:
+     - 5432:5432
+    volumes:
+     - ./postgres:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: "pg_isready -U postgresuser -d demodb"
+      interval: 2s
+      timeout: 20s
+      retries: 10
+    environment:
+     - POSTGRES_USER=postgresuser
+     - POSTGRES_PASSWORD=postgrespw
+     - POSTGRES_DB=demodb
+    networks:
+     - my-network
+  zookeeper:
+    image: quay.io/debezium/zookeeper:2.1
+    ports:
+     - 2181:2181
+     - 2888:2888
+     - 3888:3888
+    networks:
+     - my-network
+  kafka:
+    image: quay.io/debezium/kafka:2.1
+    ports:
+     - 9092:9092
+    links:
+     - zookeeper
+    environment:
+     - ZOOKEEPER_CONNECT=zookeeper:2181
+     - ADVERTISED_HOST_NAME=192.168.178.48
+    networks:
+     - my-network
+networks:
+  my-network:
+    name: logical-decoding-network

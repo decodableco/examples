@@ -49,7 +49,8 @@ services:
      - zookeeper
     environment:
      - ZOOKEEPER_CONNECT=zookeeper:2181
-     - ADVERTISED_HOST_NAME=192.168.178.48
+     # Set to your host IP
+     - ADVERTISED_HOST_NAME=<YOUR HOST IP>
     networks:
      - my-network
 networks:

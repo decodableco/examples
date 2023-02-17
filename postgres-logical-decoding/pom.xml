@@ -240,6 +240,30 @@
               </arguments>
             </configuration>
           </execution>
+          <execution>
+            <id>outbox</id>
+            <configuration>
+               <executable>java</executable>
+               <classpathScope>provided</classpathScope>
+              <arguments>
+                <argument>--class-path</argument>
+                <arggument>${project.build.directory}/deps/*:${project.build.directory}/classes</arggument>
+                <argument>co.decodable.examples.logicaldecoding.outbox.OutboxMain</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>advanceslot</id>
+            <configuration>
+               <executable>java</executable>
+               <classpathScope>provided</classpathScope>
+              <arguments>
+                <argument>--class-path</argument>
+                <arggument>${project.build.directory}/deps/*:${project.build.directory}/classes</arggument>
+                <argument>co.decodable.examples.logicaldecoding.advanceslot.AdvanceSlotMain</argument>
+              </arguments>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

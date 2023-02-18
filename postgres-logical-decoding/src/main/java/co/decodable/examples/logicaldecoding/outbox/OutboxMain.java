@@ -31,6 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.common.base.Charsets;
 import com.ververica.cdc.connectors.postgres.PostgreSQLSource;
 import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
 
@@ -87,10 +88,13 @@ public class OutboxMain {
             try {
                 JsonNode content = element.getMessage().getContent();
 
-                return new ProducerRecord<byte[], byte[]>(
+                ProducerRecord<byte[], byte[]> record = new ProducerRecord<byte[], byte[]>(
                         content.get("aggregate_type").asText(),
-                        content.get("aggregate_id").asText().getBytes(),
+                        content.get("aggregate_id").asText().getBytes(Charsets.UTF_8),
                         mapper.writeValueAsBytes(content.get("payload")));
+                record.headers().add("message_id", content.get("id").asText().getBytes(Charsets.UTF_8));
+
+                return record;
             }
             catch (JsonProcessingException e) {
                 throw new IllegalArgumentException("Couldn't serialize outbox message", e);

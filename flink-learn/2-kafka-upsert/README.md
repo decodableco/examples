@@ -82,7 +82,38 @@ DELETE FROM shipments where shipment_id = 1004;
 
 ## Emitting Data to Kafka
 
-Attempt 1: Using the "kafka" connector:
+It's vital to use the "kafka-upsert" connector:
+
+```sql
+CREATE TABLE shipments_output_upsert (
+  shipment_id INT,
+  order_id INT,
+  origin STRING,
+  destination STRING,
+  is_arrived BOOLEAN,
+  db_name STRING,
+  operation_ts TIMESTAMP_LTZ(3),
+  PRIMARY KEY (shipment_id) NOT ENFORCED
+ )
+WITH (
+  'connector' = 'upsert-kafka',
+  'topic' = 'shipments',
+  'properties.bootstrap.servers' = 'redpanda:29092',
+  'key.format' = 'json', 'value.format' = 'json'
+);
+```
+
+```sql
+INSERT INTO shipments_output_upsert SELECT * FROM shipments;
+```
+
+Next, observe the data in Redpanda (do some more data changes in Postgres as well):
+
+```bash
+rpk topic consume shipments | jq .
+```
+
+In contrast, using the "kafka" connector won't work, as it cannot ingest the changelog stream emitted by the CDC connector:
 
 ```sql
 CREATE TABLE shipments_output (
@@ -102,8 +133,6 @@ WITH (
 );
 ```
 
-Then insert data from the source table into the output table:
-
 ```sql
 --this won't work
 INSERT INTO shipments_output SELECT * FROM shipments;
@@ -119,37 +148,6 @@ SET 'sql-client.execution.result-mode' = 'changelog';
 ```
 
 The "kafka" connector can only handle `I` (insert/append) events.
-
-Attempt 2: Using the "kafka-upsert" connector:
-
-```sql
-DROP TABLE shipments_output;
-
-CREATE TABLE shipments_output (
-  shipment_id INT,
-  order_id INT,
-  origin STRING,
-  destination STRING,
-  is_arrived BOOLEAN,
-  db_name STRING,
-  operation_ts TIMESTAMP_LTZ(3),
-  PRIMARY KEY (shipment_id) NOT ENFORCED
- )
-WITH (
-  'connector' = 'upsert-kafka',
-  'topic' = 'shipments',
-  'properties.bootstrap.servers' = 'redpanda:29092',
-  'key.format' = 'json', 'value.format' = 'json'
-);
-
-INSERT INTO shipments_output SELECT * FROM shipments;
-```
-
-Next, observe the data in Redpanda (do some more data changes in Postgres as well):
-
-```bash
-rpk topic consume shipments | jq .
-```
 
 ## Emitting Change Events
 

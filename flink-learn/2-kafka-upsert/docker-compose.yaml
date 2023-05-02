@@ -10,6 +10,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
      - ./postgres/public_inventory.sql:/docker-entrypoint-initdb.d/public_inventory.sql
+    networks:
+      - my-network
   redpanda:
     image: docker.redpanda.com/redpandadata/redpanda:v23.1.7
     command:
@@ -26,6 +28,8 @@ services:
       - 9092:9092
       - 9644:9644
       - 29092:29092
+    networks:
+      - my-network
   jobmanager:
     image: decodable-examples/flink-with-connectors:1.17.0-scala_2.12-java11
     build:
@@ -37,6 +41,8 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
+    networks:
+      - my-network
   taskmanager:
     image: decodable-examples/flink-with-connectors:1.17.0-scala_2.12-java11
     build:
@@ -49,7 +55,9 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2
+        taskmanager.numberOfTaskSlots: 4
+    networks:
+      - my-network
   sql-client:
     image: decodable-examples/flink-with-connectors:1.17.0-scala_2.12-java11
     build:
@@ -61,4 +69,9 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        rest.address: jobmanager 
+        rest.address: jobmanager
+    networks:
+      - my-network
+networks:
+  my-network:
+    name: upsert-network

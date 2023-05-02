@@ -29,7 +29,7 @@ Obtain a Postgres client session:
 
 ```bash
 docker run --tty --rm -i \
-  --network kafka-upsert-test_default \
+  --network upsert-network \
   quay.io/debezium/tooling:1.2 \
   bash -c 'pgcli postgresql://postgres:postgres@postgres:5432/postgres'
 ```

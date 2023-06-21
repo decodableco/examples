@@ -133,30 +133,12 @@ From Apache Flink Documentation:
 
 
 ## Checkpointing
+
 Checkpoints allow Flink to recover state and positions in the streams to give the application the same semantics as a failure-free execution.
 
 ```java
 // start a checkpoint every 1000 ms
 env.enableCheckpointing(1000);
-// set mode to exactly-once (this is the default)
-env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-// make sure 500 ms of progress happen between checkpoints
-env.getCheckpointConfig().setMinPauseBetweenCheckpoints(500);
-// checkpoints have to complete within one minute, or are discarded
-env.getCheckpointConfig().setCheckpointTimeout(60000);
-// only two consecutive checkpoint failures are tolerated
-env.getCheckpointConfig().setTolerableCheckpointFailureNumber(2);
-// allow only one checkpoint to be in progress at the same time
-env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-// enable externalized checkpoints which are retained
-// after job cancellation
-env.getCheckpointConfig().setExternalizedCheckpointCleanup(
-        CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
-// enables the unaligned checkpoints.
-// You should use unaligned checkpoints if your checkpointing durations are very high due to backpressure. 
-env.getCheckpointConfig().enableUnalignedCheckpoints();
-// sets the checkpoint storage where checkpoint snapshots will be written
-env.getCheckpointConfig().setCheckpointStorage(String.format("file:///%s/cp",System.getProperty("user.dir")));
 ```
 
 For more information on unaligned checkpoints, click [here](https://nightlies.apache.org/flink/flink-docs-master/docs/ops/state/checkpointing_under_backpressure/#unaligned-checkpoints).
@@ -200,8 +182,7 @@ import org.apache.flink.streaming.api.functions.sink.PrintSink;
 1. Create a secured source connector to Redpanda by copying and pasting the code below. It will read the properties from the .env file and create a Kafka source.
 
 ```java
-ParameterTool parameters = ParameterTool.fromPropertiesFile("./.env");
-String bootstrap_servers = parameters.get("REDPANDA_BROKERS");
+String bootstrap_servers = ...;
 KafkaSource<String> ksource = KafkaSource.<String>builder()
         .setBootstrapServers(bootstrap_servers)
         .setTopics("input-topic")
@@ -216,7 +197,7 @@ KafkaSource<String> ksource = KafkaSource.<String>builder()
 Create a Kafka source by copying and pasting the code below.
 
 ```java
-DataStreamSource<String> stream = env.fromSource(
+DataStream<String> stream = env.fromSource(
     ksource, 
     WatermarkStrategy.noWatermarks(), 
     "Redpanda Source"
@@ -233,7 +214,7 @@ Javadoc:
 > Applies a Filter transformation on a DataStream. The transformation calls a FilterFunction for each element of the DataStream and retains only those element for which the function returns true. `Elements for which the function returns false are filtered.` The user can also extend RichFilterFunction to gain access to other features provided by the org.apache.flink.api.common.functions.RichFunction interface.
 
 ```java
-SingleOutputStreamOperator<String> filtered = stream.filter(string -> string.contains("foo"));
+DataStream<String> filtered = stream.filter(string -> string.contains("foo"));
 ```
 
 ## Add a PrintSink for debugging

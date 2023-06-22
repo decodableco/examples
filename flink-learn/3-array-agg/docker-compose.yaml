@@ -1,0 +1,104 @@
+version: '2.1'
+services:
+  postgres:
+    image: quay.io/debezium/example-postgres:2.3
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./postgres/public_inventory.sql:/docker-entrypoint-initdb.d/public_inventory.sql
+      - ./postgres/postgresql.conf.sample:/usr/share/postgresql/postgresql.conf.sample
+    networks:
+      - my-network
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.1.7
+    command:
+      - redpanda start
+      - --smp 1
+      - --overprovisioned
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr 0.0.0.0:8082
+      - --advertise-pandaproxy-addr localhost:8082
+    ports:
+      - 8081:8081
+      - 8082:8082
+      - 9092:9092
+      - 9644:9644
+      - 29092:29092
+    networks:
+      - my-network
+  jobmanager:
+    image: decodable-examples/flink-with-connectors:1.17.1-scala_2.12-java11
+    build:
+      context: flink
+    ports:
+      - "18081:8081"
+    command: jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+    volumes:
+      - ./target/array-agg-0.1.jar:/opt/flink/lib/array-agg-0.1.jar
+    networks:
+      - my-network
+  taskmanager:
+    image: decodable-examples/flink-with-connectors:1.17.1-scala_2.12-java11
+    build:
+      context: flink
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 4
+    volumes:
+      - ./target/array-agg-0.1.jar:/opt/flink/lib/array-agg-0.1.jar
+    networks:
+      - my-network
+  sql-client:
+    image: decodable-examples/flink-with-connectors:1.17.1-scala_2.12-java11
+    build:
+      context: flink
+    command: bin/sql-client.sh -i /opt/flink/examples/flink-tables.sql
+    depends_on:
+      - jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        rest.address: jobmanager
+    volumes:
+      - ./target/array-agg-0.1.jar:/opt/flink/lib/array-agg-0.1.jar
+      - ./flink-tables.sql:/opt/flink/examples/flink-tables.sql
+    networks:
+      - my-network
+  elasticsearch:
+    image: elastic/elasticsearch:7.17.9
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    networks:
+      - my-network
+networks:
+  my-network:
+    name: array-agg-network

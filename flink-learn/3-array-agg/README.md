@@ -1,6 +1,7 @@
-# Flink Kafka and Kafka Upsert Demo
+# Array Aggregation with Flink SQL
 
-This demo shows how to use Flink's [Apache Kafka SQL Connector](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/kafka/) and the [Upsert Kafka SQL Connector](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/upsert-kafka/) together with the [Postgres CDC connector for Apache Flink](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/postgres-cdc.html), based on [Debezium](https://debezium.io/).
+This demo shows how to aggregate the contents of arrays with Flink SQL, using the built-in function `JSON_ARRAYAGG()`, as well as a user-defined function for emitting a fully type-safe data structure.
+It uses the [Upsert Kafka SQL Connector](https://nightlies.apache.org/flink/flink-docs-master/docs/connectors/table/upsert-kafka/) together with the [Postgres CDC connector for Apache Flink](https://ververica.github.io/flink-cdc-connectors/master/content/connectors/postgres-cdc.html), based on [Debezium](https://debezium.io/).
 [Redpanda](https://redpanda.com/) is used as a data streaming platform.
 
 ## Prerequisites
@@ -101,39 +102,21 @@ CREATE TABLE order_lines (
  );
 ```
 
-And one for products:
+Register the UDF:
 
 ```sql
-CREATE TABLE products (
-   id INT,
-   name VARCHAR(255),
-   description VARCHAR(512),
-   weight DOUBLE,
-   PRIMARY KEY (id) NOT ENFORCED
- ) WITH (
-   'connector' = 'postgres-cdc',
-   'hostname' = 'postgres',
-   'port' = '5432',
-   'username' = 'postgres',
-   'password' = 'postgres',
-   'database-name' = 'postgres',
-   'schema-name' = 'inventory',
-   'table-name' = 'products',
-   'slot.name' = 'products_slot'
- );
+CREATE FUNCTION ARRAY_AGGR AS 'co.decodable.demos.arrayagg.ArrayAggr';
 ```
 
 Perform some data changes in Postgres (via pgcli) and observe how the data in the Flink shell changes accordingly:
 
 ```sql
-UPDATE shipments SET destination = 'Miami' WHERE shipment_id=1003;
-INSERT INTO shipments VALUES (default, 10001, 'Los Angeles', 'New York City', false);
-DELETE FROM shipments where shipment_id = 1004;
+TODO
 ```
 
-## Emitting Data to Kafka
+## Emitting Data to Redpanda
 
-It's vital to use the "kafka-upsert" connector:
+Create an instance of the Kafka upsert connector:
 
 ```sql
 CREATE TABLE orders_with_lines (
@@ -150,24 +133,6 @@ WITH (
   'key.format' = 'json', 'value.format' = 'json'
 );
 ```
-
-```sql
-CREATE TABLE orders_with_lines_es (
-  order_id INT,
-  order_date DATE,
-  purchaser_id INT,
-  lines ARRAY<row<id INT, product_id INT, quantity INT, price DOUBLE>>,
-  PRIMARY KEY (order_id) NOT ENFORCED
- )
- WITH (
-     'connector' = 'elasticsearch-7',
-     'hosts' = 'http://elasticsearch:9200',
-     'index' = 'orders_with_lines'
- );
-```
-
-
-CREATE FUNCTION ARRAY_AGGR AS 'co.decodable.demos.arrayagg.ArrayAggr';
 
 ```sql
 INSERT INTO orders_with_lines
@@ -188,68 +153,25 @@ Next, observe the data in Redpanda (do some more data changes in Postgres as wel
 rpk topic consume orders-with-lines | jq '.value | fromjson'
 ```
 
-In contrast, using the "kafka" connector won't work, as it cannot ingest the changelog stream emitted by the CDC connector:
+## Emitting events to Elasticsearch
 
 ```sql
-CREATE TABLE shipments_output (
-  shipment_id INT,
+CREATE TABLE orders_with_lines_es (
   order_id INT,
-  origin STRING,
-  destination STRING,
-  is_arrived BOOLEAN,
-  db_name STRING,
-  operation_ts TIMESTAMP_LTZ(3)
-)
-WITH (
-  'connector' = 'kafka',
-  'topic' = 'shipments',
-  'properties.bootstrap.servers' = 'redpanda:29092',
-  'value.format' = 'json'
-);
-```
-
-```sql
---this won't work
-INSERT INTO shipments_output SELECT * FROM shipments;
-
-[ERROR] Could not execute SQL statement. Reason:
-org.apache.flink.table.api.TableException: Table sink 'default_catalog.default_database.shipments_output' doesn't support consuming update and delete changes which is produced by node TableSourceScan(table=[[default_catalog, default_database, shipments]], fields=[shipment_id, order_id, origin, destination, is_arrived, db_name, operation_ts])
-```
-
-Let's make those operations more easily visible:
-
-```sql
-SET 'sql-client.execution.result-mode' = 'changelog';
-```
-
-The "kafka" connector can only handle `I` (insert/append) events.
-
-## Emitting Change Events
-
-When emitting changes in the `debezium-json` format, the "kafka" connector can be used:
-
-```sql
-CREATE TABLE shipments_output_cdc (
-  shipment_id INT,
-  order_id INT,
-  origin STRING,
-  destination STRING,
-  is_arrived BOOLEAN,
-  db_name STRING,
-  operation_ts TIMESTAMP_LTZ(3),
-  PRIMARY KEY (shipment_id) NOT ENFORCED
- ) WITH (
-  'connector' = 'kafka',
-  'topic' = 'shipments-cdc',
-  'properties.bootstrap.servers' = 'redpanda:29092',
-  'format' = 'debezium-json'
+  order_date DATE,
+  purchaser_id INT,
+  lines ARRAY<row<id INT, product_id INT, quantity INT, price DOUBLE>>,
+  PRIMARY KEY (order_id) NOT ENFORCED
+ )
+ WITH (
+     'connector' = 'elasticsearch-7',
+     'hosts' = 'http://elasticsearch:9200',
+     'index' = 'orders_with_lines'
  );
-
-INSERT INTO shipments_output_cdc SELECT * FROM shipments;
 ```
 
 ```bash
-rpk topic consume shipments-cdc | jq -c '.value | fromjson'
+http http://localhost:9200/orders_with_lines/_doc/10001 | jq .
 ```
 
 ## Clean-up

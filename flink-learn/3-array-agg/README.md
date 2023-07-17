@@ -66,7 +66,7 @@ CREATE TABLE purchase_orders (
    db_name STRING METADATA FROM 'database_name' VIRTUAL,
    operation_ts TIMESTAMP_LTZ(3) METADATA FROM 'op_ts' VIRTUAL,
    PRIMARY KEY (id) NOT ENFORCED
- ) WITH (
+) WITH (
    'connector' = 'postgres-cdc',
    'hostname' = 'postgres',
    'port' = '5432',
@@ -76,7 +76,7 @@ CREATE TABLE purchase_orders (
    'schema-name' = 'inventory',
    'table-name' = 'purchase_orders',
    'slot.name' = 'purchase_orders_slot'
- );
+);
 ```
 
 Create a table for order lines:
@@ -89,7 +89,7 @@ CREATE TABLE order_lines (
    quantity INT,
    price DOUBLE,
    PRIMARY KEY (id) NOT ENFORCED
- ) WITH (
+) WITH (
    'connector' = 'postgres-cdc',
    'hostname' = 'postgres',
    'port' = '5432',
@@ -99,7 +99,7 @@ CREATE TABLE order_lines (
    'schema-name' = 'inventory',
    'table-name' = 'order_lines',
    'slot.name' = 'order_lines_slot'
- );
+);
 ```
 
 Register the UDF:

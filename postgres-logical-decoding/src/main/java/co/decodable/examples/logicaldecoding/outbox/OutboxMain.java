@@ -15,6 +15,7 @@
  */
 package co.decodable.examples.logicaldecoding.outbox;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
@@ -31,7 +32,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.google.common.base.Charsets;
 import com.ververica.cdc.connectors.postgres.PostgreSQLSource;
 import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
 
@@ -90,9 +90,9 @@ public class OutboxMain {
 
                 ProducerRecord<byte[], byte[]> record = new ProducerRecord<byte[], byte[]>(
                         content.get("aggregate_type").asText(),
-                        content.get("aggregate_id").asText().getBytes(Charsets.UTF_8),
+                        content.get("aggregate_id").asText().getBytes(StandardCharsets.UTF_8),
                         mapper.writeValueAsBytes(content.get("payload")));
-                record.headers().add("message_id", content.get("id").asText().getBytes(Charsets.UTF_8));
+                record.headers().add("message_id", content.get("id").asText().getBytes(StandardCharsets.UTF_8));
 
                 return record;
             }

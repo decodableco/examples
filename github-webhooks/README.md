@@ -1,7 +1,7 @@
 # Processing GitHub Webhooks With Decodable
 
 This repository shows how to process GitHub Webhooks with Decodable.
-It accompanies the blog post <todo>.
+It accompanies this [blog post](https://www.decodable.co/blog/processing-github-webhooks-with-decodable).
 
 ## Prerequisites
 

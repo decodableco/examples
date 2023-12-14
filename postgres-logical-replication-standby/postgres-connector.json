@@ -1,0 +1,15 @@
+{
+    "name" : "inventory-connector",
+    "config" : {
+        "connector.class" : "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max" : "1",
+        "database.hostname" : "<host>",
+        "database.port" : "5432",
+        "database.user" : "<user>",
+        "database.password" : "<password>",
+        "database.dbname" : "<database>",
+        "topic.prefix" : "dbserver1",
+        "plugin.name" : "pgoutput",
+        "poll.interval.ms" : "100"
+    }
+}

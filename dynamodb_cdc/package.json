@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.202.0",
+    "@aws-sdk/client-dynamodb": "^3.431.0",
     "aws-sdk": "^2.1247.0",
     "randomstring": "^1.2.3"
   }

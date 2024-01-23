@@ -23,39 +23,69 @@ import org.apache.flink.table.types.inference.TypeInference;
 public class ArrayAggr <T> extends AggregateFunction<T[], ArrayAccumulator<T>> {
 
 	private static final long serialVersionUID = 6560271654419701770L;
-	private DataType elementType;
 
 	@Override
 	public ArrayAccumulator<T> createAccumulator() {
 		return new ArrayAccumulator<T>();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public T[] getValue(ArrayAccumulator<T> acc) {
-		if (acc.values.getList().isEmpty()) {
+		if (acc.added.getList().isEmpty()) {
 			return null;
-		}
-		else {
-			List<T> values = new ArrayList<T>(acc.values.getList());
-			return values.toArray((T[]) Array.newInstance(elementType.getConversionClass(), values.size()));
+		} else {
+			Class<?> elementType = getElementType(acc);
+			if (elementType != null) {
+				List<T> added = new ArrayList<T>(acc.added.getList());
+				added.removeAll(acc.retracted.getList());
+
+				return added.toArray((T[]) Array.newInstance(elementType, added.size()));
+			}
+
+			return null;
 		}
 	}
 
+	private Class<?> getElementType(ArrayAccumulator<T> acc) {
+		try {
+			for (Object row : acc.added.get()) {
+				if (row != null) {
+					return row.getClass();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	public void accumulate(ArrayAccumulator<T> acc, T o) throws Exception {
+		System.out.println("Adding: " + o);
+
 		if (o != null) {
-			acc.values.add(o);
+			acc.added.add(o);
 		}
 	}
 
 	public void retract(ArrayAccumulator<T> acc, T o) throws Exception {
+		System.out.println("Retracting: " + o);
+
 		if (o != null) {
-			acc.values.remove(o);
+			acc.retracted.add(o);
+		}
+	}
+
+	public void merge(ArrayAccumulator<T> acc, Iterable<ArrayAccumulator<T>> it) throws Exception {
+		for (ArrayAccumulator<T> other : it) {
+			acc.added.addAll(other.added.getList());
+			acc.retracted.addAll(other.retracted.getList());
 		}
 	}
 
 	public void resetAccumulator(ArrayAccumulator<T> acc) {
-		acc.values.clear();
+		acc.added.clear();
+		acc.retracted.clear();
 	}
 
 	@Override
@@ -66,12 +96,13 @@ public class ArrayAggr <T> extends AggregateFunction<T[], ArrayAccumulator<T>> {
 					return Optional.of(
 							DataTypes.STRUCTURED(
 									ArrayAccumulator.class,
-									DataTypes.FIELD("values",ListView.newListViewDataType(ctx.getArgumentDataTypes().get(0)))//,
+									DataTypes.FIELD("added",ListView.newListViewDataType(ctx.getArgumentDataTypes().get(0))),
+									DataTypes.FIELD("retracted",ListView.newListViewDataType(ctx.getArgumentDataTypes().get(0)))
 							));
 				})
 				.outputTypeStrategy(ctx -> {
-					this.elementType = ctx.getArgumentDataTypes().get(0);
-					return Optional.of(DataTypes.ARRAY(elementType));
+					DataType argDataType = ctx.getArgumentDataTypes().get(0);
+					return Optional.of(DataTypes.ARRAY(argDataType));
 				}).build();
 	}
 }

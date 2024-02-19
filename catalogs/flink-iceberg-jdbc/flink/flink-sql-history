@@ -1,0 +1,8 @@
+1706886897423:CREATE CATALOG c_iceberg_jdbc WITH ( \n   'type' = 'iceberg', \n   'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO', \n   'warehouse' = 's3://warehouse', \n   's3.endpoint' = 'http://minio:9000', \n   's3.path-style-access' = 'true', \n   'catalog-impl' = 'org.apache.iceberg.jdbc.JdbcCatalog', \n   'uri' ='jdbc:postgresql://postgres:5432/?user=dba&password=rules');
+1706886897425:CREATE DATABASE `c_iceberg_jdbc`.db01;
+1706886897426:USE `c_iceberg_jdbc`.db01;
+1706886897427:CREATE TABLE t_foo (c1 varchar, c2 int);
+1706886897428:INSERT INTO t_foo VALUES ('a',42);
+1706886897429:SELECT * FROM t_foo;
+1706886897430:SET 'execution.runtime-mode' = 'batch';
+1706886897431:SET 'sql-client.execution.result-mode' = 'tableau';

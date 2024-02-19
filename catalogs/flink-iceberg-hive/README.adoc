@@ -1,0 +1,133 @@
+= Apache Flink writing to Apache Iceberg on S3 (MinIO) using Apache Hive Metastore
+
+For more details, see https://decodable.co/blog/catalogs-in-flink-sql-hands-on
+
+== Launch stack
+
+[source,bash]
+----
+docker compose build
+docker compose up
+----
+
+== Run SQL Client
+
+[source,bash]
+----
+docker compose exec -it flink ./bin/sql-client.sh
+----
+
+== Do SQL Stuff
+
+[source,sql]
+----
+CREATE CATALOG c_iceberg_hive WITH (
+        'type' = 'iceberg',
+        'catalog-type'='hive',
+        'warehouse' = 's3a://warehouse',
+        'hive-conf-dir' = './conf');
+
+CREATE DATABASE `c_iceberg_hive`.`db01`;
+
+USE `c_iceberg_hive`.`db01`;
+
+CREATE TABLE t_foo (c1 varchar, c2 int);
+
+INSERT INTO t_foo VALUES ('a',42);
+
+SET 'execution.runtime-mode' = 'batch';
+SET 'sql-client.execution.result-mode' = 'tableau';
+
+-- Wait a few moments; running this straightaway often doesn't show
+-- the results
+SELECT * FROM t_foo;
+----
+
+== Poke around
+
+Flink Dashboard: http://localhost:8081/
+
+MinIO (login `admin`/`password`): http://localhost:9001/browser/warehouse/
+
+=== Logs from Flink
+
+[source,bash]
+----
+docker compose exec -t flink bash -c "tail -f log/*"
+----
+
+=== MinIO Contents
+
+[source,bash]
+----
+❯ docker compose exec mc bash -c "mc ls -r minio/warehouse/"
+[2024-02-02 21:30:22 UTC]   608B STANDARD db01.db/t_foo/data/00000-0-41e6f635-3859-46ef-a57e-de5f774203fa-00001.parquet
+[2024-02-02 21:30:08 UTC]   957B STANDARD db01.db/t_foo/metadata/00000-109580b8-77eb-45d5-b2a7-bd63bd239c99.metadata.json
+[2024-02-02 21:30:23 UTC] 2.1KiB STANDARD db01.db/t_foo/metadata/00001-e5705f33-a446-4614-ba66-80a40e176318.metadata.json
+[2024-02-02 21:30:23 UTC] 6.5KiB STANDARD db01.db/t_foo/metadata/3485210c-2c99-4c72-bb36-030c8e0a4a90-m0.avro
+[2024-02-02 21:30:23 UTC] 4.2KiB STANDARD db01.db/t_foo/metadata/snap-125388589100921283-1-3485210c-2c99-4c72-bb36-030c8e0a4a90.avro
+----
+
+If you have DuckDB available locally you can run:
+
+```bash
+$ docker compose exec mc bash -c \
+        "mc cat minio/warehouse/db_rmoff.db/t_foo/data/00000-0-41e6f635-3859-46ef-a57e-de5f774203fa-00001.parquet" \
+        > /tmp/data.parquet && \
+        duckdb :memory: "SELECT * FROM read_parquet('/tmp/data.parquet')"
+┌─────────┬───────┐
+│   c1    │  c2   │
+│ varchar │ int32 │
+├─────────┼───────┤
+│ a       │    42 │
+└─────────┴───────┘
+```
+
+(replace `00000-0-41e6f635-3859-46ef-a57e-de5f774203fa-00001.parquet` with the actual filename)
+
+=== Metastore
+
+Copy the DerbyDB and launch `ij`:
+
+[source,bash]
+----
+docker compose exec -it hive-metastore bash -c "cp -r /tmp/metastore_db/ /tmp/metastore_db2 && rlwrap ./db-derby-10.14.2.0-bin/bin/ij"
+----
+
+Connect to the copy of the DB:
+
+[source,sql]
+----
+connect 'jdbc:derby:/tmp/metastore_db2/';
+----
+
+Query it
+
+[source,sql]
+----
+ij> select * from dbs;
+DB_ID  |DESC                   |DB_LOCATION_URI           |NAME        |OWNER_NAME |OWNER_TYPE|CTLG_NAME
+--------------------------------------------------------------------------------------------------------
+1      |Default Hive database  |file:/user/hive/warehouse |default     |public     |ROLE      |hive
+2      |NULL                   |s3a://warehouse/db01.db   |db01        |root       |USER      |hive
+
+
+2 rows selected
+ij>
+
+ij> SELECT DB."NAME",  
+	       DB.DB_LOCATION_URI,  
+	       TB.TBL_NAME,  
+	       TBP.PARAM_VALUE  
+	FROM   APP.DBS DB  
+	       INNER JOIN APP.TBLS TB  
+	               ON DB.DB_ID = TB.DB_ID  
+	       INNER JOIN APP.TABLE_PARAMS TBP  
+	               ON TB.TBL_ID = TBP.TBL_ID  
+	WHERE  TBP.PARAM_KEY = 'metadata_location';
+
+NAME    |DB_LOCATION_URI            |TBL_NAME|PARAM_VALUE                                                                                         |
+--------+---------------------------+--------+----------------------------------------------------------------------------------------------------+
+db_rmoff|s3a://warehouse/db_rmoff.db|t_foo   |s3a://warehouse/t_foo/metadata/00000-5946940a-04fa-4a60-9bc9-b83db818560a.metadata.json             |
+
+----

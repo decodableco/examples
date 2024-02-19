@@ -1,0 +1,126 @@
+= Apache Flink writing to Apache Iceberg on S3 (MinIO) using JDBC Catalog
+
+For more details, see https://decodable.co/blog/catalogs-in-flink-sql-hands-on
+
+== Launch stack
+
+[source,bash]
+----
+docker compose build
+docker compose up
+----
+
+== Run SQL Client
+
+[source,bash]
+----
+docker compose exec -it flink ./bin/sql-client.sh
+----
+
+== Do SQL Stuff
+
+[source,sql]
+----
+CREATE CATALOG c_iceberg_jdbc WITH ( 
+   'type' = 'iceberg', 
+   'io-impl' = 'org.apache.iceberg.aws.s3.S3FileIO', 
+   'warehouse' = 's3://warehouse', 
+   's3.endpoint' = 'http://minio:9000', 
+   's3.path-style-access' = 'true', 
+   'catalog-impl' = 'org.apache.iceberg.jdbc.JdbcCatalog', 
+   'uri' ='jdbc:postgresql://postgres:5432/?user=dba&password=rules');
+
+CREATE DATABASE `c_iceberg_jdbc`.`db01`;
+
+USE `c_iceberg_jdbc`.`db01`;
+
+CREATE TABLE t_foo (c1 varchar, c2 int);
+
+INSERT INTO t_foo VALUES ('a',42);
+
+SET 'execution.runtime-mode' = 'batch';
+SET 'sql-client.execution.result-mode' = 'tableau';
+
+-- Wait a few moments; running this straightaway often doesn't show
+-- the results
+SELECT * FROM t_foo;
+----
+
+== Poke around
+
+Flink Dashboard: http://localhost:8081/
+
+MinIO (login `admin`/`password`): http://localhost:9001/browser/warehouse/
+
+=== Logs from Flink
+
+[source,bash]
+----
+docker compose exec -t flink bash -c "tail -f log/*"
+----
+
+=== MinIO Contents
+
+[source,bash]
+----
+❯ docker compose exec mc bash -c "mc ls -r minio/warehouse/"
+[2024-02-02 21:30:22 UTC]   608B STANDARD db01.db/t_foo/data/00000-0-41e6f635-3859-46ef-a57e-de5f774203fa-00001.parquet
+[2024-02-02 21:30:08 UTC]   957B STANDARD db01.db/t_foo/metadata/00000-109580b8-77eb-45d5-b2a7-bd63bd239c99.metadata.json
+[2024-02-02 21:30:23 UTC] 2.1KiB STANDARD db01.db/t_foo/metadata/00001-e5705f33-a446-4614-ba66-80a40e176318.metadata.json
+[2024-02-02 21:30:23 UTC] 6.5KiB STANDARD db01.db/t_foo/metadata/3485210c-2c99-4c72-bb36-030c8e0a4a90-m0.avro
+[2024-02-02 21:30:23 UTC] 4.2KiB STANDARD db01.db/t_foo/metadata/snap-125388589100921283-1-3485210c-2c99-4c72-bb36-030c8e0a4a90.avro
+----
+
+If you have DuckDB available locally you can run:
+
+```bash
+$ docker compose exec mc bash -c \
+        "mc cat minio/warehouse/db_rmoff.db/t_foo/data/00000-0-41e6f635-3859-46ef-a57e-de5f774203fa-00001.parquet" \
+        > /tmp/data.parquet && \
+        duckdb :memory: "SELECT * FROM read_parquet('/tmp/data.parquet')"
+┌─────────┬───────┐
+│   c1    │  c2   │
+│ varchar │ int32 │
+├─────────┼───────┤
+│ a       │    42 │
+└─────────┴───────┘
+```
+
+(replace `00000-0-41e6f635-3859-46ef-a57e-de5f774203fa-00001.parquet` with the actual filename)
+
+=== Metastore
+
+[source,bash]
+----
+❯ docker compose exec -it postgres psql --user dba
+----
+
+[source,sql]
+----
+dba=# \dt
+                   List of relations
+ Schema |             Name             | Type  | Owner
+--------+------------------------------+-------+-------
+ public | iceberg_namespace_properties | table | dba
+ public | iceberg_tables               | table | dba
+(2 rows)
+
+dba=# \d iceberg_tables
+                             Table "public.iceberg_tables"
+           Column           |          Type           | Collation | Nullable | Default
+----------------------------+-------------------------+-----------+----------+---------
+ catalog_name               | character varying(255)  |           | not null |
+ table_namespace            | character varying(255)  |           | not null |
+ table_name                 | character varying(255)  |           | not null |
+ metadata_location          | character varying(1000) |           |          |
+ previous_metadata_location | character varying(1000) |           |          |
+Indexes:
+    "iceberg_tables_pkey" PRIMARY KEY, btree (catalog_name, table_namespace, table_name)
+
+dba=# SELECT * FROM iceberg_tables;
+
+  catalog_name  | table_namespace | table_name |                                      metadata_location                                      |                                 previous_metadata_location
+----------------+-----------------+------------+---------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------
+ c_iceberg_jdbc | db01            | t_foo      | s3://warehouse/db01/t_foo/metadata/00001-bdf5e336-36c1-4531-b6bf-9d90821bc94d.metadata.json | s3://warehouse/db01/t_foo/metadata/00000-a81cb608-6e46-42ab-a943-81230ad90b3d.metadata.json
+(1 row)
+----

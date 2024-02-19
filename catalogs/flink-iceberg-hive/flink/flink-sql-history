@@ -1,0 +1,6 @@
+1706886897423:CREATE CATALOG c_iceberg_hive WITH (\n        'type' = 'iceberg',\n        'catalog-type'='hive',\n        'warehouse' = 's3a://warehouse',\n        'hive-conf-dir' = './conf');
+1706886897424:USE CATALOG c_iceberg_hive;
+1706886897425:CREATE DATABASE db01;
+1706886897426:USE db01;
+1706886897427:CREATE TABLE t_foo (c1 varchar, c2 int);
+1706886897428:INSERT INTO t_foo VALUES ('a',42);

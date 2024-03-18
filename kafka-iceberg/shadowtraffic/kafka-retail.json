@@ -3,7 +3,7 @@
     "throttle": {
       "ms": {
         "_gen": "uniformDistribution",
-        "bounds": [50, 1000]
+        "bounds": [50, 200]
       }
     }
   },
@@ -83,9 +83,6 @@
   "connections": {
     "dev-kafka": {
       "kind": "kafka",
-      "topicPolicy": {
-        "policy": "manual"
-      },
       "producerConfigs": {
         "bootstrap.servers": "broker:29092",
         "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",

@@ -92,6 +92,12 @@ services:
     environment:
       - HMS_LOGLEVEL=INFO
 
+  duckdb:
+    image: davidgasquez/duckdb
+    container_name: duckdb
+    restart: no
+    entrypoint: tail -f /dev/null
+
   kcat:
     image: edenhill/kcat:1.7.1
     container_name: kcat
@@ -99,7 +105,7 @@ services:
     entrypoint: tail -f /dev/null
 
   shadowtraffic:
-    image: shadowtraffic/shadowtraffic:0.1.34
+    image: shadowtraffic/shadowtraffic:0.1.35
     container_name: shadowtraffic
     profiles: ["shadowtraffic"]
     env_file:

@@ -196,7 +196,7 @@ docker ps -a|grep shadowtraffic|awk '{print $1}'|xargs -Ifoo docker rm -f foo
 docker compose up shadowtraffic
 ```
 
-Confirm that there's data 
+Confirm that there's data:
 
 ```bash
 docker exec -i kcat kcat -b broker:29092 -C -t orders -c -U | jq '.'
@@ -226,7 +226,7 @@ CREATE TABLE t_k_orders
 
 ```sql
 SET 'pipeline.operator-chaining.enabled' = 'false';
-SET 'execution.checkpointing.interval' = '10sec';
+SET 'execution.checkpointing.interval' = '60sec';
 ```
 
 ```sql
@@ -240,6 +240,8 @@ CREATE TABLE t_i_orders
   AS 
   SELECT * FROM t_k_orders;
 ```
+
+View the Flink dashboard: http://localhost:8081/#/overview
 
 ```bash
 docker exec -it jobmanager bash -c "duckdb"
@@ -264,7 +266,7 @@ CREATE SECRET secret1 (
 ```bash
 docker exec mc bash -c \
         "mc ls -r minio/warehouse/" | grep orders | grep json | tail -n1 | \
-        awk '{print "SELECT count(*), strftime(to_timestamp(max(create_ts)/1000),'\''%Y-%m-%d %H:%M:%S'\'') as max_ts,avg(cost), min(cost) \n FROM iceberg_scan('\''s3://warehouse/" $6"'\'');"}'
+        awk '{print "SELECT count(*), strftime(to_timestamp(max(create_ts)/1000),'\''%Y-%m-%d %H:%M:%S'\'') as max_ts, \n avg(cost), min(cost) \n FROM iceberg_scan('\''s3://warehouse/" $6"'\'');"}'
 ```
 
 ```sql
@@ -272,11 +274,11 @@ SELECT *
 FROM iceberg_scan('s3://warehouse/default_database.db/t_i_orders/metadata/00000-9f24cff7-bd6c-42c5-9f5f-be4e3a94fd14.metadata.json')
 ```
 
----
-
+****
 
 ## Appendix
-## Catalog
+
+### Catalog
 
 ```sql
  CREATE CATALOG c_hive WITH (
@@ -312,7 +314,7 @@ CREATE TABLE c_hive.db01.t_k_test_topic (
 select * from c_hive.db01.t_k_test_topic;
 ```
 
-## Iceberg catalog
+### Iceberg catalog
 
 ```sql
 CREATE CATALOG c_iceberg WITH (
@@ -344,10 +346,6 @@ SHOW JOBS;
 STOP JOB '6c9790735d4658d4ac9802961cd137b3';
 ```
 
-
-![[CleanShot 2024-03-11 at 12.40.19.png]]
-
-
 ```bash
 docker exec mc bash -c "mc ls -r minio/warehouse/"
 ```
@@ -368,8 +366,7 @@ docker exec mc bash -c "mc ls -r minio/warehouse/"
 
 ```
 
-
----
+****
 
 ```sql
 CREATE TABLE t_i_test WITH (
@@ -394,4 +391,3 @@ AS
 INSERT INTO t_i_test
   SELECT * FROM foo;
 ```
-

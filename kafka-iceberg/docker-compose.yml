@@ -107,7 +107,7 @@ services:
   shadowtraffic:
     image: shadowtraffic/shadowtraffic:0.1.35
     container_name: shadowtraffic
-    profiles: ["shadowtraffic"]
+      #    profiles: ["shadowtraffic"]
     env_file:
       - shadowtraffic/license.env
     volumes:

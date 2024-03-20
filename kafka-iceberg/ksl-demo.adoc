@@ -4,6 +4,8 @@ This is the demo script to accompany my talk from Kafka Summit London 2024: http
 
 image::images/kafkaflinkicebergminio.excalidraw.png[]
 
+Test data is generated using https://shadowtraffic.io/[ShadowTraffic]. Put your `license.env` file in the `shadowtraffic` folder. If you don't want to use ShadowTraffic you can insert your own dummy data on a Kafka topic.
+
 == Startup the stack
 
 [source,bash]
@@ -11,7 +13,7 @@ image::images/kafkaflinkicebergminio.excalidraw.png[]
 docker compose up -d 
 ----
 
----
+****
 
 == Demo 1: Exploring the SQL Client
 

@@ -1,5 +1,7 @@
 = Writing to Apache Iceberg from Apache Flink using data from Apache Kafka
 
+This is the demo script to accompany my talk from Kafka Summit London 2024: https://talks.rmoff.net/8VjuaU/here-be-dragons-h-h-stacktraces-flink-sql-for-non-java-developers
+
 image::images/kafkaflinkicebergminio.excalidraw.png[]
 
 == Startup the stack

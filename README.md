@@ -30,6 +30,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 |[ Logical Decoding Message Examples](postgres-logical-decoding)| We show how to retrieve logical decoding messages from the Postgres WAL |
 |[GitHub Webhooks](github-webhooks)| We show how to process GitHub Webhook events using the Decodable REST source connector |
 |[PyFlink](pyflink)| We run a basic PyFlink job on Kubernetes |
+|[Kafka / Flink / Iceberg](kafka-iceberg)| Integrating Apache Kafka with Apache Iceberg through Apache Flink. As presented at Kafka Summit London 2024|
 
 ## License
 

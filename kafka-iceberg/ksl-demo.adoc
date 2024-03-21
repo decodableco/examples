@@ -13,8 +13,6 @@ Test data is generated using https://shadowtraffic.io/[ShadowTraffic]. Put your 
 docker compose up -d 
 ----
 
-****
-
 == Demo 1: Exploring the SQL Client
 
 === Result Mode
@@ -239,7 +237,7 @@ After running the SQL statement, modify it to a `SELECT *` and set it to line mo
 .mode line
 ----
 
-****
+---
 
 == Appendix
 

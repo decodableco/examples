@@ -28,9 +28,9 @@ RUN sed -i "s/jobmanager.rpc.address: localhost/jobmanager.rpc.address: flink-jo
 
 # Install JARs
 
-#RUN echo "Add Flink S3 Plugin" && \
-#    mkdir ./plugins/s3-fs-hadoop && \
-#    cp ./opt/flink-s3-fs-hadoop-1.18.1.jar ./plugins/s3-fs-hadoop/
+RUN echo "Add Flink S3 Plugin" && \
+    mkdir ./plugins/s3-fs-hadoop && \
+    cp ./opt/flink-s3-fs-hadoop-1.18.1.jar ./plugins/s3-fs-hadoop/
 
 RUN echo "-> Install JARs: Flink Parquet support" && \
     mkdir -p ./lib/formats && pushd $_ && \

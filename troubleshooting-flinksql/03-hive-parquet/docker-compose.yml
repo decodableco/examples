@@ -9,10 +9,14 @@ services:
       - "8081:8081"
     command: jobmanager
     environment:
-    - |
-      FLINK_PROPERTIES=
-      jobmanager.rpc.address: jobmanager
-      rest.flamegraph.enabled: true
+      - |
+        FLINK_PROPERTIES=
+        s3.access.key: admin
+        s3.secret.key: password
+        s3.endpoint: http://minio:9000
+        s3.path.style.access: true
+        jobmanager.rpc.address: jobmanager
+        rest.flamegraph.enabled: true
   taskmanager:
     build: ./flink
     hostname: taskmanager
@@ -24,6 +28,10 @@ services:
     environment:
       - |
         FLINK_PROPERTIES=
+        s3.access.key: admin
+        s3.secret.key: password
+        s3.endpoint: http://minio:9000
+        s3.path.style.access: true
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 4
 

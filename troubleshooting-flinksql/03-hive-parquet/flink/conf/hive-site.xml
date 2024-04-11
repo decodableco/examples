@@ -11,4 +11,5 @@
     <value>thrift://hms:9083</value>
   </property>
 
+
 </configuration>

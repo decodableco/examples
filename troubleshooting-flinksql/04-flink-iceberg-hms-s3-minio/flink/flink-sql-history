@@ -1,0 +1,8 @@
+1712757955359:CREATE CATALOG c_hive WITH (\n      'type' = 'hive',\n      'hive-conf-dir' = './conf/');
+1712757966192:USE `c_hive`.`default`;
+1712757971660:CREATE TABLE t_foo_fs (c1 varchar, c2 int)\n			WITH (\n			 'connector' = 'filesystem',\n			 'path' = 's3://warehouse/t_foo_fs/',\n			 'format' = 'csv'\n			);
+1712757971660:CREATE TABLE t_foo_fs (c1 varchar, c2 int)\n			WITH (\n			 'connector' = 'filesystem',\n			 'path' = 's3://warehouse/t_foo_fs/',\n			 'format' = 'parquet'\n			);
+1712757978642:INSERT INTO t_foo_fs VALUES ('a',42);
+1712757983533:SHOW JOBS;
+1712757993533:SET 'sql-client.execution.result-mode' = 'tableau';
+1712757994533:SELECT * FROM t_foo_fs;

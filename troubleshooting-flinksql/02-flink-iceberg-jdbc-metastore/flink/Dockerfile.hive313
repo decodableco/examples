@@ -1,0 +1,57 @@
+FROM apache/flink:1.18.1-scala_2.12-java11
+SHELL ["/bin/bash", "-c"]
+
+# Install some useful tools
+RUN apt-get update && \
+    apt-get install -y neovim tree lnav unzip
+
+RUN echo "Purge apt artifacts" && \
+    apt-get purge -y --auto-remove $build_deps && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget https://github.com/duckdb/duckdb/releases/download/v0.10.0/duckdb_cli-linux-amd64.zip \
+    && unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin \
+    && rm duckdb_cli-linux-amd64.zip
+
+USER flink
+
+WORKDIR /opt/flink
+
+# Set up Hive config
+COPY conf/hive-site.xml ./conf/hive-site.xml
+# Pre-seed the SQL history because I'm nice like that
+#COPY flink-sql-history /root/.flink-sql-history
+
+# Enable SQL Client to find the job manager when running it from this image
+RUN sed -i "s/jobmanager.rpc.address: localhost/jobmanager.rpc.address: flink-jobmanager/g" ./conf/flink-conf.yaml
+
+# Install JARs
+RUN echo "-> Install JARs: Postgres JDBC Driver" && \
+    mkdir -p ./lib/jdbc && pushd $_ && \
+    curl https://repo.maven.apache.org/maven2/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar -O && \
+    popd
+
+RUN echo "-> Install JARs: Flink's Hive connector" && \
+    mkdir -p ./lib/hive && pushd $_ && \
+    curl https://repo1.maven.org/maven2/org/apache/flink/flink-sql-connector-hive-3.1.3_2.12/1.18.1/flink-sql-connector-hive-3.1.3_2.12-1.18.1.jar -O && \
+    popd
+
+RUN echo "-> Install JARs: Dependencies for Iceberg" && \
+    mkdir -p ./lib/iceberg && pushd $_ && \
+    curl https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-flink-runtime-1.18/1.5.0/iceberg-flink-runtime-1.18-1.5.0.jar -O && \
+    popd
+
+RUN echo "-> Install JARs: AWS" && \
+    mkdir -p ./lib/aws && pushd $_ && \
+    curl https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.20.18/bundle-2.20.18.jar -O && \
+    popd
+
+RUN echo "-> Install JARs: Hadoop" && \
+    mkdir -p ./lib/hadoop && pushd $_ && \
+    curl https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/2.8.3/hadoop-common-2.8.3.jar  -O && \
+    curl https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop-2-uber/2.8.3-10.0/flink-shaded-hadoop-2-uber-2.8.3-10.0.jar -O && \
+    popd
+
+# Set the launch command
+CMD ./bin/start-cluster.sh && sleep infinity

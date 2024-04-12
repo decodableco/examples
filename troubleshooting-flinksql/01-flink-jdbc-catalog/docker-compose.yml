@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  jobmanager:
+    build: ./flink
+    hostname: jobmanager
+    container_name: jobmanager
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    environment:
+    - |
+      FLINK_PROPERTIES=
+      jobmanager.rpc.address: jobmanager
+      rest.flamegraph.enabled: true
+  taskmanager:
+    build: ./flink
+    hostname: taskmanager
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    deploy:
+      replicas: 2
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 4
+
+  postgres:
+    image: ghusta/postgres-world-db:2.10
+    ports:
+      - "5432:5432"
+
+# Without a network explicitly defined, you hit this Hive/Thrift error
+# java.net.URISyntaxException Illegal character in hostname
+# https://github.com/TrivadisPF/platys-modern-data-platform/issues/231
+networks:
+  default:
+     name: zaphod

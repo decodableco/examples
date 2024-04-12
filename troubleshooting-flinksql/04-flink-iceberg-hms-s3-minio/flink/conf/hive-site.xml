@@ -3,6 +3,11 @@
 <configuration>
 
     <property>
+      <name>hive.metastore.uris</name>
+      <value>thrift://hms:9083</value>
+    </property>
+
+    <property>
         <name>fs.s3a.access.key</name>
         <value>admin</value>
     </property>

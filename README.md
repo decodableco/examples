@@ -31,7 +31,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 |[GitHub Webhooks](github-webhooks)| We show how to process GitHub Webhook events using the Decodable REST source connector |
 |[PyFlink](pyflink)| We run a basic PyFlink job on Kubernetes |
 |[Kafka / Flink / Iceberg](kafka-iceberg)| Integrating Apache Kafka with Apache Iceberg through Apache Flink. As presented at Kafka Summit London 2024|
-|[Flink SQL Troubleshooting](troubleshooting-flinksql)| A set of Docker Compose environments for demonstrating various Flink SQL troubleshooting scenarios|
+|[Flink SQL Troubleshooting](troubleshooting-flinksql)| A set of Docker Compose environments for demonstrating various Flink SQL troubleshooting scenarios (see [related blog](https://www.decodable.co/blog/flink-sql-misconfiguration-misunderstanding-and-mishaps?utm_medium=github&utm_source=examples_repo&utm_campaign=blog&utm_content=troubleshooting-flinksql))|
 
 ## License
 

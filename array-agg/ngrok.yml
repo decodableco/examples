@@ -1,0 +1,9 @@
+version: "2"
+authtoken: <your token goes here>
+tunnels:
+  mysql:
+    addr: 3306
+    proto: tcp
+  opensearch:
+    addr: https://localhost:9200
+    proto: http

@@ -1,0 +1,30 @@
+= Docker Compose for running Apache Kafka locally, accessible from the internet using ngrok
+
+image::https://rmoff.net/images/2023/11/ngrok02.webp[Overview diagram]
+
+_For details of how this works, see https://rmoff.net/2023/11/01/using-apache-kafka-with-ngrok/[this blog] (and take note of https://rmoff.net/2024/05/03/ngrok-dns-headaches/[possible problems] you might encounter)._
+
+To use this you need to https://dashboard.ngrok.com/signup[create an ngrok account] and add a file called `.env` in this folder with the following entry:
+
+[source,bash]
+----
+NGROK_AUTH_TOKEN=<your_token>
+----
+
+Bring up the Kafka and ngrok stack with
+
+[source,bash]
+----
+docker compose up
+----
+
+Once up, find out your Kafka broker host/post that is available on the internet:
+
+[source,bash]
+----
+curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' | sed 's/tcp:\/\///g'
+----
+
+WARNING: There is **NO SECURITY** defined on this Kafka cluster. Anyone scanning the ngrok address/port may find this and be able to access your data. 
+
+https://github.com/edenhill/kcat[kcat] is included.

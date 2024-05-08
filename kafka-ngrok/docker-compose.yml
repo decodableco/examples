@@ -1,0 +1,69 @@
+---
+version: '3.8'
+services:
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    # Sign up for an ngrok account at https://dashboard.ngrok.com/signup
+    # Get your auth-token from https://dashboard.ngrok.com/get-started/your-authtoken
+    # and either put it directly in the file here, or write it to a .env file in 
+    # the same folder as this Docker Compose file in the form
+    # NGROK_AUTH_TOKEN=your_token_value
+    command: tcp broker:9092 --log stdout --authtoken $NGROK_AUTH_TOKEN
+    ports:
+      - 4040:4040 # Web dashboard for ngrok
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka:7.5.1
+    container_name: broker
+    depends_on:
+      - zookeeper
+      - ngrok
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: DOCKER://broker:29092, NGROK://broker:9092
+      KAFKA_ADVERTISED_LISTENERS: DOCKER://broker:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER:PLAINTEXT,NGROK:PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    entrypoint: 
+      - /bin/sh 
+      - -c 
+      - |
+        echo "Waiting for ngrok tunnel to be created"
+        while : ; do
+          curl_status=$$(curl -s -o /dev/null -w %{http_code} http://ngrok:4040/api/tunnels/command_line)
+          echo -e $$(date) "\tTunnels API HTTP state: " $$curl_status " (waiting for 200)"
+          if [ $$curl_status -eq 200 ] ; then
+            break
+          fi
+          sleep 5 
+        done
+        echo "ngrok tunnel is up"
+        # My kingdom for a jq 😿
+        NGROK_LISTENER=$(curl -s  http://ngrok:4040/api/tunnels/command_line | grep -Po '"public_url":.*?[^\\]",' | cut -d':' -f2- | tr -d ',"' | sed 's/tcp:\/\//NGROK:\/\//g')
+        echo $$NGROK_LISTENER
+        export KAFKA_ADVERTISED_LISTENERS="$$KAFKA_ADVERTISED_LISTENERS, $$NGROK_LISTENER"
+        echo "KAFKA_ADVERTISED_LISTENERS is set to " $$KAFKA_ADVERTISED_LISTENERS
+        /etc/confluent/docker/run
+
+  kcat:
+    image: edenhill/kcat:1.7.1
+    container_name: kcat
+    restart: no
+    entrypoint: tail -f /dev/null
+
+networks:
+  default:
+     name: zaphod

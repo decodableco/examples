@@ -3,7 +3,7 @@
         {
             "topic": "supermarketBaskets",
             "localConfigs": {
-                "maxEvents": 100
+                "maxEvents": 10000
             },
             "key": {
                 "basketId": {

@@ -1,5 +1,4 @@
 ---
-version: '3.8'
 services:
   ngrok:
     image: ngrok/ngrok:latest
@@ -10,16 +9,8 @@ services:
     # the same folder as this Docker Compose file in the form
     # NGROK_AUTH_TOKEN=your_token_value
     command: tcp broker:9092 --log stdout --authtoken $NGROK_AUTH_TOKEN
-    # command: tcp test:8001 --log stdout --authtoken $NGROK_AUTH_TOKEN
     ports:
       - 4040:4040 # Web dashboard for ngrok
-
-  test:
-    image: nicolaka/netshoot
-    container_name: test
-    command: nc -lk 8001
-    ports:
-      - 8001:8001
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.1
@@ -74,7 +65,7 @@ services:
 
   shadowtraffic:
   # watch 'docker exec shadowtraffic curl -s localhost:9400/metrics |grep events_sent'
-    image: shadowtraffic/shadowtraffic:0.3.18
+    image: shadowtraffic/shadowtraffic:latest
     container_name: shadowtraffic
     env_file:
       - shadowtraffic/license.env

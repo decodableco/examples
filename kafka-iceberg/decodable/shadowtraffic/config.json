@@ -1,0 +1,133 @@
+{
+    "generators": [
+        {
+            "topic": "supermarketBaskets",
+            "localConfigs": {
+                "maxEvents": 10000
+            },
+            "key": {
+                "basketId": {
+                    "_gen": "uuid"
+                }
+            },
+            "value": {
+                "customerId": {
+                    "_gen": "uuid"
+                },
+                "customerName": {
+                    "_gen": "string",
+                    "expr": "#{Name.fullName}"
+                },
+                "customerAddress": {
+                    "_gen": "string",
+                    "expr": "#{Address.fullAddress}"
+                },
+                "storeId": {
+                    "_gen": "uuid"
+                },
+                "storeName": {
+                    "_gen": "string",
+                    "expr": "#{Company.name}"
+                },
+                "storeLocation": {
+                    "_gen": "string",
+                    "expr": "#{Address.city}"
+                },
+                "products": {
+                    "_gen": "repeatedly",
+                    "n": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            {
+                                "weight": 8,
+                                "value": {
+                                    "_gen": "uniformDistribution",
+                                    "bounds": [
+                                        1,
+                                        10
+                                    ]
+                                }
+                            },
+                            {
+                                "weight": 2,
+                                "value": {
+                                    "_gen": "uniformDistribution",
+                                    "bounds": [
+                                        11,
+                                        30
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "target": {
+                        "productName": {
+                            "_gen": "string",
+                            "expr": "#{Commerce.productName}"
+                        },
+                        "quantity": {
+                            "_gen": "integer",
+                            "n": {
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    1,
+                                    5
+                                ]
+                            }
+                        },
+                        "unitPrice": {
+                            "_gen": "uniformDistribution",
+                            "bounds": [
+                                1,
+                                20
+                            ],
+                            "decimals": 2
+                        },
+                        "category": {
+                            "_gen": "string",
+                            "expr": "#{Commerce.department}"
+                        }
+                    }
+                },
+                "timestamp": {
+                    "_gen": "formatDateTime",
+                    "format": "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+                    "ms": {
+                        "_gen": "add",
+                        "args": [
+                            {
+                                "_gen": "subtract",
+                                "args": [
+                                    {
+                                        "_gen": "now"
+                                    },
+                                    86400000
+                                ]
+                            },
+                            {
+                                "_gen": "integer",
+                                "n": {
+                                    "_gen": "uniformDistribution",
+                                    "bounds": [
+                                        60000,
+                                        600000
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "connections": {
+        "kafka": {
+            "kind": "kafka",
+            "producerConfigs": {
+                "bootstrap.servers": "broker:29092",
+                "key.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer",
+                "value.serializer": "io.shadowtraffic.kafka.serdes.JsonSerializer"
+            }
+        }
+    }
+}

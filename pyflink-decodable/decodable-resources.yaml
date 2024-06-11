@@ -1,0 +1,36 @@
+---
+kind: secret
+metadata:
+  name: todo_kafka_user_name
+spec_version: v1
+spec:
+  value_file: .secret_kafka_user_name
+---
+kind: secret
+metadata:
+  name: todo_kafka_password
+spec_version: v1
+spec:
+  value_file: .secret_kafka_password
+---
+kind: secret
+metadata:
+  name: todo_kafka_bootstrap_servers
+spec_version: v1
+spec:
+  value_file: .secret_kafka_bootstrap_servers
+---
+kind: pipeline
+metadata:
+    name: pyflink_on_decodable
+spec_version: v1
+spec:
+    type: PYTHON
+    job_file_path: target/pyflink-job.zip
+    properties:
+        secrets:
+            - todo_kafka_user_name
+            - todo_kafka_password
+            - todo_kafka_bootstrap_servers
+        flink_version: 1.18-python310
+        additional_metrics: []

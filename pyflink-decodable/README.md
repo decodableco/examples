@@ -2,7 +2,7 @@
 
 This example project shows how to run PyFlink jobs on Decodable.
 
-By deploying your PyFlink jobs as [https://docs.decodable.co/pipelines/create-pipelines-using-your-own-apache-flink-jobs.html](Custom Pipelines) onto Decodable, you can solely focus on implementing your job,
+By deploying your PyFlink jobs as [Custom Pipelines](https://docs.decodable.co/pipelines/create-pipelines-using-your-own-apache-flink-jobs.html) onto Decodable, you can solely focus on implementing your job,
 while leaving all the aspects of running the job, like provisioning Flink clusters and the underlying hardware,
 keeping them secure and up-to-date, scaling them, monitoring and observing them, to the fully-managed Decodable platform.
 

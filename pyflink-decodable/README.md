@@ -10,7 +10,7 @@ keeping them secure and up-to-date, scaling them, monitoring and observing them,
 
 You'll need the following things in place to run this example:
 
-* A free Decodable account ([https://app.decodable.co/-/accounts/create](sign up))
+* A free Decodable account ([sign up](https://app.decodable.co/-/accounts/create))
 * The [Decodable CLI](https://docs.decodable.co/cli.html)
 * [GNU Make](https://www.gnu.org/software/make/)
 * A Kafka cluster which can be accessed via Decodable; For instance, the free tier of [Upstash](https://upstash.com/) can be used

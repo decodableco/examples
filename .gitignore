@@ -33,3 +33,5 @@ api-key*
 secret
 snow*.log*
 .DS_Store
+
+.venv

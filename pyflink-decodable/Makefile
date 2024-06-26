@@ -15,7 +15,7 @@ $(TARGET):
 
 $(VENV): requirements.txt
 	$(PY) -m venv $(VENV)
-	$(BIN)/pip install -r requirements.txt --target=${PYTHON_LIBS}
+	$(BIN)/pip install --platform manylinux2014_aarch64 --only-binary=:all: --upgrade -r requirements.txt --target=${PYTHON_LIBS}
 	touch $(VENV)
 
 $(LIBS)/flink-sql-connector-kafka-3.0.2-1.18.jar: | $(TARGET)

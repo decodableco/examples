@@ -28,19 +28,30 @@ from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.table import StreamTableEnvironment, DataTypes
 from pyflink.table.udf import udf
 
+import polars as pl
+from datetime import datetime
+
 @udf(input_types=[DataTypes.BIGINT()], result_type=DataTypes.STRING())
 def get_user_name(id):
+    df = pl.DataFrame(
+        {
+            "integer": [1, 2, 3],
+            "date": [
+                datetime(2025, 1, 1),
+                datetime(2025, 1, 2),
+                datetime(2025, 1, 3),
+            ],
+            "float": [4.0, 5.0, 6.0],
+            "string": ["a", "b", "c"],
+        }
+    )
+
+    print(df)
+
     r = requests.get('https://jsonplaceholder.typicode.com/users/' + str(id))
     return jmespath.search("name", json.loads(r.text))
 
 def process_todos():
-    with open('/opt/pipeline-secrets/gm_todo_kafka_user_name', 'r') as file:
-      user_name = file.read()
-    with open('/opt/pipeline-secrets/gm_todo_kafka_password', 'r') as file:
-      password = file.read()
-    with open('/opt/pipeline-secrets/gm_todo_kafka_bootstrap_servers', 'r') as file:
-      bootstrap_servers = file.read()
-
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(1)
 
@@ -76,14 +87,7 @@ def process_todos():
       due       TIMESTAMP(3),
       user_name STRING
     ) WITH (
-      'connector' = 'kafka',
-      'topic' = 'todos',
-      'properties.bootstrap.servers' = '{bootstrap_servers}',
-      'properties.sasl.mechanism' = 'SCRAM-SHA-256',
-      'properties.security.protocol' = 'SASL_SSL',
-      'properties.sasl.jaas.config' = 'org.apache.flink.kafka.shaded.org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{user_name}\" password=\"{password}\";',
-      'properties.group.id' = 'todos-sink',
-      'format' = 'json'
+      'connector' = 'blackhole'
     )""")
 
     t_env.execute_sql("""

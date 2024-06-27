@@ -15,6 +15,11 @@ docker compose up -d
 
 == Demo 1: Exploring the SQL Client
 
+[source,bash]
+----
+docker compose exec -it jobmanager bash -c "./bin/sql-client.sh"
+----
+
 === Result Mode
 
 ==== table

@@ -66,14 +66,11 @@
                             "expr": "#{Commerce.productName}"
                         },
                         "quantity": {
-                            "_gen": "integer",
-                            "n": {
-                                "_gen": "uniformDistribution",
-                                "bounds": [
-                                    1,
-                                    5
-                                ]
-                            }
+                            "_gen": "uniformDistribution",
+                            "bounds": [
+                                1,
+                                5
+                            ]
                         },
                         "unitPrice": {
                             "_gen": "uniformDistribution",
@@ -105,14 +102,11 @@
                                 ]
                             },
                             {
-                                "_gen": "integer",
-                                "n": {
-                                    "_gen": "uniformDistribution",
-                                    "bounds": [
-                                        60000,
-                                        600000
-                                    ]
-                                }
+                                "_gen": "uniformDistribution",
+                                "bounds": [
+                                    60000,
+                                    600000
+                                ]
                             }
                         ]
                     }

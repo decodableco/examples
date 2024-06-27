@@ -94,7 +94,7 @@ services:
     entrypoint: tail -f /dev/null
 
   shadowtraffic:
-    image: shadowtraffic/shadowtraffic:latest0.6.0
+    image: shadowtraffic/shadowtraffic:0.6.0
     container_name: shadowtraffic
       #    profiles: ["shadowtraffic"]
     env_file:

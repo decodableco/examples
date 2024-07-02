@@ -1,18 +1,43 @@
 {
   "globalConfigs": {
-    "throttle": {
-      "ms": {
-        "_gen": "uniformDistribution",
-        "bounds": [50, 200]
-      }
+    "throttleMs": {
+      "_gen": "uniformDistribution",
+      "bounds": [
+        500,
+        2000
+      ]
     }
   },
-
+  "schedule": {
+    "stages": [
+      {
+        "generators": [
+          "customers"
+        ],
+        "overrides": {
+          "customers": {
+            "localConfigs": {
+              "maxEvents": 20,
+              "throttleMs": 0
+            }
+          }
+        }
+      },
+      {
+        "generators": [
+          "orders"
+        ]
+      }
+    ]
+  },
   "generators": [
     {
+      "name": "customers",
       "topic": "customers",
       "value": {
-        "customerId": { "_gen": "uuid" },
+        "customerId": {
+          "_gen": "uuid"
+        },
         "name": {
           "_gen": "string",
           "expr": "#{Name.fullName}"
@@ -26,7 +51,11 @@
         },
         "membershipLevel": {
           "_gen": "oneOf",
-          "choices": ["free", "pro", "elite"]
+          "choices": [
+            "free",
+            "pro",
+            "elite"
+          ]
         },
         "shippingAddress": {
           "_gen": "string",
@@ -36,29 +65,52 @@
           "_gen": "formatDateTime",
           "ms": {
             "_gen": "uniformDistribution",
-            "bounds": [1710176905, { "_gen": "now" }]
+            "bounds": [
+              1710176905,
+              {
+                "_gen": "now"
+              }
+            ]
           }
         }
       }
     },
     {
+      "localConfigs": {
+        "maxMs": 3600000
+      },
+      "name": "orders",
       "topic": "orders",
       "value": {
-        "orderId": { "_gen": "uuid" },
+        "orderId": {
+          "_gen": "uuid"
+        },
         "customerId": {
           "_gen": "lookup",
           "topic": "customers",
-          "path": ["value", "customerId"]
+          "path": [
+            "value",
+            "customerId"
+          ]
         },
         "orderNumber": {
           "_gen": "sequentialInteger"
         },
-        "product": { "_gen": "string", "expr": "#{Commerce.productName}" },
+        "product": {
+          "_gen": "string",
+          "expr": "#{Commerce.productName}"
+        },
         "backordered": {
           "_gen": "weightedOneOf",
           "choices": [
-            { "weight": 19, "value": false },
-            { "weight": 1, "value": true }
+            {
+              "weight": 19,
+              "value": false
+            },
+            {
+              "weight": 1,
+              "value": true
+            }
           ]
         },
         "cost": {
@@ -66,15 +118,23 @@
           "mean": 100,
           "sd": 20
         },
-        "description": { "_gen": "string", "expr": "#{Lorem.paragraph}" },
-        "create_ts": { "_gen": "now" },
+        "description": {
+          "_gen": "string",
+          "expr": "#{Lorem.paragraph}"
+        },
+        "create_ts": {
+          "_gen": "now"
+        },
         "creditCardNumber": {
           "_gen": "string",
           "expr": "#{Business.creditCardNumber}"
         },
         "discountPercent": {
           "_gen": "uniformDistribution",
-          "bounds": [0, 10],
+          "bounds": [
+            0,
+            10
+          ],
           "decimals": 0
         }
       }

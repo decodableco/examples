@@ -6,6 +6,8 @@ services:
     ports:
       - "8081:8081"
     command: jobmanager
+    volumes:
+      - .:/data/
     environment:
     - |
       FLINK_PROPERTIES=
@@ -81,6 +83,22 @@ services:
     environment:
       - HMS_LOGLEVEL=INFO
 
+  pyiceberg:
+    image: python:3.12-bookworm
+    container_name: pyiceberg
+    environment:
+      PYICEBERG_CATALOG__DEFAULT__URI: thrift://hms:9083
+      PYICEBERG_CATALOG__DEFAULT__S3__ACCESS_KEY_ID: admin
+      PYICEBERG_CATALOG__DEFAULT__S3__SECRET_ACCESS_KEY: password
+      PYICEBERG_CATALOG__DEFAULT__S3__PATH_STYLE_ACCESS: true
+      PYICEBERG_CATALOG__DEFAULT__S3__ENDPOINT: http://minio:9000
+    entrypoint: >
+      /bin/sh -c "
+      pip install pyiceberg["s3fs,hive,pyarrow"];
+      sleep infinity
+      "
+      
+
   duckdb:
     image: davidgasquez/duckdb
     container_name: duckdb
@@ -94,6 +112,7 @@ services:
     entrypoint: tail -f /dev/null
 
   shadowtraffic:
+  # watch 'docker exec shadowtraffic curl -s localhost:9400/metrics |grep events_sent'
     image: shadowtraffic/shadowtraffic:0.6.0
     container_name: shadowtraffic
       #    profiles: ["shadowtraffic"]
@@ -101,8 +120,7 @@ services:
       - shadowtraffic/license.env
     volumes:
       - ./shadowtraffic:/data
-    command: --show-progress --config /data/config.json
-   
+    command: --config /data/kafka-retail.json
 
 # Without a network explicitly defined, you hit this Hive/Thrift error
 # java.net.URISyntaxException Illegal character in hostname

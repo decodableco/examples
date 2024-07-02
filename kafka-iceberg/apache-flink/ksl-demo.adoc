@@ -193,7 +193,7 @@ CREATE TABLE t_i_orders
    WHERE cost > 100;
 ----
 
-View the Flink dashboard: http://localhost:8081/=/overview
+View the Flink dashboard: http://localhost:8081/
 
 View the MinIO browser and see that there are objects there: http://localhost:9001 (login:admin / password:password)
 

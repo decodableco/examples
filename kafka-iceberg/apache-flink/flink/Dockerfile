@@ -10,7 +10,7 @@ RUN echo "Purge apt artifacts" && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/duckdb/duckdb/releases/download/v0.10.0/duckdb_cli-linux-amd64.zip \
+RUN wget https://github.com/duckdb/duckdb/releases/download/v1.0.0/duckdb_cli-linux-amd64.zip \
     && unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin \
     && rm duckdb_cli-linux-amd64.zip
 
@@ -20,17 +20,11 @@ WORKDIR /opt/flink
 
 # Set up Hive config
 COPY conf/hive-site.xml ./conf/hive-site.xml
-# Pre-seed the SQL history because I'm nice like that
-#COPY flink-sql-history /root/.flink-sql-history
 
 # Enable SQL Client to find the job manager when running it from this image
 RUN sed -i "s/jobmanager.rpc.address: localhost/jobmanager.rpc.address: flink-jobmanager/g" ./conf/flink-conf.yaml
 
 # Install JARs
-
-RUN echo "Add Flink S3 Plugin" && \
-    mkdir ./plugins/s3-fs-hadoop && \
-    cp ./opt/flink-s3-fs-hadoop-1.18.1.jar ./plugins/s3-fs-hadoop/
 
 RUN echo "-> Install JARs: Flink's Kafka connector" && \
     mkdir -p ./lib/kafka && pushd $_ && \

@@ -1,0 +1,105 @@
+== Using Delta Lake with Flink and Hive Metastore (HMS) 
+
+[source,sql] 
+---- 
+CREATE CATALOG c_delta_hms WITH ( 
+    'type' = 'delta-catalog', 
+    'catalog-type' = 'hive', 
+    'hive-conf-dir' = './conf/'); 
+
+CREATE DATABASE c_delta_hms.db_new; 
+
+USE c_delta_hms.db_new; 
+---- 
+
+[source,sql] 
+---- 
+Flink SQL> CREATE TABLE t_foo2 (c1 varchar, c2 int) 
+>     WITH ('connector' = 'delta', 
+>           'table-path' = 's3a://warehouse/t_foo2'); 
+[ERROR] Could not execute SQL statement. Reason: 
+java.lang.IllegalArgumentException: table should be resolved 
+---- 
+
+https://github.com/apache/flink/blob/4041b2458a9eaef265c4b91e201e0c691056da51/flink-connectors/flink-connector-hive/src/main/java/org/apache/flink/table/catalog/hive/HiveCatalog.java#L476 
+
+== Writing with Delta Lake to local filesystem 
+
+Create a https://www.decodable.co/blog/catalogs-in-flink-sql-a-primer[Flink catalog], using the ephemeral in-memory catalog metastore: 
+
+[source,sql] 
+---- 
+CREATE CATALOG c_delta 
+    WITH ('type'         = 'delta-catalog', 
+          'catalog-type' = 'in-memory'); 
+---- 
+
+Create a database within the new catalog and set it as the active one for the session 
+
+[source,sql] 
+---- 
+CREATE DATABASE c_delta.db_1; 
+USE c_delta.db_1; 
+---- 
+
+Create a Delta Lake table on the local filesystem: 
+
+[source,sql] 
+---- 
+CREATE TABLE t_foo (c1 VARCHAR, 
+                    c2 INT) 
+     WITH ('connector'  = 'delta', 
+           'table-path' = '/tmp/t_foo'); 
+---- 
+
+Populate the table: 
+
+[source,sql] 
+---- 
+INSERT INTO t_foo 
+SELECT col1, 42 
+FROM (VALUES  ('Never'), ('Gonna'), ('Give'), ('You'), ('Up')) AS t1(col1); 
+---- 
+
+Check that the `INSERT` ran successfully: 
+
+[source,sql] 
+---- 
+Flink SQL> SHOW JOBS; 
++----------------------------------+--------------------------------+----------+-------------------------+ 
+|                           job id |                       job name |   status |              start time | 
++----------------------------------+--------------------------------+----------+-------------------------+ 
+| f2743cc8c6d95f9e1eebea6d93f30445 | insert-into_c_delta.db_1.t_foo | FINISHED | 2024-07-11T09:05:54.535 | 
++----------------------------------+--------------------------------+----------+-------------------------+ 
+1 rows in set 
+---- 
+
+Query the data 
+
+[source,sql] 
+---- 
+SET 'sql-client.execution.result-mode' = 'tableau'; 
+
+SELECT * FROM t_foo; 
+
+Flink SQL> SELECT * FROM t_foo; 
++----+--------------------------------+-------------+ 
+| op |                             c1 |          c2 | 
++----+--------------------------------+-------------+ 
+Received a total of 0 row 
+---- 
+
+ZERO rows? wtf? 
+
+[source,bash] 
+---- 
+$ ls -lR /tmp/t_foo/ 
+/tmp/t_foo/: 
+total 0 
+drwxr-xr-x 1 flink flink 110 Jul 11 09:07 _delta_log 
+
+/tmp/t_foo/_delta_log: 
+total 4 
+-rw-r--r-- 1 flink flink 776 Jul 11 09:07 00000000000000000000.json 
+---- 
+ 

@@ -36,6 +36,7 @@ This repository contains examples of use cases that utilize Decodable streaming 
 |[Array Aggregation](array-agg)| Using the `array_agg()` UDF for denormalizing data in a pipeline from MySQL to OpenSearch |
 |[Kafka with ngrok](kafka-ngrok)| Docker Compose for running Apache Kafka locally, accessible from the internet using ngrok|
 |[PyFlink on Decodable](pyflink-decodable)| Running a PyFlink job as a Custom Pipeline on Decodable|
+|[Delta Lake / Flink](flink-delta-lake)| Writing to Delta Lake with Apache Flink |
 
 
 ## License

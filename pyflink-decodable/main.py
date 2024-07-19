@@ -34,11 +34,11 @@ def get_user_name(id):
     return jmespath.search("name", json.loads(r.text))
 
 def process_todos():
-    with open('/opt/pipeline-secrets/gm_todo_kafka_user_name', 'r') as file:
+    with open('/opt/pipeline-secrets/todo_kafka_user_name', 'r') as file:
       user_name = file.read()
-    with open('/opt/pipeline-secrets/gm_todo_kafka_password', 'r') as file:
+    with open('/opt/pipeline-secrets/todo_kafka_password', 'r') as file:
       password = file.read()
-    with open('/opt/pipeline-secrets/gm_todo_kafka_bootstrap_servers', 'r') as file:
+    with open('/opt/pipeline-secrets/todo_kafka_bootstrap_servers', 'r') as file:
       bootstrap_servers = file.read()
 
     env = StreamExecutionEnvironment.get_execution_environment()

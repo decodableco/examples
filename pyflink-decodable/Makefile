@@ -15,6 +15,8 @@ $(TARGET):
 
 $(VENV): requirements.txt
 	$(PY) -m venv $(VENV)
+	# $(BIN)/pip config set global.trusted-host "pypi.org files.pythonhosted.org pypi.python.org"
+	# $(BIN)/pip install --upgrade certifi
 	$(BIN)/pip install -r requirements.txt --target=${PYTHON_LIBS}
 	touch $(VENV)
 

@@ -22,8 +22,8 @@ spec:
 ---
 kind: pipeline
 metadata:
-    name: pyflink_on_decodable
-spec_version: v1
+    name: sharon-demo-pyflink-numpy
+spec_version: v2
 spec:
     type: PYTHON
     job_file_path: target/pyflink-job.zip
@@ -34,3 +34,7 @@ spec:
             - todo_kafka_bootstrap_servers
         flink_version: 1.18-python310
         additional_metrics: []
+    execution:
+      active: true
+      task_size: M
+      task_count: 1

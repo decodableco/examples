@@ -1,45 +1,91 @@
 # Decodable Examples
 
+## Introduction
+
 This repository contains examples of use cases that utilize Decodable streaming solution as well as demos for related open-source projects such as Apache Flink, Debezium, and Postgres.
+
+Examples are presented "as-is" and were working when committed to the repository :)
+
+For help with any of the examples, or using Decodable in general, please [join our Slack group](https://join.slack.com/t/decodablecommunity/shared_invite/zt-uvow71bk-Uf914umgpoyIbOQSxriJkA).
+
+## About Decodable
+
+_Decodable radically simplifies real-time data, making it easier to access the freshest, high-quality data. Reduce infrastructure overhead, connect data sources, transform, and deliver data reliably to any destination._
+
+_Learn more [here](https://decodable.co), and [sign up for a free trial](https://app.decodable.co/-/accounts/create) today!_
 
 ## Contents
 
-| Example | Description |
-|---------|-------------|
-| [Flink Learn](./flink-learn/) | Apache Flink tutorials and webinar|
-| [AsyncAPI](asyncapi) | Publishing Data Products with AsyncAPI |
-| [Opinionated Data Pipelines](opinionated-pipelines) | Building data pipelines with schema on write streams. |
-| [Postman](postman) | Building data pipelines with Postman. |
-| [Change Streams](change-streams) | Using change streams to build materialized views in Postgres |
-| [XML Processing](xml) | Parse XML and transform to JSON |
-| [OSQuery Routing](osquery) | Route OSQuery logs with SQL |
-| [Masking](masking) | Ways to mask data |
-| [Apache Pinot](pinot) | Transforming osquery logs to Apache Pinot and Superset |
-| [Apache Druid](druid) | This example sends covid 19 data to Decodable using it's REST API. The data is then cleansed using Decodable SQL and send the data to a Kafka sink.  |
-| [Rockset](rockset) | We will be utilizing a cloud MQTT broker and AWS Kinesis to capture and stream data. Decodable will be responsible for preparing and aggregating the data prior to reaching the real-time analytical database (Rockset) |
-| [Tinybird](tinybird) | We write data to Tinybird and build a simple real time web application. |
-| [Apache Kafka](kafka2s3) | Installing Apache Kafka on EC2 and writing to S3 with Decodable |
-| [Apache Kafka mTLS](mtls) | We install Apache Kafka on EC2 and configure it with mTLS and configure Decodable to read from it |
-| [Snowflake + Snowpipe](snowflake) | We setup a snowpipe at the end of a Decodable S3 sink. |
-| [Confluent](confluent) | Clickstream from Confluent Cloud joined with CDC user data from Postgres |
-| [Snowflake + Snowpipe + Merge](snowflake/README-CDC.md) | Leveraging Snowpipe, we send CDC data from Postgres to be processed in Snowflake using an Append Only Stream in Snowflake to merge CDC data in a Snowflake table. Essentially `mirroring` the table in Postgres in a Snowflake table. |
-|[Reading S3 Events in a Lambda Function](s3events/)|We configure an S3 bucket with a Lambda notification to send data to Kinesis to be processed in Decodable |
-|[MSSQL CDC](mssql_cdc/)| We enable a MSSQL in Docker with CDC. We then stand up a Debezium server to read from MSSQL and write the change events into AWS Kinesis  |
-|[Oracle CDC](oracle_cdc/)| We configure a Oracle AWS RDS with LogMiner. We then stand up a Debezium server to read change events into AWS Kinesis  |
-|[DynamoDb CDC](dynamodb_cdc/)| We configure a DynamoDB to send change data to Kinesis. Then we read those changes into Decodable for transformation or replication.  |
-|[ Logical Decoding Message Examples](postgres-logical-decoding)| We show how to retrieve logical decoding messages from the Postgres WAL |
-|[GitHub Webhooks](github-webhooks)| We show how to process GitHub Webhook events using the Decodable REST source connector |
-|[PyFlink](pyflink)| We run a basic PyFlink job on Kubernetes |
-|[Kafka / Flink / Iceberg](kafka-iceberg/apache-flink)| Integrating Apache Kafka with Apache Iceberg through Apache Flink. _As presented at Kafka Summit London 2024_|
-|[Kafka / Flink / Iceberg](kafka-iceberg/decodable) (with Decodable)| Streaming from Apache Kafka to Apache Iceberg with Decodable|
-|[Flink SQL Troubleshooting](troubleshooting-flinksql)| A set of Docker Compose environments for demonstrating various Flink SQL troubleshooting scenarios (see [related blog](https://www.decodable.co/blog/flink-sql-misconfiguration-misunderstanding-and-mishaps?utm_medium=github&utm_source=examples_repo&utm_campaign=blog&utm_content=troubleshooting-flinksql))|
-|[Array Aggregation](array-agg)| Using the `array_agg()` UDF for denormalizing data in a pipeline from MySQL to OpenSearch |
-|[Kafka with ngrok](kafka-ngrok)| Docker Compose for running Apache Kafka locally, accessible from the internet using ngrok|
-|[PyFlink on Decodable](pyflink-decodable)| Running a PyFlink job as a Custom Pipeline on Decodable|
-|[Delta Lake / Flink](flink-delta-lake)| Writing to Delta Lake with Apache Flink |
+### Stream Processing Techniques
 
+| Example                                     | Description                                                                                                    |
+|---------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+| [Change Streams](change-streams)            | Using change streams to build materialized views in Postgres                                                   |
+| [XML Processing](xml)                       | Parse XML and transform to JSON                                                                                |
+| [Masking](masking)                          | Ways to mask data                                                                                              |
+| [Array Aggregation (1)](array-agg-postgres) | Demonstrating how to aggregate the elements of the many side of 1:n join into an array with data from Postgres |
+| [Array Aggregation (2)](array-agg)          | Using the `array_agg()` UDF for denormalizing data in a pipeline from MySQL to OpenSearch                      |
+
+### Data Pipelines
+
+| Example                                             | Description                                            |
+|-----------------------------------------------------|--------------------------------------------------------|
+| [Opinionated Data Pipelines](opinionated-pipelines) | Building data pipelines with schema on write streams. |
+| [Postman](postman)                                  | Building data pipelines with Postman.                  |
+
+### Integrations
+
+| Example                                                                    | Description                                                                                                                                                                                                          |
+|----------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| [Apache Druid](druid)                                                      | Sending COVID-19 data to Decodable using its REST API, cleaning it with SQL, and then sending it to Apache Druid      |
+| [Apache Kafka / Flink / Iceberg](kafka-iceberg/apache-flink)               | Integrating Apache Kafka with Apache Iceberg through Apache Flink. _As presented at Kafka Summit London 2024_         |
+| [Apache Kafka / Flink / Iceberg](kafka-iceberg/decodable) (with Decodable) | Streaming from Apache Kafka to Apache Iceberg with Decodable                                                          |
+| [Apache Kafka Upsert connector](kafka-upsert/)                             | Explaining the difference between the Flink Kafka and Kafka Upsert connectors                                         |
+| [Apache Kafka mTLS](mtls)                                                  | Installing Apache Kafka on EC2 and configuring it with mTLS                                                           |
+| [Apache Kafka with ngrok](kafka-ngrok)                                     | Using Docker Compose for running Apache Kafka locally, accessible from the internet using ngrok                       |
+| [Apache Kafka](kafka2s3)                                                   | Installing Apache Kafka on EC2 and writing to S3 with Decodable                                                       |
+| [Apache Pinot](pinot)                                                      | Transforming osquery logs to Apache Pinot and Superset                                                                |
+| [AsyncAPI](asyncapi)                                                       | Publishing Data Products with AsyncAPI                                                                                |
+| [Confluent](confluent)                                                     | Clickstream from Confluent Cloud joined with CDC user data from Postgres                                              |
+| [Delta Lake / Flink](flink-delta-lake)                                     | Writing to Delta Lake with Apache Flink                                                                               |
+| [GitHub Webhooks](github-webhooks)                                         | Processing GitHub Webhook events using the Decodable REST source connector                                            |
+| [OSQuery Routing](osquery)                                                 | Routing OSQuery logs with SQL                                                                                         |
+| [Redpanda](redpanda)                                                       | Reading and writing data to Redpanda from Flink                                                                       |
+| [S3 Events in a Lambda Function](s3events/)                                | Configuring an S3 bucket with a Lambda notification to send data to Kinesis to be processed in Decodable              |
+| [Tinybird](tinybird)                                                       | Writing data to Tinybird from Decodable                                                                               |
+
+### Changed Data Capture (CDC)
+
+| Example                                                          | Description                                                                                                          |
+|------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| [MSSQL CDC](mssql_cdc/)                                          | Enabling MSSQL in Docker with CDC, reading from it with Debezium, writing change events into AWS Kinesis             |
+| [Oracle CDC](oracle_cdc/)                                        | Configuring Oracle AWS RDS with LogMiner, reading from it with Debezium, writing change events into AWS Kinesis      | 
+| [DynamoDb CDC](dynamodb_cdc/)                                    | Configure DynamoDB to send change data to Kinesis, reading changes into Decodable for transformation or replication. |
+| [ Logical Decoding Message Examples](postgres-logical-decoding)  | How to retrieve logical decoding messages from the Postgres WAL                                                      |
+
+### PyFlink
+
+| Example                                   | Description                                             |
+|-------------------------------------------|---------------------------------------------------------|
+| [PyFlink](pyflink)                        | We run a basic PyFlink job on Kubernetes                |
+| [PyFlink on Decodable](pyflink-decodable) | Running a PyFlink job as a Custom Pipeline on Decodable |
+
+### Flink SQL
+
+| Example                                               | Description |
+|-------------------------------------------------------|-------------|
+| [Flink SQL Troubleshooting](troubleshooting-flinksql) | A set of Docker Compose environments for demonstrating various Flink SQL troubleshooting scenarios (see [related blog](https://www.decodable.co/blog/flink-sql-misconfiguration-misunderstanding-and-mishaps?utm_medium=github&utm_source=examples_repo&utm_campaign=blog&utm_content=troubleshooting-flinksql))|
+
+## Deprecated
+
+The following examples are included for reference but are deprecated for the reason shown.
+
+| Example                                                 | Description                                                                                                                                                                                                          | Deprecation reason                                                                               |
+|---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| [Rockset](rockset)                                      | Reading data from a cloud MQTT broker and AWS Kinesis into Decodable and streaming it to Rockset                                                                                                                     | [Rockset was acquired by OpenAI](https://rockset.com/blog/openai-acquires-rockset/) in June 2024 |
+| [Snowflake + Snowpipe + Merge](snowflake/README-CDC.md) | Sending data from Postgres with CDC using Snowpipe to Snowflake using an Append Only Stream in Snowflake to merge CDC data in a Snowflake table. Essentially `mirroring` the table in Postgres in a Snowflake table. | Replaced with [Snowflake sink](https://docs.decodable.co/connect/sink/snowflake.html)            |
+| [Snowflake + Snowpipe](snowflake)                       | Sending data to Snowflake via S3 from Decodable                                                                                                                                                                      | Replaced with [Snowflake sink](https://docs.decodable.co/connect/sink/snowflake.html)            |
 
 ## License
 
 This code base is available under the Apache License, version 2.
-

@@ -1,0 +1,70 @@
+
+Launch stack:
+
+[source,bash]
+----
+cd ~/git/examples/troubleshooting-flinksql/04-flink-iceberg-hms-s3-minio
+docker compose up -d && while ! nc -z localhost 8081; do sleep 1; done && docker compose exec -it jobmanager bash -c "./bin/sql-client.sh"
+----
+
+Build tcpdump Docker image:
+
+[source,bash]
+----
+docker build -t tcpdump - <<EOF
+FROM ubuntu
+RUN apt-get update && apt-get install -y tcpdump tshark
+CMD tcpdump -i eth0
+EOF
+----
+
+Run tcpdump to sniff HMS and MinIO:
+
+[source,bash]
+----
+docker run --rm -it --net=container:minio tcpdump tshark -i eth0 -l -Y "http"
+docker run --rm -it --net=container:hms tcpdump tshark -i eth0 -l -Tfields -e ip.src -e ip.dst -e thrift.method -e thrift.binary -Y "thrift"
+----
+
+List IPs of containers (useful for reading tcpdump output)
+
+[source,bash]
+----
+docker ps --format "{{.ID}} {{.Names}}" | while read -r id name; do ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $id); printf "%-15s %-20s\n" "$ip" "$name"; done | awk 'BEGIN { print "IP Address       Container Name"; print "---------------  --------------------" } { print }'
+----
+
+Exfil pcap files from containers for viewing in Wireshark
+[source,bash]
+----
+for container_id in $(docker ps | grep tcpdump | awk '{print $1}'); do
+  docker exec $container_id sh -c "cd /tmp && tar czf - wireshark_*.pcapng" > /tmp/wireshark_files_$container_id.tar.gz
+done
+
+for tar_file in /tmp/wireshark_files_*.tar.gz; do
+  tar xzf $tar_file -C /tmp/
+done
+----
+
+(could also do this with volume mounts on the Docker containers I guess)
+
+Run some SQL:
+
+[source,sql]
+----
+CREATE CATALOG c_iceberg WITH (
+       'type' = 'iceberg',
+       'catalog-type'='hive',
+       'warehouse' = 's3a://warehouse',
+       'hive-conf-dir' = './conf');
+
+CREATE DATABASE c_iceberg.rmoff;
+
+USE c_iceberg.rmoff;
+
+CREATE TABLE test
+AS 
+    SELECT name, COUNT(*) AS cnt 
+    FROM (VALUES ('Never'), ('Gonna'), ('Give'), ('You'), ('Up')) AS NameTable(name) 
+    GROUP BY name;
+
+----

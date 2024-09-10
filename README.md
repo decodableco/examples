@@ -1,5 +1,7 @@
 # Decodable Examples
 
+![A squirrel holding a laptop that says "Examples repo"](images/examples_repo.webp)
+
 ## Introduction
 
 This repository contains examples of use cases that utilize Decodable streaming solution as well as demos for related open-source projects such as Apache Flink, Debezium, and Postgres.

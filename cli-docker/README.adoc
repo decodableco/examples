@@ -1,0 +1,65 @@
+= Example Docker image for Decodable CLI
+
+The https://docs.decodable.co/cli.html[Decodable CLI] enables you configure, view, and control resources on your Decodable account.
+
+== Build
+
+[source,bash]
+----
+cd cli-docker
+docker build -t decodable-cli .
+----
+
+== Usage
+
+You need two configuration values:
+
+* Your Decodable **account name**
+* The **refresh token** for your account. You can obtain this by running the CLI locally on your machine and doing the following:
++
+[source,bash]
+----
+decodable config setup <account name>
+
+decodable login
+# [ follow the prompts to complete the login process ]
+
+decodable token refresh
+----
++
+WARNING: Anyone with refresh token can access your Decodable account. 
+Treat your refresh token as you would any other sensitive information such as passwords.
+If you invoke the Docker container as illustrated below note that the refresh token will remain on your command line history and thus be vulnerable to local access.
+
+=== Invocation
+
+[source,bash]
+----
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           decodable-cli:latest                            \
+           <decodable CLI command line arguments>
+----
+
+For example:
+
+[source,bash]
+----
+# Get CLI version
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           decodable-cli:latest                            \
+           --version
+----
+
+[source,bash]
+----
+# Show status of all resources
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           decodable-cli:latest                            \
+           query --no-spec
+----

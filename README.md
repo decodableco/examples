@@ -80,6 +80,12 @@ _Decodable provides a managed PyFlink service. Learn more [here](https://docs.de
 |-------------------------------------------------------|-------------|
 | [Flink SQL Troubleshooting](troubleshooting-flinksql) | A set of Docker Compose environments for demonstrating various Flink SQL troubleshooting scenarios (see [related blog](https://www.decodable.co/blog/flink-sql-misconfiguration-misunderstanding-and-mishaps?utm_medium=github&utm_source=examples_repo&utm_campaign=blog&utm_content=troubleshooting-flinksql))|
 
+### Decodable tools
+
+| Example                                               | Description |
+|-------------------------------------------------------|-------------|
+| [Decodable CLI Docker image](cli-docker) | An example Dockerfile for running the Decodable CLI under Docker.|
+
 ## License
 
 This code base is available under the Apache License, version 2.

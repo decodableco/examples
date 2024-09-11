@@ -1,0 +1,13 @@
+---
+kind: pipeline
+metadata:
+    name: count-messages
+    description: ""
+spec_version: v2
+spec:
+    type: SQL
+    sql: INSERT INTO msg_count SELECT COUNT(*) AS ct FROM envoy
+    execution:
+        active: false
+        task_count: 1
+        task_size: M

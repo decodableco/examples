@@ -1,0 +1,25 @@
+---
+kind: connection
+metadata:
+    name: datagen-01
+    description: ""
+spec_version: v2
+spec:
+    connector: datagen
+    type: source
+    stream_name: envoy
+    schema_v2:
+        fields:
+            - kind: physical
+              name: message
+              type: STRING
+        constraints: {}
+    properties:
+        delay: "5000"
+        format: json
+        data.type: envoy
+    execution:
+        active: true
+        task_count: 1
+        task_size: M
+

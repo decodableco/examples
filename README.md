@@ -6,7 +6,7 @@
 
 This repository contains examples of use cases that utilize Decodable streaming solution as well as demos for related open-source projects such as Apache Flink, Debezium, and Postgres.
 
-Examples are presented "as-is" and were working when committed to the repository :)
+Examples are presented "as-is" and are maintained on a best effort basis. PRs for updating existing (or adding new) examples are welcome!
 
 For help with any of the examples, or using Decodable in general, please [join our Slack group](https://join.slack.com/t/decodablecommunity/shared_invite/zt-uvow71bk-Uf914umgpoyIbOQSxriJkA).
 

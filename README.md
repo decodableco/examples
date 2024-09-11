@@ -35,6 +35,15 @@ _Learn more [here](https://decodable.co), and [sign up for a free trial](https:/
 | [Opinionated Data Pipelines](opinionated-pipelines) | Building data pipelines with schema on write streams. |
 | [Postman](postman)                                  | Building data pipelines with Postman.                  |
 
+### PyFlink
+
+_Decodable provides a managed PyFlink service. Learn more [here](https://docs.decodable.co/pipelines/create-pipelines-using-your-own-apache-flink-jobs.html#_create_a_custom_pipeline_python)._
+
+| Example                                    | Description                                             |
+|--------------------------------------------|---------------------------------------------------------|
+| [PyFlink](pyflink)                         | Running a basic PyFlink job on Kubernetes               |
+| [PyFlink on Decodable](pyflink-decodable)  | Running a PyFlink job as a Custom Pipeline on Decodable |
+
 ### Integrations
 
 | Example                                                                    | Description                                                                                                                                                                                                          |
@@ -65,28 +74,11 @@ _Learn more [here](https://decodable.co), and [sign up for a free trial](https:/
 | [DynamoDb CDC](dynamodb_cdc/)                                    | Configure DynamoDB to send change data to Kinesis, reading changes into Decodable for transformation or replication. |
 | [ Logical Decoding Message Examples](postgres-logical-decoding)  | How to retrieve logical decoding messages from the Postgres WAL                                                      |
 
-### PyFlink
-
-| Example                                   | Description                                             |
-|-------------------------------------------|---------------------------------------------------------|
-| [PyFlink](pyflink)                        | We run a basic PyFlink job on Kubernetes                |
-| [PyFlink on Decodable](pyflink-decodable) | Running a PyFlink job as a Custom Pipeline on Decodable |
-
 ### Flink SQL
 
 | Example                                               | Description |
 |-------------------------------------------------------|-------------|
 | [Flink SQL Troubleshooting](troubleshooting-flinksql) | A set of Docker Compose environments for demonstrating various Flink SQL troubleshooting scenarios (see [related blog](https://www.decodable.co/blog/flink-sql-misconfiguration-misunderstanding-and-mishaps?utm_medium=github&utm_source=examples_repo&utm_campaign=blog&utm_content=troubleshooting-flinksql))|
-
-## Deprecated
-
-The following examples are included for reference but are deprecated for the reason shown.
-
-| Example                                                 | Description                                                                                                                                                                                                          | Deprecation reason                                                                               |
-|---------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| [Rockset](rockset)                                      | Reading data from a cloud MQTT broker and AWS Kinesis into Decodable and streaming it to Rockset                                                                                                                     | [Rockset was acquired by OpenAI](https://rockset.com/blog/openai-acquires-rockset/) in June 2024 |
-| [Snowflake + Snowpipe + Merge](snowflake/README-CDC.md) | Sending data from Postgres with CDC using Snowpipe to Snowflake using an Append Only Stream in Snowflake to merge CDC data in a Snowflake table. Essentially `mirroring` the table in Postgres in a Snowflake table. | Replaced with [Snowflake sink](https://docs.decodable.co/connect/sink/snowflake.html)            |
-| [Snowflake + Snowpipe](snowflake)                       | Sending data to Snowflake via S3 from Decodable                                                                                                                                                                      | Replaced with [Snowflake sink](https://docs.decodable.co/connect/sink/snowflake.html)            |
 
 ## License
 

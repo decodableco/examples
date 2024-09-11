@@ -44,9 +44,10 @@ docker run --rm                                            \
 
 For example:
 
+* Get CLI version
++
 [source,bash]
 ----
-# Get CLI version
 docker run --rm                                            \
            -e DECODABLE_ACCOUNT_NAME=<your account id>     \
            -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
@@ -54,12 +55,46 @@ docker run --rm                                            \
            --version
 ----
 
+Show status of all resources
++
 [source,bash]
 ----
-# Show status of all resources
 docker run --rm                                            \
            -e DECODABLE_ACCOUNT_NAME=<your account id>     \
            -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
            decodable-cli:latest                            \
            query --no-spec
+----
+
+* Create and populate a secret "postgres-prod"
++
+[source,bash]
+----
+# Create the resource definition
+# Ref: https://docs.decodable.co/declarative/definitions.html#secret
+cat <<EOF > postgres-prod.yaml
+---
+kind: secret
+metadata:
+  name: postgres-prod
+  description: 🤫 The password for the Production Postgres server
+spec_version: v1
+spec:
+  value_file: ./pg_pw.txt
+EOF
+
+# Write the password to a file, which is read when
+# the resource is created
+cat <<EOF > pg_pw.txt
+hunter2
+EOF
+
+# Invoke the Decodable `apply` command
+# Ref: https://docs.decodable.co/declarative/apply.html#_how_to_use_the_apply_command
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           -v $PWD:/data                                   \
+           decodable-cli:latest                            \
+           apply /data/postgres-prod.yaml
 ----

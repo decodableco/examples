@@ -4,8 +4,8 @@ on:
   # push:
   #   branches:
   #     - main
-  on:
-    pull_request:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   setup-and-apply:

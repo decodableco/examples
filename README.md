@@ -1,5 +1,10 @@
 # Decodable Examples
 
+![Real-time Data: Simplified](https://img.shields.io/badge/real%E2%80%93time%20data-simplified-%232F74F9?labelColor=%2306091A&link=https%3A%2F%2Fdecodable.co)
+![GitHub last commit](https://img.shields.io/github/last-commit/decodableco/examples)
+![GitHub License](https://img.shields.io/github/license/decodableco/examples)
+![Static Badge](https://img.shields.io/badge/we%20love-apache%20flink-%23E6526F?logo=apacheflink)
+
 ![A squirrel holding a laptop that says "Examples repo"](images/examples_repo.webp)
 
 ## Introduction

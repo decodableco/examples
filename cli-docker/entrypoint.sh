@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# config file
+# write the config file if env var set
 if [ -n "$DECODABLE_ACCOUNT_NAME" ]; then
 mkdir -p ~/.decodable
 cat <<EOF > ~/.decodable/config
@@ -11,9 +11,12 @@ profiles:
   default:
     account: $DECODABLE_ACCOUNT_NAME
 EOF
+else
+  echo "\n⚠️ DECODABLE_ACCOUNT_NAME not set.\n"
+  exit 1
 fi
 
-# auth file
+# write the auth file if env var set
 if [ -n "$DECODABLE_REFRESH_TOKEN" ]; then
 mkdir -p ~/.decodable
 cat <<EOF > ~/.decodable/auth
@@ -25,4 +28,14 @@ EOF
 fi
 
 # Execute the main process
-exec decodable "$@"
+if [ "$1" = "print-refresh-token" ]; then
+  decodable login
+  echo "Refresh token: $(decodable token refresh)"
+else
+  if [ -n "$DECODABLE_REFRESH_TOKEN" ]; then
+    exec decodable "$@"
+  else
+    echo "\n⚠️ DECODABLE_REFRESH_TOKEN not set.\n👉 Use print-refresh-token to generate a refresh token.\n"
+    exit 1
+  fi
+fi

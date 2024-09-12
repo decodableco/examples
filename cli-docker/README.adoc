@@ -15,17 +15,18 @@ docker build -t decodable-cli .
 You need two configuration values:
 
 * Your Decodable **account name**
-* The **refresh token** for your account. You can obtain this by running the CLI locally on your machine and doing the following:
+* The **refresh token** for your account. You can obtain this by running the Docker image with the `print-refresh-token` argument:
 +
 [source,bash]
 ----
-decodable config setup <account name>
-
-decodable login
-# [ follow the prompts to complete the login process ]
-
-decodable token refresh
+docker run --rm -it                                    \
+           -e DECODABLE_ACCOUNT_NAME=<your account id> \
+           decodable-cli:latest                        \
+           print-refresh-token
 ----
++
+You'll be prompted to open an URL in your web browser which will take you through the Decodable authentication process.
+After entering the supplied values you'll get a refresh token.
 +
 WARNING: Anyone with refresh token can access your Decodable account. 
 Treat your refresh token as you would any other sensitive information such as passwords.

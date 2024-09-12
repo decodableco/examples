@@ -25,7 +25,7 @@ docker run --rm -it                                    \
            print-refresh-token
 ----
 +
-You'll be prompted to open an URL in your web browser which will take you through the Decodable authentication process.
+You'll be prompted to open a URL in your web browser which will take you through the Decodable authentication process.
 After entering the supplied values you'll get a refresh token.
 +
 WARNING: Anyone with refresh token can access your Decodable account. 

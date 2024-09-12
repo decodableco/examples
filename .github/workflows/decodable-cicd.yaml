@@ -45,4 +45,4 @@ jobs:
         EOF
 
     - name: Apply all Decodable resources
-      run: decodable apply decodable-cicd/*/*.yaml
+      run: decodable apply $(find declarative-cicd -name '*.yaml')

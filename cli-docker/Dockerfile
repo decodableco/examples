@@ -1,8 +1,10 @@
-FROM amd64/ubuntu:latest
+FROM ubuntu:latest
+
+ARG TARGETARCH
 
 # Set environment variables
 ENV DECO_CLI_VERSION=1.20.0
-ENV DECO_CLI_URL=https://releases.decodable.co/decodable-cli/linux/amd64/decodable-cli-linux-amd64-${DECO_CLI_VERSION}.tar.gz
+ENV DECO_CLI_URL="https://releases.decodable.co/decodable-cli/linux/${TARGETARCH}/decodable-cli-linux-${TARGETARCH}-${DECO_CLI_VERSION}.tar.gz"
 
 # Install necessary packages
 RUN apt-get update && \
@@ -12,8 +14,8 @@ RUN apt-get update && \
 # Download and unpack the Decodable CLI
 RUN curl -L $DECO_CLI_URL -o /tmp/decodable-cli.tar.gz && \
     tar -xzf /tmp/decodable-cli.tar.gz -C /tmp && \
-    mv /tmp/decodable-cli-linux-amd64-${DECO_CLI_VERSION}/bin/decodable /usr/local/bin && \
-    rm -r /tmp/decodable-cli.tar.gz /tmp/decodable-cli-linux-amd64-${DECO_CLI_VERSION}
+    mv /tmp/decodable-cli-linux-${TARGETARCH}-${DECO_CLI_VERSION}/bin/decodable /usr/local/bin && \
+    rm -r /tmp/decodable-cli.tar.gz /tmp/decodable-cli-linux-${TARGETARCH}-${DECO_CLI_VERSION}
 
 # Copy the entrypoint script into the image
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

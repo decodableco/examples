@@ -1,10 +1,10 @@
-name: Decodable CLI Setup and Apply
+name: Deploy Decodable resources
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  pull_request:
+  push:
+    branches:
+      - main
+  # pull_request:
   workflow_dispatch:
 
 jobs:

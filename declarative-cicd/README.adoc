@@ -1,0 +1,5 @@
+= Using Decodable with GitHub Actions
+
+The folder shows an example of how you can integrate Decodable with your CICD workflow using GitHub Actions.
+
+Refer to https://docs.decodable.co/cli/integrate-with-github-actions.html[the documentation page] for details.

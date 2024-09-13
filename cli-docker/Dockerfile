@@ -3,7 +3,7 @@ FROM ubuntu:latest
 ARG TARGETARCH
 
 # Set environment variables
-ENV DECO_CLI_VERSION=1.21.0
+ENV DECO_CLI_VERSION=1.20.1
 ENV DECO_CLI_URL="https://releases.decodable.co/decodable-cli/linux/${TARGETARCH}/decodable-cli-linux-${TARGETARCH}-${DECO_CLI_VERSION}.tar.gz"
 
 # Install necessary packages

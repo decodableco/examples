@@ -1,0 +1,2 @@
+#currently no external dependencies other than pre-installed ones
+#apache-flink==1.18.1

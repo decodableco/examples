@@ -1,0 +1,101 @@
+= Example container image for Decodable CLI
+
+The https://docs.decodable.co/cli.html[Decodable CLI] enables you configure, view, and control resources on your Decodable account.
+
+== Build
+
+[source,bash]
+----
+cd cli-docker
+docker build -t decodable-cli .
+----
+
+== Usage
+
+You need two configuration values:
+
+* Your Decodable **account name**
+* The **refresh token** for your account. You can obtain this by running the Docker image with the `print-refresh-token` argument:
++
+[source,bash]
+----
+docker run --rm -it                                    \
+           -e DECODABLE_ACCOUNT_NAME=<your account id> \
+           decodable-cli:latest                        \
+           print-refresh-token
+----
++
+You'll be prompted to open a URL in your web browser which will take you through the Decodable authentication process.
+After entering the supplied values you'll get a refresh token.
++
+WARNING: Anyone with refresh token can access your Decodable account. 
+Treat your refresh token as you would any other sensitive information such as passwords.
+If you invoke the Docker container as illustrated below note that the refresh token will remain on your command line history and thus be vulnerable to local access.
+
+=== Invocation
+
+[source,bash]
+----
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           decodable-cli:latest                            \
+           <decodable CLI command line arguments>
+----
+
+For example:
+
+* Get CLI version
++
+[source,bash]
+----
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           decodable-cli:latest                            \
+           --version
+----
+
+Show status of all resources
++
+[source,bash]
+----
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           decodable-cli:latest                            \
+           query --no-spec
+----
+
+* Create and populate a secret "postgres-prod"
++
+[source,bash]
+----
+# Create the resource definition
+# Ref: https://docs.decodable.co/declarative/definitions.html#secret
+cat <<EOF > postgres-prod.yaml
+---
+kind: secret
+metadata:
+  name: postgres-prod
+  description: 🤫 The password for the Production Postgres server
+spec_version: v1
+spec:
+  value_file: ./pg_pw.txt
+EOF
+
+# Write the password to a file, which is read when
+# the resource is created
+cat <<EOF > pg_pw.txt
+hunter2
+EOF
+
+# Invoke the Decodable `apply` command
+# Ref: https://docs.decodable.co/declarative/apply.html#_how_to_use_the_apply_command
+docker run --rm                                            \
+           -e DECODABLE_ACCOUNT_NAME=<your account id>     \
+           -e DECODABLE_REFRESH_TOKEN=<your refresh token> \
+           -v $PWD:/data                                   \
+           decodable-cli:latest                            \
+           apply /data/postgres-prod.yaml
+----

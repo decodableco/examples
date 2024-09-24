@@ -89,6 +89,7 @@ _Decodable provides a managed PyFlink service. Learn more [here](https://docs.de
 
 | Example                                               | Description |
 |-------------------------------------------------------|-------------|
+| [Decodable CI/CD](declarative-cicd) | An example of using Decodable with GitHub Actions|
 | [Decodable CLI Docker image](cli-docker) | An example Dockerfile for running the Decodable CLI under Docker.|
 
 ## License

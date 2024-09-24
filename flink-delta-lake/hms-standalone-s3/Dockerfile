@@ -1,4 +1,4 @@
-FROM hms-standalone
+FROM ghcr.io/criccomini/hive-metastore-standalone:latest
 
 RUN apt-get update && apt-get install -y curl rlwrap vim
 

@@ -76,14 +76,7 @@ def process_todos():
       due       TIMESTAMP(3),
       user_name STRING
     ) WITH (
-      'connector' = 'kafka',
-      'topic' = 'todos',
-      'properties.bootstrap.servers' = '{bootstrap_servers}',
-      'properties.sasl.mechanism' = 'SCRAM-SHA-256',
-      'properties.security.protocol' = 'SASL_SSL',
-      'properties.sasl.jaas.config' = 'org.apache.flink.kafka.shaded.org.apache.kafka.common.security.scram.ScramLoginModule required username=\"{user_name}\" password=\"{password}\";',
-      'properties.group.id' = 'todos-sink',
-      'format' = 'json'
+        'connector' = 'print'
     )""")
 
     t_env.execute_sql("""

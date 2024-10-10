@@ -1,4 +1,4 @@
-# Real-time Vector Ingestion with PyFlink on Decodable and MongoDB Vector Search
+# PyFlink on Decodable with MongoDB Vector Search
 
 ## Demo Scenario Overview
 

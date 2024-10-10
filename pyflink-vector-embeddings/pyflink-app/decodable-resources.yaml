@@ -1,0 +1,64 @@
+---
+kind: secret
+metadata:
+  name: vector_ingest_mysql_host
+spec_version: v1
+spec:
+  value_file: ./.secrets/mysql_host
+---
+kind: secret
+metadata:
+  name: vector_ingest_mysql_port
+spec_version: v1
+spec:
+  value_file: ./.secrets/mysql_port
+---
+kind: secret
+metadata:
+  name: vector_ingest_mysql_user
+spec_version: v1
+spec:
+  value_file: ./.secrets/mysql_user
+---
+kind: secret
+metadata:
+  name: vector_ingest_mysql_password
+spec_version: v1
+spec:
+  value_file: ./.secrets/mysql_password
+---
+kind: secret
+metadata:
+  name: vector_ingest_mongodb_uri
+spec_version: v1
+spec:
+  value_file: ./.secrets/mongodb_uri
+---
+kind: secret
+metadata:
+  name: vector_ingest_model_server
+spec_version: v1
+spec:
+  value_file: ./.secrets/model_server
+---
+kind: pipeline
+metadata:
+    name: webinar_vector_ingestion_fallback
+spec_version: v2
+spec:
+    type: PYTHON
+    job_file_path: ./target/pyflink-job.zip
+    properties:
+        secrets:
+            - vector_ingest_mysql_host
+            - vector_ingest_mysql_port
+            - vector_ingest_mysql_user
+            - vector_ingest_mysql_password
+            - vector_ingest_mongodb_uri
+            - vector_ingest_model_server
+        flink_version: 1.18-python310
+        additional_metrics: []
+    execution:
+        active: true
+        task_size: M
+        task_count: 1

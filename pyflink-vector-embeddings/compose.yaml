@@ -1,0 +1,69 @@
+version: '1.27.0'
+name: pyflink-decodable
+services:
+  mysql:
+    hostname: mysql
+    image: quay.io/debezium/example-mysql:2.7.0.Final
+    ports:
+      - "3306:3306"
+    command: ["--default-authentication-plugin=caching_sha2_password","--log-bin=binlog","--server-id=12345"]
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 0s
+    volumes:
+      - ./db/mysql/init.sql:/docker-entrypoint-initdb.d/mysql_init.sql
+    networks:
+      - demo-network
+  mongodb:
+    hostname: mongodb
+    image: mongodb/mongodb-atlas-local:7.0.7
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=demousr
+      - MONGODB_INITDB_ROOT_PASSWORD=demopwd
+    ports:
+      - "27017:27017"
+    networks:
+      - demo-network
+  review-app:
+    hostname: review-app
+    image: docker.io/hpgrahsl/reviews-app:1.2.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql: 
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      model-serving-app:
+        condition: service_started
+    environment:
+      # NOTE: vector search queries are shown and executed
+      # against the vector search index of the underlying mongodb collection
+      - QUARKUS_MONGODB_CONNECTION_STRING=mongodb://demousr:demopwd@mongodb:27017/?directConnection=true
+    networks:
+      - demo-network
+  model-serving-app:
+    hostname: model-serving-app
+    image: docker.io/hpgrahsl/model-serving-app:1.2.0
+    ports:
+      - "9090:8080"
+    environment:
+      # OPTIONAL: define your individual HuggingFace API key
+      # you can find it in your profile https://huggingface.co/settings/tokens
+      # if necessary create a new token with READ permissions
+      # only used if model inference is done against the HugginFace API
+      - QUARKUS_LANGCHAIN4J_HUGGINGFACE_API_KEY=<your_hugging_face_api_key_here>
+    networks:
+      - demo-network
+
+networks:
+  demo-network:
+    name: vector-ingest-network

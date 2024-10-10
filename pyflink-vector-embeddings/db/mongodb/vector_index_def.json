@@ -1,0 +1,14 @@
+{
+    "name": "vector_index",
+    "type": "vectorSearch",
+    "collectionName": "review_embeddings",
+    "database": "vector_demo",
+    "fields": [
+        {
+            "numDimensions": 768,
+            "path": "embedding",
+            "similarity": "cosine",
+            "type": "vector"
+        }
+    ]
+}

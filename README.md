@@ -44,10 +44,11 @@ _Learn more [here](https://decodable.co), and [sign up for a free trial](https:/
 
 _Decodable provides a managed PyFlink service. Learn more [here](https://docs.decodable.co/pipelines/create-pipelines-using-your-own-apache-flink-jobs.html#_create_a_custom_pipeline_python)._
 
-| Example                                    | Description                                             |
-|--------------------------------------------|---------------------------------------------------------|
-| [PyFlink](pyflink)                         | Running a basic PyFlink job on Kubernetes               |
-| [PyFlink on Decodable](pyflink-decodable)  | Running a PyFlink job as a Custom Pipeline on Decodable |
+| Example                                                         | Description                                                                             |
+|-----------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| [PyFlink](pyflink)                                              | Running a basic PyFlink job on Kubernetes                                               |
+| [PyFlink on Decodable](pyflink-decodable)                       | Running a PyFlink job as a Custom Pipeline on Decodable                                 |
+| [PyFlink and MongoDB Vector Search](pyflink-vector-embeddings)  | End-to-end example for PyFlink Vector Ingestion on Decodable with MongoDB Vector Search |
 
 ### Integrations
 

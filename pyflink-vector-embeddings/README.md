@@ -38,9 +38,9 @@ In order for the PyFlink job to reach these locally running containerized servic
 
 1. Login into ngrok and **copy your auth token** which you can find [here](https://dashboard.ngrok.com/get-started/your-authtoken)
 
-2. Open the file `ngrok.yaml`, **paste your auth token** into [line 3](https://github.com/hpgrahsl/pyflink-vector-ingestion-decodable/blob/main/compose.yaml#L42), and save the updated file.
+2. Open the file `ngrok.yml`, **paste your auth token** into [line 3](./ngrok.yml#L3), and save the updated file.
 
-3. Run `ngrok start --all --config ngrok.yml` in a terminal which in total will set up three tunnels to your local machine: to MySQL, to the Model Serving app, and to MongoDB, all of which will be started as containers on your local machine.
+3. Run `ngrok start --all --config ngrok.yml` in a terminal which in total will set up three tunnels to your local machine: to MySQL, to the Model Serving app, and to MongoDB, all of which will be started as containers on your local machine in the next step.
 
 Terminal output should look similar to the following:
 
@@ -115,6 +115,8 @@ In order to simplify the set up, this demo runs an [Atlas container locally](htt
 > Before proceeding, make sure to download and install the following tools:
 > 1. [Atlas CLI](https://www.mongodb.com/products/tools/atlas-cli)
 > 2. [mongosh](https://www.mongodb.com/docs/mongodb-shell/install/#install-mongosh)
+
+Then switch to a terminal window and run the following shell commands to intialize the database and define the vector search index:
 
 ```bash
 USR=demousr

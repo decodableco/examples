@@ -47,7 +47,6 @@ services:
     environment:
       # NOTE: vector search queries are shown and executed
       # against the vector search index of the underlying mongodb collection
-      # TODO: define your MongoDB connection string
       - QUARKUS_MONGODB_CONNECTION_STRING=mongodb://demousr:demopwd@mongodb:27017/?directConnection=true
     networks:
       - demo-network

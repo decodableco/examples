@@ -1,0 +1,163 @@
+{
+    "generators": [
+        {
+            "table": "customers",
+            "row": {
+                "customer_id": { "_gen": "uuid" },
+                "first_name": { "_gen": "string", "expr": "#{Name.firstName}" },
+                "last_name": { "_gen": "string", "expr": "#{Name.lastName}" },
+                "phone": { "_gen": "string", "expr": "#{PhoneNumber.cellPhone}" },
+                "email": { "_gen": "string", "expr": "#{Internet.emailAddress}" },
+                "registered_date": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "now"
+                    }
+                }
+            },
+            "localConfigs": { "throttleMs": 5000 }
+        },
+        {
+            "table": "pets",
+            "fork": {
+                "key": {
+                    "_gen": "lookup",
+                    "table": "customers",
+                    "path": ["customer_id"]
+                },
+                "stagger": { "ms": 250 }
+            },
+            "row": {
+                "pet_id": { "_gen": "uuid" },
+                "customer_id": { "_gen": "var", "var": "forkKey" },
+                "pet_name": { "_gen": "string", "expr": "#{Artist.name}" },
+                "pet_type": { "_gen": "oneOf", "choices": ["Dog", "Cat", "Bird", "Reptile"] }
+            },
+            "localConfigs": {
+                "repeat": {
+                    "rate": 1,
+                    "times": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 70, "value": 1 },
+                            { "weight": 20, "value": 2 },
+                            { "weight": 10, "value": 3 }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "table": "appointments",
+            "fork": {
+                "key": {
+                    "_gen": "lookup",
+                    "table": "pets",
+                    "path": ["pet_id"]
+                },
+                "stagger": { "ms": 500 }
+            },
+            "stateMachine": {
+                "_gen": "stateMachine",
+                "initial": "Scheduled",
+                "transitions": {
+                    "Scheduled": {
+                        "_gen": "weightedOneOf",
+                        "choices": [
+                            { "weight": 90, "value": "Completed" },
+                            { "weight": 10, "value": "Cancelled" }
+                        ]
+                    }
+                },
+                "states": {
+                    "Scheduled": {
+                        "row": {
+                            "status": "Scheduled",
+                            "last_updated": {
+                                "_gen": "formatDateTime",
+                                "ms": {
+                                    "_gen": "now"
+                                }
+                            }
+                        }
+                    },
+                    "Completed": {
+                        "row": {
+                            "status": "Completed",
+                            "last_updated": {
+                                "_gen": "formatDateTime",
+                                "ms": {
+                                    "_gen": "now"
+                                }
+                            }
+                        }
+                    },
+                    "Cancelled": {
+                        "row": {
+                            "status": "Cancelled",
+                            "last_updated": {
+                                "_gen": "formatDateTime",
+                                "ms": {
+                                    "_gen": "now"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "row": {
+                "appointment_id": { "_gen": "uuid" },
+                "customer_id": { "_gen": "lookup", "table": "pets", "path": ["pet_id"] },
+                "pet_id": { "_gen": "lookup", "table": "pets", "path": ["customer_id"] },
+                "service_type": { "_gen": "oneOf", "choices": ["Bathing", "Haircut", "Nail Trim", "Full Grooming"] },
+                "appointment_time": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "intervals",
+                        "intervals": [
+                            ["0 9 * * 1-5", { "_gen": "add", "args": [{ "_gen": "now" }, { "_gen": "uniformDistribution", "bounds": [1, 14] }] }]
+                        ],
+                        "defaultValue": { "_gen": "now" }
+                    }
+                },
+                "duration_minutes": {
+                    "_gen": "oneOf",
+                    "choices": [30, 60, 90]
+                },
+                "price": { "_gen": "normalDistribution", "mean": 50, "sd": 10, "decimals": 2 },
+                "status": "Scheduled",
+                "last_updated": {
+                    "_gen": "formatDateTime",
+                    "ms": {
+                        "_gen": "now"
+                    }
+                }
+            },
+            "localConfigs": {
+                "repeat": {
+                    "rate": 0.5,
+                    "times": {
+                        "_gen": "uniformDistribution",
+                        "bounds": [
+                            1,
+                            4
+                        ]
+                    }
+                },
+                "throttleMs": 500
+            }
+        }
+    ],
+    "connections": {
+        "pg": {
+            "kind": "postgres",
+            "connectionConfigs": {
+                "host": "postgres",
+                "port": 5432,
+                "username": "postgres",
+                "password": "Welcome123",
+                "db": "postgres"
+            }
+        }
+    }
+}

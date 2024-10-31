@@ -1,0 +1,23 @@
+= Docker Compose for running Postgres locally, accessible from the internet using ngrok
+
+To use this you need to https://dashboard.ngrok.com/signup[create an ngrok account] and add a file called `.env` in this folder with the following entry:
+
+[source,bash]
+----
+NGROK_AUTH_TOKEN=<your_token>
+----
+
+Bring up the Postgres and ngrok stack with
+
+[source,bash]
+----
+docker compose up
+----
+
+Once up, find out your Postgres server host/post that is available on the internet:
+
+[source,bash]
+----
+curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' | sed 's/tcp:\/\///g'
+----
+

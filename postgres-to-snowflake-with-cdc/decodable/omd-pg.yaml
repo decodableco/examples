@@ -1,0 +1,135 @@
+---
+kind: connection
+metadata:
+    name: oh-my-dawg-pg
+    description: ""
+    tags:
+      project: "oh-my-dawg"
+      author: "rmoff"
+spec_version: v2
+spec:
+    execution:
+      active: true
+    connector: postgres-cdc
+    properties:
+        database-name: postgres
+        hostname: 2.tcp.eu.ngrok.io
+        password: omd-pg
+        port: "19366"
+        username: postgres
+    stream_mappings:
+        - stream_name: omd-appointments
+          external_resource_specifier:
+            database-name: postgres
+            schema-name: public
+            table-name: appointments
+        - stream_name: omd-customers
+          external_resource_specifier:
+            database-name: postgres
+            schema-name: public
+            table-name: customers
+        - stream_name: omd-pets
+          external_resource_specifier:
+            database-name: postgres
+            schema-name: public
+            table-name: pets
+    type: source
+---
+kind: stream
+metadata:
+    name: omd-appointments
+    tags:
+      project: "oh-my-dawg"
+      author: "rmoff"
+spec_version: v1
+spec:
+    schema_v2:
+        constraints:
+            primary_key:
+                - appointment_id
+        fields:
+            - kind: physical
+              name: appointment_id
+              type: STRING NOT NULL
+            - kind: physical
+              name: duration_minutes
+              type: BIGINT
+            - kind: physical
+              name: appointment_time
+              type: STRING
+            - kind: physical
+              name: status
+              type: STRING
+            - kind: physical
+              name: pet_id
+              type: STRING
+            - kind: physical
+              name: customer_id
+              type: STRING
+            - kind: physical
+              name: service_type
+              type: STRING
+            - kind: physical
+              name: price
+              type: DOUBLE
+            - kind: physical
+              name: last_updated
+              type: STRING
+---
+kind: stream
+metadata:
+    name: omd-customers
+    tags:
+      project: "oh-my-dawg"
+      author: "rmoff"
+spec_version: v1
+spec:
+    schema_v2:
+        constraints:
+            primary_key:
+                - customer_id
+        fields:
+            - kind: physical
+              name: customer_id
+              type: STRING NOT NULL
+            - kind: physical
+              name: first_name
+              type: STRING
+            - kind: physical
+              name: last_name
+              type: STRING
+            - kind: physical
+              name: phone
+              type: STRING
+            - kind: physical
+              name: email
+              type: STRING
+            - kind: physical
+              name: registered_date
+              type: STRING
+---
+kind: stream
+metadata:
+    name: omd-pets
+    tags:
+      project: "oh-my-dawg"
+      author: "rmoff"
+spec_version: v1
+spec:
+    schema_v2:
+        constraints:
+            primary_key:
+                - pet_id
+        fields:
+            - kind: physical
+              name: pet_id
+              type: STRING NOT NULL
+            - kind: physical
+              name: customer_id
+              type: STRING
+            - kind: physical
+              name: pet_name
+              type: STRING
+            - kind: physical
+              name: pet_type
+              type: STRING

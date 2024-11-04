@@ -21,3 +21,143 @@ Once up, find out your Postgres server host/post that is available on the intern
 curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' | sed 's/tcp:\/\///g'
 ----
 
+== Steps
+
+=== Configure Postgres tables for replication
+
+[source,bash]
+----
+docker exec -it postgres psql -h localhost -U postgres -d postgres -f /data/replication-config.sql
+----
+
+[source,sql]
+----
+ALTER TABLE customers REPLICA IDENTITY FULL;
+ALTER TABLE pets REPLICA IDENTITY FULL;
+ALTER TABLE appointments REPLICA IDENTITY FULL;
+----
+
+Check their replica status; each should show `f`:
+
+[source,sql]
+----
+SELECT relreplident FROM pg_class
+ WHERE oid in ( 'customers'::regclass, 'pets'::regclass, 'appointments'::regclass);
+----
+
+=== Add PKs to the Postgres tables
+
+[source,bash]
+----
+docker exec -it postgres psql -h localhost -U postgres -d postgres -f /data/add-pk.sql
+----
+
+
+[source,sql]
+----
+alter table customers
+alter column customer_id set not null;
+alter table customers
+add constraint pk_customers primary key (customer_id);
+
+alter table pets
+alter column pet_id set not null;
+alter table pets
+add constraint pk_pets primary key (pet_id);
+
+alter table appointments
+alter column appointment_id set not null;
+alter table appointments
+add constraint pk_appointments primary key (appointment_id );
+----
+
+
+=== Store the password
+
+[source,bash]
+----
+decodable apply decodable/pg-secret.yaml
+----
+
+[source,yaml]
+----
+---
+kind: secret
+name: omd-pg
+id: ee94bd72
+result: updated
+• Wrote plaintext values for secret IDs: [ee94bd72]
+----
+
+=== Generate resource definitions
+
+[source,bash]
+----
+decodable connection scan \
+          --name oh-my-dawg-pg \
+          --connector postgres-cdc \
+          --type source \
+          --prop hostname=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' | sed 's/tcp:\/\///g' | cut -d':' -f1) \
+          --prop port=$(curl -s localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' | sed 's/tcp:\/\///g' | cut -d':' -f2) \
+          --prop database-name=postgres \
+          --prop username=postgres \
+          --prop password=$(decodable query --name omd-pg --keep-ids | yq '.metadata.id') \
+          --include-pattern schema-name=public \
+          --output-resource-name-template stream-name="omd-{table-name}" \
+          > omd-pg.yaml
+----
+
+=== Edit resource definitions
+
+
+- set to active
+
+[source,yaml]
+----
+spec_version: v2
+spec:
+    execution:
+      active: true
+----
+
+- add tags
+
+[source,yaml]
+----
+metadata:
+    tags:
+      project: "oh-my-dawg"
+      author: "rmoff"
+----
+
+=== Apply resource definitions
+
+[source,bash]
+----
+decodable apply omd-pg.yaml
+----
+
+[source,yaml]
+----
+---
+kind: connection
+name: oh-my-dawg-pg
+id: 6d02ba15
+result: created
+---
+kind: stream
+name: omd-appointments
+id: 975bba8d
+result: created
+---
+kind: stream
+name: omd-customers
+id: 7885b32e
+result: created
+---
+kind: stream
+name: omd-pets
+id: 3cc8e060
+result: created
+----
+

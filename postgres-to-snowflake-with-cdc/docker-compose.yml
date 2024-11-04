@@ -13,12 +13,17 @@ services:
       - 4040:4040 # Web dashboard for ngrok
 
   postgres:
-    image: postgres:latest
-    ports:
-      - 5432:5432
     container_name: postgres
+    image: quay.io/debezium/example-postgres:2.3
+    ports:
+      - "5432:5432"
     environment:
-     POSTGRES_PASSWORD: Welcome123
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Welcome123
+    volumes:
+      - ./postgres/postgresql.conf.sample:/usr/share/postgresql/postgresql.conf.sample
+      - ${PWD}/postgres:/data
 
   shadowtraffic:
   # watch 'docker exec shadowtraffic curl -s localhost:9400/metrics |grep events_sent'
@@ -28,9 +33,10 @@ services:
       - shadowtraffic/license.env
     volumes:
       - ./shadowtraffic:/data
-    command: --config /data/config.json --with-studio --sample 1000 --watch
+    command: --config /data/config.json
+#    --with-studio --sample 20 --watch
     ports:
-      - 8080:8080
+#      - 8080:8080
       - 9400:9400
 
 networks:

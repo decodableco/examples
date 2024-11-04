@@ -1,163 +1,279 @@
 {
-    "generators": [
-        {
-            "table": "customers",
-            "row": {
-                "customer_id": { "_gen": "uuid" },
-                "first_name": { "_gen": "string", "expr": "#{Name.firstName}" },
-                "last_name": { "_gen": "string", "expr": "#{Name.lastName}" },
-                "phone": { "_gen": "string", "expr": "#{PhoneNumber.cellPhone}" },
-                "email": { "_gen": "string", "expr": "#{Internet.emailAddress}" },
-                "registered_date": {
-                    "_gen": "formatDateTime",
-                    "ms": {
-                        "_gen": "now"
-                    }
-                }
-            },
-            "localConfigs": { "throttleMs": 5000 }
+  "generators": [
+    {
+      "table": "customers",
+      "row": {
+        "customer_id": {
+          "_gen": "uuid",
+          "pgHint": "TEXT"
         },
-        {
-            "table": "pets",
-            "fork": {
-                "key": {
-                    "_gen": "lookup",
-                    "table": "customers",
-                    "path": ["customer_id"]
-                },
-                "stagger": { "ms": 250 }
-            },
-            "row": {
-                "pet_id": { "_gen": "uuid" },
-                "customer_id": { "_gen": "var", "var": "forkKey" },
-                "pet_name": { "_gen": "string", "expr": "#{Artist.name}" },
-                "pet_type": { "_gen": "oneOf", "choices": ["Dog", "Cat", "Bird", "Reptile"] }
-            },
-            "localConfigs": {
-                "repeat": {
-                    "rate": 1,
-                    "times": {
-                        "_gen": "weightedOneOf",
-                        "choices": [
-                            { "weight": 70, "value": 1 },
-                            { "weight": 20, "value": 2 },
-                            { "weight": 10, "value": 3 }
-                        ]
-                    }
-                }
-            }
+        "first_name": {
+          "_gen": "string",
+          "expr": "#{Name.firstName}"
         },
-        {
-            "table": "appointments",
-            "fork": {
-                "key": {
-                    "_gen": "lookup",
-                    "table": "pets",
-                    "path": ["pet_id"]
-                },
-                "stagger": { "ms": 500 }
+        "last_name": {
+          "_gen": "string",
+          "expr": "#{Name.lastName}"
+        },
+        "phone": {
+          "_gen": "string",
+          "expr": "#{PhoneNumber.cellPhone}"
+        },
+        "email": {
+          "_gen": "string",
+          "expr": "#{Internet.emailAddress}"
+        },
+        "registered_date": {
+          "_gen": "formatDateTime",
+          "ms": {
+            "_gen": "now"
+          }
+        }
+      },
+      "localConfigs": {
+        "throttleMs": 1000,
+        "maxEvents": 500
+      }
+    },
+    {
+      "table": "pets",
+      "fork": {
+        "key": {
+          "_gen": "lookup",
+          "table": "customers",
+          "path": [
+            "row",
+            "customer_id"
+          ]
+        },
+        "oneTimeKeys": true
+      },
+      "row": {
+        "pet_id": {
+          "_gen": "uuid",
+          "pgHint": "TEXT"
+        },
+        "customer_id": {
+          "_gen": "var",
+          "var": "forkKey"
+        },
+        "pet_name": {
+          "_gen": "string",
+          "expr": "#{Artist.name}"
+        },
+        "pet_type": {
+          "_gen": "oneOf",
+          "choices": [
+            "Dog",
+            "Cat",
+            "Bird",
+            "Reptile"
+          ]
+        }
+      },
+      "localConfigs": {
+        "maxEvents": {
+          "_gen": "weightedOneOf",
+          "choices": [
+            {
+              "weight": 70,
+              "value": 1
             },
-            "stateMachine": {
-                "_gen": "stateMachine",
-                "initial": "Scheduled",
-                "transitions": {
-                    "Scheduled": {
-                        "_gen": "weightedOneOf",
-                        "choices": [
-                            { "weight": 90, "value": "Completed" },
-                            { "weight": 10, "value": "Cancelled" }
-                        ]
-                    }
-                },
-                "states": {
-                    "Scheduled": {
-                        "row": {
-                            "status": "Scheduled",
-                            "last_updated": {
-                                "_gen": "formatDateTime",
-                                "ms": {
-                                    "_gen": "now"
-                                }
-                            }
-                        }
-                    },
-                    "Completed": {
-                        "row": {
-                            "status": "Completed",
-                            "last_updated": {
-                                "_gen": "formatDateTime",
-                                "ms": {
-                                    "_gen": "now"
-                                }
-                            }
-                        }
-                    },
-                    "Cancelled": {
-                        "row": {
-                            "status": "Cancelled",
-                            "last_updated": {
-                                "_gen": "formatDateTime",
-                                "ms": {
-                                    "_gen": "now"
-                                }
-                            }
-                        }
-                    }
+            {
+              "weight": 20,
+              "value": 2
+            },
+            {
+              "weight": 10,
+              "value": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "table": "appointments",
+      "vars": {
+        "apt_key": {
+          "_gen": "uuid",
+          "cast": "string"
+        }
+      },
+      "fork": {
+        "key": {
+          "_gen": "lookup",
+          "table": "pets",
+          "path": [
+            "row"
+          ]
+        },
+        "oneTimeKeys": true
+      },
+      "stateMachine": {
+        "_gen": "stateMachine",
+        "initial": "Scheduled",
+        "transitions": {
+          "Scheduled": {
+            "_gen": "weightedOneOf",
+            "choices": [
+              {
+                "weight": 90,
+                "value": "Completed"
+              },
+              {
+                "weight": 10,
+                "value": "Cancelled"
+              }
+            ]
+          }
+        },
+        "states": {
+          "Scheduled": {
+            "row": {
+              "status": "Scheduled",
+              "last_updated": {
+                "_gen": "formatDateTime",
+                "ms": {
+                  "_gen": "now"
                 }
+              }
+            }
+          },
+          "Completed": {
+            "op": "update",
+            "where": {
+              "appointment_id": {
+                "_gen": "var",
+                "var": "apt_key"
+              }
             },
             "row": {
-                "appointment_id": { "_gen": "uuid" },
-                "customer_id": { "_gen": "lookup", "table": "pets", "path": ["pet_id"] },
-                "pet_id": { "_gen": "lookup", "table": "pets", "path": ["customer_id"] },
-                "service_type": { "_gen": "oneOf", "choices": ["Bathing", "Haircut", "Nail Trim", "Full Grooming"] },
-                "appointment_time": {
-                    "_gen": "formatDateTime",
-                    "ms": {
-                        "_gen": "intervals",
-                        "intervals": [
-                            ["0 9 * * 1-5", { "_gen": "add", "args": [{ "_gen": "now" }, { "_gen": "uniformDistribution", "bounds": [1, 14] }] }]
-                        ],
-                        "defaultValue": { "_gen": "now" }
-                    }
-                },
-                "duration_minutes": {
-                    "_gen": "oneOf",
-                    "choices": [30, 60, 90]
-                },
-                "price": { "_gen": "normalDistribution", "mean": 50, "sd": 10, "decimals": 2 },
-                "status": "Scheduled",
-                "last_updated": {
-                    "_gen": "formatDateTime",
-                    "ms": {
-                        "_gen": "now"
-                    }
+              "status": "Completed",
+              "last_updated": {
+                "_gen": "formatDateTime",
+                "ms": {
+                  "_gen": "now"
                 }
+              }
+            }
+          },
+          "Cancelled": {
+            "op": "update",
+            "where": {
+              "appointment_id": {
+                "_gen": "var",
+                "var": "apt_key"
+              }
             },
-            "localConfigs": {
-                "repeat": {
-                    "rate": 0.5,
-                    "times": {
-                        "_gen": "uniformDistribution",
-                        "bounds": [
-                            1,
-                            4
-                        ]
+            "row": {
+              "status": "Cancelled",
+              "last_updated": {
+                "_gen": "formatDateTime",
+                "ms": {
+                  "_gen": "now"
+                }
+              }
+            }
+          }
+        }
+      },
+      "row": {
+        "appointment_id": {
+          "_gen": "var",
+          "pgHint": "TEXT",
+          "var": "apt_key"
+        },
+        "customer_id": {
+          "_gen": "var",
+          "pgHint": "TEXT",
+          "var": "forkKey",
+          "path": [
+            "customer_id"
+          ]
+        },
+        "pet_id": {
+          "_gen": "var",
+          "pgHint": "TEXT",
+          "var": "forkKey",
+          "path": [
+            "pet_id"
+          ]
+        },
+        "service_type": {
+          "_gen": "oneOf",
+          "choices": [
+            "Bathing",
+            "Haircut",
+            "Nail Trim",
+            "Full Grooming"
+          ]
+        },
+        "appointment_time": {
+          "_gen": "formatDateTime",
+          "ms": {
+            "_gen": "intervals",
+            "intervals": [
+              [
+                "0 9 * * 1-5",
+                {
+                  "_gen": "add",
+                  "args": [
+                    {
+                      "_gen": "now"
+                    },
+                    {
+                      "_gen": "uniformDistribution",
+                      "bounds": [
+                        1,
+                        14
+                      ]
                     }
-                },
-                "throttleMs": 500
+                  ]
+                }
+              ]
+            ],
+            "defaultValue": {
+              "_gen": "now"
             }
+          }
+        },
+        "duration_minutes": {
+          "_gen": "oneOf",
+          "choices": [
+            30,
+            60,
+            90
+          ]
+        },
+        "price": {
+          "_gen": "normalDistribution",
+          "mean": 50,
+          "sd": 10,
+          "decimals": 2
+        },
+        "status": "Scheduled",
+        "last_updated": {
+          "_gen": "formatDateTime",
+          "ms": {
+            "_gen": "now"
+          }
         }
-    ],
-    "connections": {
-        "pg": {
-            "kind": "postgres",
-            "connectionConfigs": {
-                "host": "postgres",
-                "port": 5432,
-                "username": "postgres",
-                "password": "Welcome123",
-                "db": "postgres"
-            }
-        }
+      },
+      "localConfigs": {
+        "maxEvents": 2
+      }
     }
+  ],
+  "connections": {
+    "pg": {
+      "kind": "postgres",
+      "connectionConfigs": {
+        "host": "postgres",
+        "port": 5432,
+        "username": "postgres",
+        "password": "Welcome123",
+        "db": "postgres"
+      }
+    }
+  }
 }

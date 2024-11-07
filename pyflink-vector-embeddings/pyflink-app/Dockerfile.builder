@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 python:3.10.14-slim-bullseye
+FROM --platform=linux/arm64 python:3.11.10-slim-bullseye
 
 RUN apt-get update -y && \
     apt-get install -y make && \

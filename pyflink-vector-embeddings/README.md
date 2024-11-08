@@ -76,12 +76,9 @@ Connections                   ttl     opn     rt1     rt5     p50     p90
 
 Since all locally running services are containerized applications, you need to have have either [Docker](https://www.docker.com/) or [Podman](https://podman-desktop.io/) installed on your system.
 
-> [!IMPORTANT]  
-> Before running the containers make sure to set your own MongoDB Connection String in the `compose.yaml` (see https://github.com/hpgrahsl/pyflink-vector-ingestion-decodable/blob/main/compose.yaml#L35).
-
 > [!NOTE]  
-> Optional: The model inference supports two REST endpoint, one for local inference and another to delegate requests to a hosted model on HuggingFace. 
-For the latter, you'd need an API KEY and set it in the `compose.yaml` (see https://github.com/hpgrahsl/pyflink-vector-ingestion-decodable/blob/main/compose.yaml#L48).
+> _OPTIONAL:_ The app for model inference supports two REST endpoints, one for local inference and another to delegate requests to a hosted model on HuggingFace. 
+For the latter, you'd need an API KEY and set it in the `compose.yaml` [here](./compose.yaml#L63).
 
 Next, switch to a terminal and run the whole demo stack with like so:
 
@@ -161,10 +158,11 @@ Find the most important code snippets of the PyFlink job below:
                     PRIMARY KEY (id) NOT ENFORCED
                 )  WITH (
                     'connector' = 'mysql-cdc',
-                    'hostname' = '{mysql_host}',
-                    'port' = '{mysql_port}',
-                    'username' = '{mysql_user}',
-                    'password' = '{mysql_password}',
+                    'hostname' = '{job_config['mysql_host']}',
+                    'port' = '{job_config['mysql_port']}',
+                    'username' = '{job_config['mysql_user']}',
+                    'password' = '{job_config['mysql_password']}',
+                    'jdbc.properties.maxAllowedPacket' = '16777216',
                     'server-time-zone' = 'UTC',
                     'database-name' = 'vector_demo',
                     'table-name' = 'Review');
@@ -172,27 +170,56 @@ Find the most important code snippets of the PyFlink job below:
 ```
 
 ```python
-# define scalar user-defined function
-class Embedding(ScalarFunction):
+# define scalar user-defined functions
+class RemoteEmbedding(ScalarFunction):
   
   def __init__(self, url):
       self.modelServerApiUrl = url
   
   def eval(self, text):
-    response = requests.post(self.modelServerApiUrl,text)
+    response = requests.post(self.modelServerApiUrl,
+                             data=text.encode('utf-8'),
+                             headers={'Content-type': 'text/plain; charset=utf-8'})
     return json.loads(response.text)
+  
+class LocalEmbedding(ScalarFunction):
+  
+  model: None
+  
+  def __init__(self):
+    self.model = SentenceTransformer(model_name_or_path='all-mpnet-base-v2',cache_folder='/opt/flink-libs/hf-hub-cache')
+
+  def open(self, function_context: FunctionContext):
+    self.model = SentenceTransformer(model_name_or_path='all-mpnet-base-v2',cache_folder='/opt/flink-libs/hf-hub-cache')
+ 
+  def eval(self, text):
+    return self.model.encode(text,None,None,32,None,'sentence_embedding','float32',True,False).tolist()
+  
+  def __getstate__(self):
+    state = dict(self.__dict__)
+    del state['model']
+    return state
 ```
 
 ```python
-# register UDF and specify I/O data types
-t_env.create_temporary_system_function(
-        "embedding",
-        udf(
-            Embedding(model_server),
-            input_types=[DataTypes.STRING()],
-            result_type=DataTypes.ARRAY(DataTypes.DOUBLE())
-            )
-)
+# register UDFs and specify I/O data types
+    t_env.create_temporary_system_function(
+       "remote_embedding",
+       udf(
+          RemoteEmbedding(job_config['model_server']),
+          input_types=[DataTypes.STRING()],
+          result_type=DataTypes.ARRAY(DataTypes.DOUBLE())
+        )
+    )
+
+    t_env.create_temporary_system_function(
+       "local_embedding",
+       udf(
+          LocalEmbedding(),
+          input_types=[DataTypes.STRING()],
+          result_type=DataTypes.ARRAY(DataTypes.DOUBLE())
+        )
+    )
 ```
 
 ```python
@@ -214,16 +241,28 @@ t_env.execute_sql(f"""
 ```
 
 ```python
-# read from the source table, calculate vector embeddings by means of the UDF, and insert into sink table
-t_env.execute_sql("""
+    # switch between local or remote embedding calculation according to configuration
+    calc_embedding = "";
+    if job_config['embedding_mode'] == 'remote':
+        calc_embedding = 'REMOTE_EMBEDDING(reviewText) AS embedding'
+    elif job_config['embedding_mode'] == 'local':
+        calc_embedding = 'LOCAL_EMBEDDING(reviewText) AS embedding'
+    else:
+       print(f"error: embedding_mode must be either [local | remote] but was '{job_config['embedding_mode']}'")
+       sys.exit(-1)
+   
+    # read from source table, calculate vector embeddings according to chosen mode, and insert into table sink
+    t_env.execute_sql(
+            f"""
                 INSERT INTO review_embeddings
                     SELECT
                         id AS _id,
                         itemId,
                         reviewText,
-                        EMBEDDING(reviewText) AS embedding
+                        {calc_embedding}
                     FROM reviews
-            """)
+            """
+    )
 ```
 
 #### Build Pyflink Job
@@ -247,14 +286,14 @@ In the `pyflink-app` folder there is a YAML file `decodable-resources.yaml`  whi
 > [!IMPORTANT]
 > Before you deploy this using the Decodable CLI you have to specify all the necessary secrets matching your setup.
 
-Four secrets must be modified which are all found in `pyflink-app/.secrets` folder:
+The secret named `job_config` must be modified which is found in the `pyflink-app/.secrets` folder. Adapt all placeholders in the following fields of the JSON:
 
 * `model_server`: adapt the placeholder with your **ngrok hostname from the HTTPs tunnel** for the model serving app
 * `mongodb_uri`: adapt the placeholder with your **ngrok hostname and port for the MongoDB TCP tunnel**
 * `mysql_host`: adapt the placeholder with your proper **ngrok hostname from the MySQL TCP tunnel**
 * `mysql_port`: adapt the placeholder with your proper **ngrok port from the MySQL TCP tunnel**
 
-Make sure all files are updated accordingly and saved.
+Make sure all changes to this file are saved.
 
 From the terminal within the `pyflink-app` folder use the [Decodable CLI](https://docs.decodable.co/cli.html) to deploy the PyFlink job as follows:
 
@@ -264,7 +303,7 @@ decodable apply decodable-resources.yaml
 
 The first step is that the CLI will upload and validate the self-contained ZIP archive. Right after that the other Decodable resources (secrets + pipeline) specified in the YAML manifest are created and the pipeline is automatically started.
 
-Once the pipeline is up and running, the MySQL CDC connector performs a so-called initial snapshot of the existing user reviews in the corresponding source database table. The PyFlink job transforms the textual user reviews by means of the custom `EMBEDDING` UDF which calls out to the Model Serving App to retrieve the vector embeddings. The results are written into the collection using the MongoDB connector.
+Once the pipeline is up and running, the MySQL CDC connector performs a so-called initial snapshot of the existing user reviews in the corresponding source database table. The PyFlink job transforms the textual user reviews by means of the custom UDF - either the `LOCAL_EMBEDDING` or the `REMOTE_EMBEDDING` function - which is used to calculate the vector embeddings. The results are written into the collection using the MongoDB connector.
 
 ### User Reviews Generator
 

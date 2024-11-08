@@ -1,1 +1,0 @@
-mongodb://demousr:demopwd@<your_ngrok_tcp_mongodb_hostname_and_port_here>/?retryWrites=true&w=majority

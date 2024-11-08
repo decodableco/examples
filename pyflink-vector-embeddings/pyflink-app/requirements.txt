@@ -1,2 +1,3 @@
-#currently no external dependencies other than pre-installed ones
-#apache-flink==1.18.1
+#NOTE: pyflink itself is pre-installed in the decodable environment 
+#apache-flink==1.19.1
+sentence-transformers==3.0.1

@@ -15,7 +15,7 @@ $(TARGET):
 
 $(VENV): requirements.txt
 	$(PY) -m venv $(VENV)
-	# NOTE: Decodable infra for custom pipelines runs on ARM cpus by default hence the platform specifier
+	# NOTE: Decodable infra for custom pipelines runs on ARM CPUs by default hence the platform specifier
 	$(BIN)/pip install -r requirements.txt --platform manylinux2014_aarch64 --only-binary=:all:  --target=${PYTHON_LIBS}
 	touch $(VENV)
 
@@ -37,7 +37,8 @@ $(LIBS)/flink-python-1.19.1.jar: | $(TARGET)
 
 $(TARGET)/pyflink-job.zip: main.py $(LIBS)/mysql-connector-java-8.0.30.jar $(LIBS)/flink-sql-connector-mysql-cdc-3.1.0.jar $(LIBS)/flink-sql-connector-mongodb-1.2.0-1.19.jar $(LIBS)/flink-python-1.19.1.jar $(VENV)
 	cp main.py $(TARGET)
-	cd $(TARGET) && zip -r pyflink-job.zip main.py libs python-libs
+	# NOTE: workaround due to conflicting numpy dependency -> explicitly remove the corresponding packages from the python-libs folder
+	cd $(TARGET) && rm -rf python-libs/numpy* && zip -r pyflink-job.zip main.py libs python-libs
 
 clean:
 	@rm -rf $(TARGET)

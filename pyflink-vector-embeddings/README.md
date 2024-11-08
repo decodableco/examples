@@ -76,12 +76,9 @@ Connections                   ttl     opn     rt1     rt5     p50     p90
 
 Since all locally running services are containerized applications, you need to have have either [Docker](https://www.docker.com/) or [Podman](https://podman-desktop.io/) installed on your system.
 
-> [!IMPORTANT]  
-> Before running the containers make sure to set your own MongoDB Connection String in the `compose.yaml` (see https://github.com/hpgrahsl/pyflink-vector-ingestion-decodable/blob/main/compose.yaml#L35).
-
 > [!NOTE]  
-> Optional: The model inference supports two REST endpoint, one for local inference and another to delegate requests to a hosted model on HuggingFace. 
-For the latter, you'd need an API KEY and set it in the `compose.yaml` (see https://github.com/hpgrahsl/pyflink-vector-ingestion-decodable/blob/main/compose.yaml#L48).
+> _OPTIONAL:_ The app for model inference supports two REST endpoints, one for local inference and another to delegate requests to a hosted model on HuggingFace. 
+For the latter, you'd need an API KEY and set it in the `compose.yaml` [here](./compose.yaml#L63).
 
 Next, switch to a terminal and run the whole demo stack with like so:
 

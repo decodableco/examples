@@ -34,7 +34,7 @@ services:
     volumes:
       - ./shadowtraffic:/data
     command: --config /data/config.json
-#    --with-studio --sample 20 --watch
+#      --with-studio --sample 20 --watch
     ports:
 #      - 8080:8080
       - 9400:9400

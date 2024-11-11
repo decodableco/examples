@@ -1,11 +1,11 @@
 {
   "generators": [
     {
-      "table": "customers",
+      "table": "omd_customers",
       "row": {
         "customer_id": {
           "_gen": "uuid",
-          "pgHint": "TEXT"
+          "pgHint" : "TEXT PRIMARY KEY"
         },
         "first_name": {
           "_gen": "string",
@@ -31,16 +31,15 @@
         }
       },
       "localConfigs": {
-        "throttleMs": 1000,
-        "maxEvents": 500
+        "throttleMs": 1000
       }
     },
     {
-      "table": "pets",
+      "table": "omd_pets",
       "fork": {
         "key": {
           "_gen": "lookup",
-          "table": "customers",
+          "table": "omd_customers",
           "path": [
             "row",
             "customer_id"
@@ -51,11 +50,12 @@
       "row": {
         "pet_id": {
           "_gen": "uuid",
-          "pgHint": "TEXT"
+          "pgHint" : "TEXT PRIMARY KEY"
         },
         "customer_id": {
           "_gen": "var",
-          "var": "forkKey"
+          "var": "forkKey",
+          "pgHint" : "TEXT"
         },
         "pet_name": {
           "_gen": "string",
@@ -92,8 +92,8 @@
       }
     },
     {
-      "table": "appointments",
-      "vars": {
+      "table": "omd_appointments",
+      "varsOnce": {
         "apt_key": {
           "_gen": "uuid",
           "cast": "string"
@@ -102,8 +102,8 @@
       "fork": {
         "key": {
           "_gen": "lookup",
-          "table": "pets",
-          "path": [
+          "table": "omd_pets",
+          "path":  [
             "row"
           ]
         },
@@ -180,8 +180,8 @@
       "row": {
         "appointment_id": {
           "_gen": "var",
-          "pgHint": "TEXT",
-          "var": "apt_key"
+          "var": "apt_key",
+          "pgHint" : "TEXT PRIMARY KEY"
         },
         "customer_id": {
           "_gen": "var",
@@ -267,6 +267,7 @@
   "connections": {
     "pg": {
       "kind": "postgres",
+      "tablePolicy": "dropAndCreate",
       "connectionConfigs": {
         "host": "postgres",
         "port": 5432,

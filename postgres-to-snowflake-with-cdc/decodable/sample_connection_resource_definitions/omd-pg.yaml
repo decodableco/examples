@@ -3,9 +3,6 @@ kind: connection
 metadata:
     name: oh-my-dawg-pg
     description: ""
-    tags:
-      project: "oh-my-dawg"
-      author: "rmoff"
 spec_version: v2
 spec:
     execution:
@@ -13,10 +10,10 @@ spec:
     connector: postgres-cdc
     properties:
         database-name: postgres
-        hostname: 2.tcp.eu.ngrok.io
-        password: omd-pg
-        port: "19366"
+        hostname: <hostname>
+        port: <port>
         username: postgres
+        password: omd-pg
     stream_mappings:
         - stream_name: omd-appointments
           external_resource_specifier:
@@ -38,9 +35,6 @@ spec:
 kind: stream
 metadata:
     name: omd-appointments
-    tags:
-      project: "oh-my-dawg"
-      author: "rmoff"
 spec_version: v1
 spec:
     schema_v2:
@@ -79,9 +73,6 @@ spec:
 kind: stream
 metadata:
     name: omd-customers
-    tags:
-      project: "oh-my-dawg"
-      author: "rmoff"
 spec_version: v1
 spec:
     schema_v2:
@@ -111,9 +102,6 @@ spec:
 kind: stream
 metadata:
     name: omd-pets
-    tags:
-      project: "oh-my-dawg"
-      author: "rmoff"
 spec_version: v1
 spec:
     schema_v2:

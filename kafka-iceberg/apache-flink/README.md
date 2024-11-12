@@ -1,6 +1,6 @@
 # Streaming data from Kafka to Iceberg with Apache Flink
 
-_👉 See the supporting blog post at https://www.decodable.co/blog/_
+_👉 See the supporting blog post at https://www.decodable.co/blog/kafka-to-iceberg-with-flink_
 
 ## Run it all
 

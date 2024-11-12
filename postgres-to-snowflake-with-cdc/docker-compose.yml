@@ -14,7 +14,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: quay.io/debezium/example-postgres:2.3
+    image: quay.io/debezium/example-postgres:3.0
     ports:
       - "5432:5432"
     environment:

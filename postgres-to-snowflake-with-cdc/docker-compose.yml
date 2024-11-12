@@ -1,0 +1,44 @@
+---
+services:
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    # Sign up for an ngrok account at https://dashboard.ngrok.com/signup
+    # Get your auth-token from https://dashboard.ngrok.com/get-started/your-authtoken
+    # and either put it directly in the file here, or write it to a .env file in 
+    # the same folder as this Docker Compose file in the form
+    # NGROK_AUTH_TOKEN=your_token_value
+    command: tcp postgres:5432 --log stdout --authtoken $NGROK_AUTH_TOKEN
+    ports:
+      - 4040:4040 # Web dashboard for ngrok
+
+  postgres:
+    container_name: postgres
+    image: quay.io/debezium/example-postgres:3.0
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Welcome123
+    volumes:
+      - ./postgres/postgresql.conf.sample:/usr/share/postgresql/postgresql.conf.sample
+      - ${PWD}/postgres:/data
+
+  shadowtraffic:
+  # watch 'docker exec shadowtraffic curl -s localhost:9400/metrics |grep events_sent'
+    image: shadowtraffic/shadowtraffic:latest
+    container_name: shadowtraffic
+    env_file:
+      - shadowtraffic/license.env
+    volumes:
+      - ./shadowtraffic:/data
+    command: --config /data/config.json
+#      --with-studio --sample 20 --watch
+    ports:
+#      - 8080:8080
+      - 9400:9400
+
+networks:
+  default:
+     name: zaphod

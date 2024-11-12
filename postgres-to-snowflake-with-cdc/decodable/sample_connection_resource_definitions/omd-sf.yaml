@@ -1,0 +1,101 @@
+---
+kind: connection
+metadata:
+    name: oh-my-dawg-snowflake
+    description: ""
+spec_version: v2
+spec:
+    execution:
+      active: true
+    connector: snowflake
+    properties:
+      snowflake.account-name: <org_name>-<account_name>
+      snowflake.database: omd
+      snowflake.private-key: omd-snowflake
+      snowflake.role: load_data
+      snowflake.schema: omd
+      snowflake.user: decodable
+      snowflake.warehouse: stg
+      snowflake.merge-interval: 1 minute
+    stream_mappings:
+        - stream_name: omd-appointments
+          external_resource_specifier:
+            snowflake.table: omd-appointments
+        - stream_name: omd-pets
+          external_resource_specifier:
+            snowflake.table: omd-pets
+        - stream_name: omd-customers
+          external_resource_specifier:
+            snowflake.table: omd-customers
+    type: sink
+---
+kind: external-resource
+spec_version: v1
+spec:
+    connection: oh-my-dawg-snowflake
+    external_resource_specifier:
+        snowflake.table: omd-appointments
+    schema:
+        - name: appointment_id
+          type: VARCHAR NOT NULL
+        - name: duration_minutes
+          type: BIGINT
+        - name: appointment_time
+          type: VARCHAR
+        - name: status
+          type: VARCHAR
+        - name: pet_id
+          type: VARCHAR
+        - name: customer_id
+          type: VARCHAR
+        - name: service_type
+          type: VARCHAR
+        - name: price
+          type: DOUBLE
+        - name: last_updated
+          type: VARCHAR
+    configuration:
+        primary_key:
+            - appointment_id
+---
+kind: external-resource
+spec_version: v1
+spec:
+    connection: oh-my-dawg-snowflake
+    external_resource_specifier:
+        snowflake.table: omd-customers
+    schema:
+        - name: customer_id
+          type: VARCHAR NOT NULL
+        - name: first_name
+          type: VARCHAR
+        - name: last_name
+          type: VARCHAR
+        - name: phone
+          type: VARCHAR
+        - name: email
+          type: VARCHAR
+        - name: registered_date
+          type: VARCHAR
+    configuration:
+        primary_key:
+            - customer_id
+---
+kind: external-resource
+spec_version: v1
+spec:
+    connection: oh-my-dawg-snowflake
+    external_resource_specifier:
+        snowflake.table: omd-pets
+    schema:
+        - name: pet_id
+          type: VARCHAR NOT NULL
+        - name: customer_id
+          type: VARCHAR
+        - name: pet_name
+          type: VARCHAR
+        - name: pet_type
+          type: VARCHAR
+    configuration:
+        primary_key:
+            - pet_id

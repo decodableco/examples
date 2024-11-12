@@ -35,10 +35,11 @@ _Learn more [here](https://decodable.co), and [sign up for a free trial](https:/
 
 ### Data Pipelines
 
-| Example                                             | Description                                            |
-|-----------------------------------------------------|--------------------------------------------------------|
-| [Opinionated Data Pipelines](opinionated-pipelines) | Building data pipelines with schema on write streams. |
-| [Postman](postman)                                  | Building data pipelines with Postman.                  |
+| Example                                             | Description                                              |
+|-----------------------------------------------------|----------------------------------------------------------|
+| [Opinionated Data Pipelines](opinionated-pipelines) | Building data pipelines with schema on write streams.    |
+| [Postman](postman)                                  | Building data pipelines with Postman.                    |
+| [Postgres to Snowflake](postgres-to-snowflake-with-cdc)                    | Getting data from Postgres to Snowflake using Decodable. |
 
 ### PyFlink
 

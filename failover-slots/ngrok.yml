@@ -1,5 +1,5 @@
 version: "2"
-authtoken: 2f8iH6AbSmwLDZhLT0w0taIENbC_3WrBBLaeXYVc8v6Yq17DQ
+authtoken: <tbd.>
 tunnels:
   pgbouncer:
     addr: pgbouncer:5432

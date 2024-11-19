@@ -1,0 +1,66 @@
+---
+kind: secret
+metadata:
+    name: gm-inventorydb-password
+    tags:
+        context: failover-slots-demo
+spec_version: v1
+spec:
+    value_literal: "biBfab-4gyrca-hekran"
+---
+kind: connection
+metadata:
+    name: gm_inventorydb-source
+    tags:
+        context: failover-slots-demo
+spec_version: v2
+spec:
+    connector: postgres-cdc
+    type: source
+    stream_mappings:
+        - stream_name: gm_inventorydb__inventory__customers
+          external_resource_specifier:
+            database-name: inventorydb
+            schema-name: inventory
+            table-name: customers
+    properties:
+        hostname: "%DB_HOST%"
+        password: gm-inventorydb-password
+        port: "%DB_PORT%"
+        database-name: inventorydb
+        decoding.plugin.name: pgoutput
+        username: user
+---
+kind: stream
+metadata:
+    name: gm_inventorydb__inventory__customers
+    description: Automatically created stream for inventorydb.inventory.customers
+    tags:
+        context: failover-slots-demo
+spec_version: v1
+spec:
+    schema_v2:
+        fields:
+            - kind: physical
+              name: id
+              type: INT NOT NULL
+            - kind: physical
+              name: first_name
+              type: VARCHAR(255)
+            - kind: physical
+              name: last_name
+              type: VARCHAR(255)
+            - kind: physical
+              name: email
+              type: VARCHAR(255)
+            - kind: physical
+              name: is_test_account
+              type: BOOLEAN
+        constraints:
+            primary_key:
+                - id
+    type: CHANGE
+    properties:
+        partition.count: "2"
+        compaction.enable: "false"
+        properties.compression.type: zstd

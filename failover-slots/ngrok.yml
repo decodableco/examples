@@ -1,0 +1,12 @@
+version: "2"
+authtoken: 2f8iH6AbSmwLDZhLT0w0taIENbC_3WrBBLaeXYVc8v6Yq17DQ
+tunnels:
+  pgbouncer:
+    addr: pgbouncer:5432
+    proto: tcp
+  primary:
+    addr: postgres_primary:5432
+    proto: tcp
+  replica:
+    addr: postgres_replica:5432
+    proto: tcp

@@ -12,7 +12,7 @@ To run this example, you’ll need to have these things:
 Retrieve your auth token from the ngrok web UI and put it into a file _.env_ like so:
 
 ```
-NGROK_AUTH_TOKEN=<your token>
+NGROK_AUTHTOKEN=<your token>
 ```
 
 Start everything by running:

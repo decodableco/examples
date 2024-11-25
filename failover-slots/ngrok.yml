@@ -1,12 +1,5 @@
 version: "2"
-authtoken: <tbd.>
 tunnels:
   pgbouncer:
     addr: pgbouncer:5432
-    proto: tcp
-  primary:
-    addr: postgres_primary:5432
-    proto: tcp
-  replica:
-    addr: postgres_replica:5432
     proto: tcp

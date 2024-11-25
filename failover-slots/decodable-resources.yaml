@@ -6,7 +6,7 @@ metadata:
         context: failover-slots-demo
 spec_version: v1
 spec:
-    value_literal: "biBfab-4gyrca-hekran"
+    value_literal: "top-secret"
 ---
 kind: connection
 metadata:

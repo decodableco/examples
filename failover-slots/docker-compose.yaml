@@ -1,4 +1,3 @@
-version: '3.8'
 x-postgres-common:
   &postgres-common
   image: postgres:17-alpine
@@ -17,7 +16,7 @@ services:
     # Sign up for an ngrok account at https://dashboard.ngrok.com/signup
     # Get your auth-token from https://dashboard.ngrok.com/get-started/your-authtoken
     # and put an .env file in the same folder as this Docker Compose file in the form
-    # NGROK_AUTH_TOKEN=your_token_value
+    # NGROK_AUTHTOKEN=your_token_value
     command: "start --all --config /etc/ngrok.yml"
     volumes:
       - ./ngrok.yml:/etc/ngrok.yml
@@ -27,10 +26,10 @@ services:
   pgbouncer:
     image: edoburu/pgbouncer:latest
     environment:
-      - DB_HOST=postgres_replica
+      - DB_HOST=postgres_primary
       - DB_PORT=5432
       - DB_USER=user
-      - DB_PASSWORD=biBfab-4gyrca-hekran
+      - DB_PASSWORD=top-secret
       - ADMIN_USERS=postgres,admin
       - AUTH_TYPE=scram-sha-256
     ports:
@@ -42,7 +41,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_DB: inventorydb
-      POSTGRES_PASSWORD: biBfab-4gyrca-hekran
+      POSTGRES_PASSWORD: top-secret
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256\nhost replication all 0.0.0.0/0 md5"
       POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
     command: |

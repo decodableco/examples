@@ -1,0 +1,5 @@
+version: "2"
+tunnels:
+  pgbouncer:
+    addr: pgbouncer:5432
+    proto: tcp

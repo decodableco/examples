@@ -79,7 +79,9 @@ _Decodable provides a managed PyFlink service. Learn more [here](https://docs.de
 | [MSSQL CDC](mssql_cdc/)                                          | Enabling MSSQL in Docker with CDC, reading from it with Debezium, writing change events into AWS Kinesis             |
 | [Oracle CDC](oracle_cdc/)                                        | Configuring Oracle AWS RDS with LogMiner, reading from it with Debezium, writing change events into AWS Kinesis      | 
 | [DynamoDb CDC](dynamodb_cdc/)                                    | Configure DynamoDB to send change data to Kinesis, reading changes into Decodable for transformation or replication. |
-| [ Logical Decoding Message Examples](postgres-logical-decoding)  | How to retrieve logical decoding messages from the Postgres WAL                                                      |
+| [Logical Decoding Message Examples](postgres-logical-decoding)   | How to retrieve logical decoding messages from the Postgres WAL                                                      |
+| [Logical Replication on Postgres 16 Stand-By Servers](postgres-logical-replication-standby) | How to use logical replication on Postgres 16 stand-by servers                            |
+| [Postgres 17 Fail-Over Slots](failover-slots)                    | How to use fail-over slots with Postgres 1                                                                           |
 
 ### Flink SQL
 

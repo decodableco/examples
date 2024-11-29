@@ -1,9 +1,9 @@
 # Failover Slots with Postgres 17
 
-This example shows the usage of Postgres 17 failover replication slots with Postgres SQL-based interface to logical replication as well as with Decodable.
+This example shows the usage of Postgres 17 failover replication slots with Postgres' SQL-based interface to logical replication, as well as with Decodable.
 It accompanies the blog post <TODO>.
 
-To run this example, you’ll need to have these things:
+To run this example, you’ll need Docker. For running the Decodable-specific part, you'll also need to have the following:
 
 * A free Decodable account
 * The Decodable CLI installed on your machine

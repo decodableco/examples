@@ -1,0 +1,16 @@
+pipeline:
+  name: Sync MySQL inventory tables to Elasticsearch
+
+source:
+  type: mysql
+  hostname: mysql
+  port: 3306
+  username: debezium
+  password: dbz
+  tables: inventory.\.*
+  debezium.database.allowPublicKeyRetrieval: true
+
+sink:
+  type: elasticsearch
+  version: 7
+  hosts: http://elasticsearch:9200

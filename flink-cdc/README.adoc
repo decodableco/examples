@@ -54,6 +54,8 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 
 === Observe the automagically created Elasticsearch indices
 
+_This uses https://httpie.io/[httpie]_.
+
 [source,bash]
 ----
 ❯ http -b localhost:9200/_cat/indices
@@ -100,7 +102,7 @@ Change the source data:
 [source,bash]
 ----
 docker-compose exec mysql mysql -uroot -phunter2 -e "INSERT INTO customers VALUES (42,'foo','bar','');" inventory
-docker-compose exec mysql mysql -uroot -phunter2 -e "UPDATE CUSTOMERS SET last_name='foo' WHERE id=1001;" inventory
+docker-compose exec mysql mysql -uroot -phunter2 -e "UPDATE customers SET last_name='foo' WHERE id=1001;" inventory
 ----
 
 Look at the resulting changes in Elasticsearch:
@@ -145,6 +147,8 @@ Look at the resulting changes in Elasticsearch:
 
 == Let's do the same in Flink SQL
 
+_You might want to clean up the running Flink CDC jobs before trying this—restarting the Docker Compose stack is easiest_.
+
 The first step is to manually configure an instance of the [MySQL CDC connector](https://nightlies.apache.org/flink/flink-cdc-docs-master/docs/connectors/flink-sources/mysql-cdc/) for each table.
 
 === Figure out source schema
@@ -173,6 +177,7 @@ Manually:
 (if you miss PK you get `org.apache.flink.table.api.ValidationException: 'scan.incremental.snapshot.chunk.key-column' is required for table without primary key when 'scan.incremental.snapshot.enabled' enabled.`)
 
 * `  `type` enum('SHIPPING','BILLING','LIVING') NOT NULL,` - use string instead
+* Closing brackets, commas, etc etc
 
 Handle data type conversions, e.g. `enum`, `geometry` and column characteristics e.g. `AUTO_INCREMENT`
 
@@ -194,6 +199,10 @@ In Flink SQL, add the JARs manually to avoid watch out for https://issues.apache
 [source,sql]
 ----
 ADD JAR '/opt/flink/jars/flink-sql-connector-mysql-cdc-3.2.1.jar';
+----
+
+[source,sql]
+----
 ADD JAR '/opt/flink/jars/flink-sql-connector-elasticsearch7-3.0.1-1.17.jar';
 ----
 
@@ -376,7 +385,7 @@ Check the result:
                     "email": "sally.thomas@acme.com",
                     "first_name": "Sally",
                     "id": 1001,
-                    "last_name": "bar"
+                    "last_name": "Thomas"
                 },
                 "_type": "_doc"
             }
@@ -392,7 +401,14 @@ Check the result:
 }
 ----
 
-Update the source MySQL row again
+Update the source MySQL row again:
+
+[source,bash]
+----
+docker-compose exec mysql mysql -uroot -phunter2 -e "UPDATE customers SET last_name='foo' WHERE id=1001;" inventory
+----
+
+Inspect the changed data:
 
 [source,bash]
 ----

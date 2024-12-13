@@ -1,10 +1,10 @@
 # Transaction-aware Aggregation of CDC Events
 
-This is an _experimental_ Flink job showing how to aggregate CDC events while respecting transactional boundaries in the source database. It's sample code accompanying the discussion in this  [blog post](https://www.decodable.co/blog).
+This is an _experimental_ Flink job showing how to aggregate CDC events while respecting transactional boundaries in the source database. It's sample code accompanying the discussion in this [blog post](https://www.decodable.co/blog).
 
 ## Infrastructure Setup 
 
-There is a [Compose](./compose.yaml) file to locally spin up containers for the following systems by running `docker compose -f compose.yaml up` directly from within the `flink-datastream-poc` folder:
+There is a [Compose](./compose.yaml) file to locally spin up containers for the following systems by running `docker compose -f compose.yaml up` directly from within this example's base folder:
 
 * MySQL as source database
 * Apache Kafka
@@ -46,11 +46,13 @@ curl --location 'localhost:8083/connectors' \
 }'
 ```
 
-This configuration will capture any changes for all five tables which are found in the MySQL example database named `inventory`. Important is the configuration property `"provide.transaction.metadata": "true"` which instructs Debezium to expose all the necessary metadata related to transaction handling in the MySQL database. Without this additional information the transaction-aware aggregation of CDC events would not be possible.
+This configuration will capture any changes for all five tables which are found in the MySQL example database named `inventory`. Important is the configuration property `"provide.transaction.metadata": "true"` which instructs Debezium to expose all the necessary metadata related to transaction handling in the MySQL database. Without this additional information the transaction-aware aggregation of CDC events would not work.
 
 ## Execute Database Transaction in MySQL
 
-To verify if the setup is working, the following simple transaction is executed in the `inventory` database which touches two tables, namely `customers` and the `addresses`:
+To verify if the setup is working, a simple example transaction is executed in the `inventory` database which touches two tables, namely `customers` and `addresses`. Debezium will capture the changes and propagate them into the separate Kafka topics. Additionally, the transaction metadata is written into a dedicated Kafka topic.
+
+![](./images/example_db_transaction_captured_by_dbz.png)
 
 Run this command to enter a CLI session inside the MySQL container:
 
@@ -122,11 +124,14 @@ which should show two metadata events, one for each transaction marker:
 }
 ```
 
-## Run Apache Flink Job
+## Build & Run Apache Flink Job
 
-With all this in place it's time to build and run the Flink job and verify that the two CDC events which are part of this transaction are successfully aggregated.
+With all this in place it's time to build and run the Flink job and verify that the two CDC events which are part of this transaction are successfully aggregated and written into the Kafka output topic.
 
-_! NOTE: Building the experimental Flink code requires that you have JDK 17 and installed locally on your machine !_
+![](./images/flink_job_cdc_events_tx_agg.png)
+
+> [!NOTE]  
+> NOTE: Building the experimental Flink code requires that you have JDK 17 and installed locally on your machine !_
 
 From within the `flink-datastream-poc` folder run:
 
@@ -134,13 +139,13 @@ From within the `flink-datastream-poc` folder run:
 ./mvnw clean package
 ```
 
-which should result in a successful build of a self-contained JAR file that you can run as is:
+which should result in a successful build of a self-contained JAR file that you can run as is like so:
 
 ```bash
 java --add-opens=java.base/java.util=ALL-UNNAMED -jar target/flink-datastream-tx-buffering-1.0-SNAPSHOT.jar
 ```
 
-With the job still running, you can switch into another terminal window to  verify that the resulting transactional buffer has been written into the Kafka output topic named `cdc.tx.buffers`:
+With the job still running, you can switch into another terminal window to verify that the resulting transactional buffer has been written into the Kafka output topic named `cdc.tx.buffers`:
 
 ```bash
 docker compose exec kafka ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic cdc.tx.buffers --from-beginning

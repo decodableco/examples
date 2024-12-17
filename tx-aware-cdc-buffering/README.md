@@ -1,6 +1,6 @@
 # Transaction-aware Aggregation of CDC Events
 
-This is an _experimental_ Flink job showing how to aggregate CDC events while respecting transactional boundaries in the source database. It's sample code accompanying the discussion in this [blog post](https://www.decodable.co/blog).
+This is an _experimental_ Flink job showing how to aggregate CDC events while respecting transactional boundaries in the source database. It's sample code accompanying the discussion in this [blog post](https://decodable.co/blog/aggregating-change-data-capture-events-based-on-transactional-boundaries).
 
 ## Infrastructure Setup 
 

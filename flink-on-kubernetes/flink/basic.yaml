@@ -21,7 +21,7 @@ kind: FlinkDeployment
 metadata:
   name: basic-example
 spec:
-  image: flink:1.20
+  image: flink:1.20-java17
   flinkVersion: v1_20
   flinkConfiguration:
     taskmanager.numberOfTaskSlots: "2"

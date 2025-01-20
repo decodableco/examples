@@ -1,0 +1,70 @@
+################################################################################
+#  Licensed to the Apache Software Foundation (ASF) under one
+#  or more contributor license agreements.  See the NOTICE file
+#  distributed with this work for additional information
+#  regarding copyright ownership.  The ASF licenses this file
+#  to you under the Apache License, Version 2.0 (the
+#  "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+# limitations under the License.
+################################################################################
+
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkDeployment
+metadata:
+  name: custom-job-s3
+spec:
+  image: decodable-examples/hello-world-job:1.0
+  flinkVersion: v1_20
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: "2"
+
+    s3.access.key: minio
+    s3.secret.key: minio123
+    s3.endpoint: http://minio-service.default.svc.cluster.local:9000
+    s3.path.style.access: "true"
+    s3.entropy.key: _entropy_
+    s3.entropy.length: "4"
+
+    execution.checkpointing.interval: "5000"
+
+    state.backend: rocksdb
+    state.backend.incremental: "true"
+    state.checkpoints.dir: s3://flink-data/_entropy_/checkpoints
+    state.savepoints.dir: s3://flink-data/savepoints
+
+    high-availability.type: kubernetes
+    high-availability.storageDir: s3://flink-data/ha
+  serviceAccount: flink
+  jobManager:
+    resource:
+      memory: "2048m"
+      cpu: 2
+  taskManager:
+    resource:
+      memory: "2048m"
+      cpu: 2
+  podTemplate:
+    spec:
+      containers:
+        - name: flink-main-container
+          env:
+            - name: ENABLE_BUILT_IN_PLUGINS
+              value: "flink-s3-fs-presto-1.20.0.jar"
+  job:
+    jarURI: s3://job-files/hello-world-job-1.0.jar
+    parallelism: 2
+    upgradeMode: savepoint
+    state: running
+  ingress:
+    template: "localhost/{{name}}(/|$)(.*)"
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"

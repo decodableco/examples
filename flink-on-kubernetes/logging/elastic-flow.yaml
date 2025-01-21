@@ -1,0 +1,22 @@
+apiVersion: logging.banzaicloud.io/v1beta1
+kind: Flow
+metadata:
+  name: es-flow
+spec:
+  filters:
+    - tag_normaliser: {}
+    - parser:
+        remove_key_name_field: true
+        reserve_data: true
+        parse:
+          type: json
+          time_key: "@timestamp"
+  match:
+    - select:
+        labels:
+          component: jobmanager
+    - select:
+        labels:
+          component: taskmanager
+  globalOutputRefs:
+    - es-output

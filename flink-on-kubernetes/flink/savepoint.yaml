@@ -1,0 +1,10 @@
+apiVersion: flink.apache.org/v1beta1
+kind: FlinkStateSnapshot
+metadata:
+  name: example-savepoint
+spec:
+  backoffLimit: 1
+  jobReference:
+    kind: FlinkDeployment
+    name: custom-job-ha
+  savepoint: {}

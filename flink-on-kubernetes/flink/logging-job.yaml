@@ -82,13 +82,7 @@ spec:
       # Log all infos to the console
       appender.console.name = ConsoleAppender
       appender.console.type = CONSOLE
-      # appender.console.layout.type = JsonLayout
       appender.console.layout.type = JsonTemplateLayout
-      # appender.console.layout.compact = true
-      # appender.console.layout.eventEOL= true
-      # appender.console.layout.additionalField1.type = KeyValuePair
-      # appender.console.layout.additionalField1.key = timestamp
-      # appender.console.layout.additionalField1.value = $${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}
 
       # Log all infos in the given rolling file
       appender.rolling.name = RollingFileAppender

@@ -48,7 +48,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: heimdall-service
+  name: heimdall
 spec:
   selector:
     app: heimdall
@@ -58,7 +58,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: heimdall-ingress
+  name: heimdall
 spec:
   ingressClassName: nginx
   rules:

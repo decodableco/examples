@@ -1,0 +1,1 @@
+{ "mongodb_uri": "mongodb://demousr:demopwd@mongodb:27017/?retryWrites=true&w=majority", "mysql_host": "mysql", "mysql_password": "$e(reT", "mysql_port": "3306", "mysql_user": "flinkcdc" }

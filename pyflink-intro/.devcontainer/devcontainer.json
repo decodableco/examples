@@ -1,0 +1,16 @@
+{
+	"name": "pyflink-app-dev",
+    "dockerComposeFile": [
+        "../compose.yaml",
+        "./compose.dev.yaml"
+    ],
+    "service": "pyflink-app-dev",
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/home/vscode/workspaces/",
+    "containerEnv": {
+		"JAVA_HOME": "/home/vscode/.sdkman/candidates/java/current"
+	},
+	"remoteEnv": {
+		"PATH":"${containerEnv:PATH}:${containerEnv:JAVA_HOME}/bin"
+	}
+}

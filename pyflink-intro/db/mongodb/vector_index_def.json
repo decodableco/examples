@@ -1,0 +1,14 @@
+{
+    "name": "vector_index",
+    "type": "vectorSearch",
+    "collectionName": "book_embeddings",
+    "database": "vector_demo",
+    "fields": [
+        {
+            "numDimensions": 384,
+            "path": "embedding",
+            "similarity": "cosine",
+            "type": "vector"
+        }
+    ]
+}

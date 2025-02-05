@@ -2,7 +2,7 @@ name: pyflink-intro
 services:
   pyflink-app-dev:
     hostname: pyflink-app-dev
-    image: hpgrahsl/pyflink-app-dev:1.0
+    image: hpgrahsl/pyflink-app-dev:1.1
     volumes:
       - ./:/home/vscode/workspaces/:cached
     command: sleep infinity

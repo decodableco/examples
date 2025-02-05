@@ -1,0 +1,6 @@
+# NOTE: pyflink itself is assumed to be available in the runtime environment
+# apache-flink==1.20.0
+sentence-transformers==3.4.0
+langchain-community==0.3.16
+langchain-huggingface==0.1.2
+langchain-text-splitters==0.3.5

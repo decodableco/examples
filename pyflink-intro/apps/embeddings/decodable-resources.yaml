@@ -1,0 +1,24 @@
+kind: secret
+metadata:
+  name: vector_ingestion_job_config
+spec_version: v1
+spec:
+  value_file: ./.secrets/job_config
+---
+kind: pipeline
+metadata:
+    name: pyflink-vector-ingestion
+spec_version: v2
+spec:
+    type: PYTHON
+    job_file_path: ./target/pyflink-job.zip
+    job_arguments: /opt/pipeline-secrets/vector_ingestion_job_config
+    properties:
+        secrets:
+            - vector_ingestion_job_config
+        flink_version: 1.19-python311
+        additional_metrics: []
+    execution:
+        active: false
+        task_size: L
+        task_count: 1

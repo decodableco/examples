@@ -57,7 +57,7 @@ spec:
         - name: flink-main-container
           env:
             - name: ENABLE_BUILT_IN_PLUGINS
-              value: "flink-s3-fs-presto-1.20.0.jar"
+              value: "flink-s3-fs-hadoop-1.20.1.jar"
   job:
     jarURI: local:///opt/flink-jobs/hello-world-job-1.0.jar
     parallelism: 2

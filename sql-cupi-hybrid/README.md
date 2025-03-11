@@ -4,7 +4,7 @@ _This example project shows how to build a multi-stage, real-time data pipeline 
 
 ![high-level-example-overview](./docs/images/high-level-example-overview.png)
 
-A detailed step by step guide how to work through the example material is discussed in this accompanying [blog post](https://decodable.co/blog). Find its outline below.
+A detailed step by step guide how to work through the example material is discussed in this accompanying [blog post](https://decodable.co/blog/bridging-flink-sql-and-custom-java-pipelines-with-the-decodable-sdk). Find its outline below.
 
 ## Outline
 

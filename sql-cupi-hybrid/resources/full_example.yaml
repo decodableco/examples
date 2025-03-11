@@ -1,0 +1,175 @@
+---
+kind: secret
+metadata:
+    name: rest-source-secret
+    description: ""
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo
+spec_version: v1
+spec:
+    value_literal: $e(reT
+---
+kind: connection
+metadata:
+    name: rest-source
+    description: ""
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo
+spec_version: v2
+spec:
+    connector: rest
+    type: source
+    stream_name: fruit-intake
+    schema_v2:
+        fields:
+            - kind: physical
+              name: name
+              type: STRING NOT NULL
+            - kind: physical
+              name: count
+              type: INTEGER NOT NULL
+        constraints: {}
+    properties:
+        api-key: rest-source-secret
+        format: json
+        parse-error-policy: FAIL
+    is_auto_schema_evolving: false
+    execution:
+        active: true
+        task_count: 1
+        task_size: S
+---
+kind: stream
+metadata:
+    name: fruit-intake
+    description: ""
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo
+spec_version: v1
+spec:
+    schema_v2:
+        fields:
+            - kind: physical
+              name: name
+              type: STRING NOT NULL
+            - kind: physical
+              name: count
+              type: INTEGER NOT NULL
+        constraints: {}
+    type: APPEND
+    properties:
+        partition.count: "1"
+        compaction.enable: "false"
+        properties.compression.type: zstd
+---
+kind: stream
+metadata:
+    name: fruit-intake-enriched
+    description: ""
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo    
+spec_version: v1
+spec:
+    schema_v2:
+        fields:
+            - kind: physical
+              name: intake
+              type: "ROW<`name` STRING NOT NULL, `count` INT NOT NULL> NOT NULL"
+            - kind: physical
+              name: nutritions
+              type: "ROW<`calories` DOUBLE, `fat` DOUBLE, `sugar` DOUBLE, `carbohydrates` DOUBLE, `protein` DOUBLE>"
+        constraints: {}
+    type: APPEND
+    properties:
+        partition.count: "1"
+        compaction.enable: "false"
+        properties.compression.type: zstd
+---
+kind: stream
+metadata:
+    name: intake-stats-per-fruit
+    description: ""
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo
+spec_version: v1
+spec:
+    schema_v2:
+        fields:
+            - kind: physical
+              name: fruit
+              type: STRING NOT NULL
+            - kind: physical
+              name: total_count
+              type: BIGINT NOT NULL
+            - kind: physical
+              name: total_calories
+              type: DOUBLE NOT NULL
+            - kind: physical
+              name: total_fat
+              type: DOUBLE NOT NULL
+            - kind: physical
+              name: total_sugar
+              type: DOUBLE NOT NULL
+            - kind: physical
+              name: total_carbohydrates
+              type: DOUBLE NOT NULL
+            - kind: physical
+              name: total_protein
+              type: DOUBLE NOT NULL
+        constraints:
+            primary_key:
+                - fruit
+    type: CHANGE
+    properties:
+        partition.count: "1"
+        compaction.enable: "false"
+        properties.compression.type: zstd
+---
+kind: pipeline
+metadata:
+    name: sdk-cupi-fruit-enricher
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo
+spec_version: v2
+spec:
+    type: JAVA
+    job_file_path: ../cupi/target/fruit-enricher-cupi-1.0.0-SNAPSHOT.jar
+    entry_class: co.decodable.examples.FruitEnricherJob
+    properties:
+        flink_version: 1.19-java11
+        additional_metrics: []
+    execution:
+        active: true
+        task_size: M
+        task_count: 1
+---
+kind: pipeline
+metadata:
+    name: sql-nutritions-aggregator
+    description: ""
+    tags:
+        team: devrel
+        context: sql-cupi-hybrid
+        type: demo
+spec_version: v2
+spec:
+    type: SQL
+    sql: "insert into `intake-stats-per-fruit`\nselect \n  `intake`.`name` as fruit,\n  SUM(`intake`.`count`) as total_count,\n  SUM(`nutritions`.`calories` * `intake`.`count`) as total_calories,\n  SUM(`nutritions`.`fat` * `intake`.`count`) as total_fat,\n  SUM(`nutritions`.`sugar` * `intake`.`count`) as total_sugar,\n  SUM(`nutritions`.`carbohydrates` * `intake`.`count`) as total_carbohydrates,\n  SUM(`nutritions`.`protein` * `intake`.`count`) as total_protein\nfrom `fruit-intake-enriched`\ngroup by (`intake`.`name`)"
+    execution:
+        active: true
+        task_count: 1
+        task_size: S
+        initial_start_positions:
+            fruit-intake-enriched: earliest

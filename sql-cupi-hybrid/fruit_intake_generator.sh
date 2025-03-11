@@ -7,7 +7,7 @@
 #
 # api_endpoint='https://<XY>.api.data.decodable.co/v1alpha2/connections/<ID>/events'
 #
-api_endpoint=`decodable -p private query --kind connection --name "rest-source" | yq '.status.properties.url'`
+api_endpoint=`decodable query --kind connection --name "rest-source" | yq '.status.properties.url'`
 
 fruits=("Apple" "Banana" "Cherry" "Fig" "Grape" "Kiwi" "Lemon" "Raspberry" "Mango" "Blueberry" "Apricot" "Melon" "Cranberry")
 max_num_events=10000

@@ -25,7 +25,10 @@ config.*
 *.properties
 
 output
-*test*
+# unclear why this rule has been added initially, it would ignore
+# e.g. any test classes by default or complete examples which contain
+# the term 'test' in their name...
+#*test*
 .env
 api-key*
 *.properties

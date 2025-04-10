@@ -35,13 +35,14 @@ _Learn more [here](https://decodable.co), and [sign up for a free trial](https:/
 
 ### Data Pipelines
 
-| Example                                                 | Description                                                         |
-|---------------------------------------------------------|---------------------------------------------------------------------|
-| [Opinionated Data Pipelines](opinionated-pipelines)     | Building data pipelines with schema on write streams.               |
-| [Postman](postman)                                      | Building data pipelines with Postman.                               |
-| [Postgres to Snowflake](postgres-to-snowflake-with-cdc) | Getting data from Postgres to Snowflake using Decodable.            |
-| [Flink CDC](flink-cdc)                                  | Trying out Flink CDC and comparing it to Flink SQL.                 |
-| [Flink SQL and Custom Pipelines](sql-cupi-hybrid)       | Bridging Flink SQL and Custom Java Pipelines with the Decodable SDK |
+| Example                                                 | Description                                                                            |
+|---------------------------------------------------------|----------------------------------------------------------------------------------------|
+| [Opinionated Data Pipelines](opinionated-pipelines)     | Building data pipelines with schema on write streams.                                  |
+| [Postman](postman)                                      | Building data pipelines with Postman.                                                  |
+| [Postgres to Snowflake](postgres-to-snowflake-with-cdc) | Getting data from Postgres to Snowflake using Decodable.                               |
+| [Flink CDC](flink-cdc)                                  | Trying out Flink CDC and comparing it to Flink SQL.                                    |
+| [Flink SQL and Custom Pipelines](sql-cupi-hybrid)       | Bridging Flink SQL and Custom Java Pipelines with the Decodable SDK.                   |
+| [Testing Custom Pipelines on Decodable](testing-cupi)   | How to write more modular Flink jobs with pluggable components to improve testability. |
 
 
 ### PyFlink
